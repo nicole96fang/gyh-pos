@@ -729,8 +729,41 @@ const DB = {
 };
 const RM = n => 'RM ' + Number(n).toFixed(2);
 const now = () => new Date();
-const dateKey = d => d.toISOString().slice(0,10);
-const dateTime = d => d.toLocaleString('en-GB',{hour12:false});
+// 马来西亚时间 (GMT+8) - 不受浏览器/UTC 影响
+const MY_TZ_OFFSET_MIN = 8 * 60;
+const _myParts = (d) => {
+  // 取得在 GMT+8 下 "那一刻" 对应的年月日时分秒
+  const local = new Date(d.getTime() + MY_TZ_OFFSET_MIN * 60 * 1000);
+  return {
+    y: local.getUTCFullYear(),
+    m: local.getUTCMonth() + 1,
+    d: local.getUTCDate(),
+    h: local.getUTCHours(),
+    mi: local.getUTCMinutes(),
+    s: local.getUTCSeconds(),
+    w: local.getUTCDay()
+  };
+};
+// YYYY-MM-DD (马来西亚时间)
+const dateKey = d => {
+  const p = _myParts(d);
+  const mm = String(p.m).padStart(2,'0');
+  const dd = String(p.d).padStart(2,'0');
+  return `${p.y}-${mm}-${dd}`;
+};
+const _pad2 = n => String(n).padStart(2,'0');
+// HH:MM:SS (马来西亚时间)
+const dateTime = d => {
+  const p = _myParts(d);
+  return `${_pad2(p.h)}:${_pad2(p.mi)}:${_pad2(p.s)}`;
+};
+// HH:MM (马来西亚时间)
+const dateHM = d => {
+  const p = _myParts(d);
+  return `${_pad2(p.h)}:${_pad2(p.mi)}`;
+};
+// 友好显示（本地浏览器时区）
+const dateNice = d => d.toLocaleString('en-GB',{hour12:false});
 
 /* ============ 配置 ============ */
 const MENU = [
