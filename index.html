@@ -644,6 +644,59 @@
   </div>
 </div>
 
+<!-- Edit Order modal -->
+<div class="modal" id="editOrderModal">
+  <div class="modal-box" style="max-width:560px;max-height:92vh;display:flex;flex-direction:column;">
+    <button class="close" id="editClose" style="position:absolute;top:14px;right:16px;border:none;background:var(--pink);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;color:#7a5e54;">✕</button>
+    <h3>✏️ Edit Order · 修改订单 <span id="editOrderCode" style="font-size:11px;color:var(--ink-soft);font-weight:700;"></span></h3>
+    <div style="font-size:11px;color:var(--ink-soft);margin:0 0 10px;">订单 ID: <code style="background:#f7eee5;padding:1px 6px;border-radius:4px;" id="editOrderId"></code></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <div>
+        <label style="font-size:11px;color:var(--ink-soft);font-weight:700;">📅 Date</label>
+        <input id="editDate" type="date" style="width:100%;border:1.5px dashed var(--line);border-radius:10px;padding:8px;font-family:var(--font);font-size:13px;background:#fffaf6;" />
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--ink-soft);font-weight:700;">🕐 Time</label>
+        <input id="editTime" type="text" placeholder="HH:MM:SS" style="width:100%;border:1.5px dashed var(--line);border-radius:10px;padding:8px;font-family:var(--font);font-size:13px;background:#fffaf6;" />
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--ink-soft);font-weight:700;">💳 Payment</label>
+        <select id="editMethod" style="width:100%;border:1.5px dashed var(--line);border-radius:10px;padding:8px;font-family:var(--font);font-size:13px;background:#fffaf6;">
+          <option value="Cash">💵 Cash</option>
+          <option value="Tng Ewallet">📱 Tng Ewallet</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--ink-soft);font-weight:700;">💰 Total (RM)</label>
+        <input id="editTotal" type="number" step="0.01" style="width:100%;border:1.5px dashed var(--line);border-radius:10px;padding:8px;font-family:var(--font);font-size:14px;font-weight:900;background:#fffaf6;color:#6b544b;text-align:right;" />
+      </div>
+    </div>
+
+    <div id="editCashRow" style="display:none;background:#f0f8f4;border-radius:10px;padding:10px;margin-bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div>
+        <label style="font-size:11px;color:var(--ink-soft);font-weight:700;">💵 收到</label>
+        <input id="editReceived" type="number" step="0.01" style="width:100%;border:1.5px dashed var(--line);border-radius:8px;padding:6px;font-size:13px;font-weight:700;text-align:right;" />
+      </div>
+      <div>
+        <label style="font-size:11px;color:var(--ink-soft);font-weight:700;">💰 找零</label>
+        <input id="editChange" type="number" step="0.01" readonly style="width:100%;border:1.5px dashed var(--line);border-radius:8px;padding:6px;font-size:13px;font-weight:700;text-align:right;background:#fff;color:#3f8a63;" />
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:6px 0 6px;">
+      <h4 style="margin:0;font-size:14px;color:#6b544b;">🍽️ Items</h4>
+      <button id="editAddItem" style="background:linear-gradient(135deg,#7fc4a6,#bfe3d2);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;">➕ Add Item</button>
+    </div>
+    <div id="editItemsList" style="flex:1;overflow-y:auto;min-height:120px;max-height:42vh;padding-right:4px;"></div>
+
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button id="editCancel" style="flex:1;background:#fff;color:#9a8a7e;border:1.5px dashed var(--line);padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">Cancel</button>
+      <button id="editSave" style="flex:2;background:linear-gradient(135deg,#7fc4a6,#bfe3d2);color:#fff;border:none;padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">💾 Save · 保存修改</button>
+    </div>
+  </div>
+</div>
+
 <!-- 结账所有活跃订单 (一键结清) -->
 <div class="modal" id="batchPayModal">
   <div class="modal-box" style="max-width:460px;">
@@ -865,6 +918,7 @@ let currentOrder = [];          // {dishId, qty, opts:[], desc}  当前草稿（
 let activeOrders = [];         // [orderObj, ...] 已送出厨房未结账的订单
 let selectedOrderId = null;    // 抽屉里目前查看的活跃订单
 let selectedSupplier = '';
+let _editingOrder = null;      // Edit Order modal 当前正在编辑的对象
 
 /* ============ 导航 ============ */
 const titles = {dashboard:'Dashboard',neworder:'New Order',expense:'Expense',history:'History',report:'Report'};
@@ -1645,10 +1699,142 @@ function renderHistory(){
       <td>${o.items.map(i=>i.name+'×'+i.qty).join(', ')}</td>
       <td><span class="pill ${o.method==='Cash'?'cash':'tng'}">${o.method}</span></td>
       <td>${RM(o.total)}</td>
-      <td class="no-print"><button class="mini-btn" onclick="reprint('${o.id}')">🖨️ Print</button></td></tr>`).join('')+
+      <td class="no-print">
+        <button class="mini-btn" onclick="reprint('${o.id}')">🖨️</button>
+        <button class="mini-btn" onclick="editOrder('${o.id}')" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;">✏️ Edit</button>
+        <button class="mini-btn" onclick="deleteOrder('${o.id}')" style="background:linear-gradient(135deg,#e89b9b,#fce0e0);color:#7a3a3a;">🗑️</button>
+      </td></tr>`).join('')+
     `</tbody></table>`;
 }
-window.reprint = id => { const o=DB.orders.find(x=>x.id===id); if(o) showReceipt(o); };
+window.editOrder = id => {
+  const o = DB.orders.find(x=>x.id===id);
+  if(!o) return;
+  _editingOrder = JSON.parse(JSON.stringify(o)); // deep clone
+  document.getElementById('editOrderId').textContent = o.id;
+  document.getElementById('editDate').value = o.date || dateKey(now());
+  document.getElementById('editTime').value = o.time || '';
+  document.getElementById('editMethod').value = o.method || 'Cash';
+  document.getElementById('editTotal').value = o.total;
+  document.getElementById('editReceived').value = (o.method==='Cash' ? o.received : o.total);
+  document.getElementById('editChange').value = (o.method==='Cash' ? (o.change||0) : 0);
+  document.getElementById('editOrderCode').textContent = o.code ? `(${o.code})` : '';
+  // 渲染 items 行
+  renderEditItems();
+  // 支付方式切换显示 received/change
+  _toggleEditCashFields();
+  document.getElementById('editOrderModal').classList.add('show');
+};
+window.deleteOrder = id => {
+  const o = DB.orders.find(x=>x.id===id);
+  if(!o) return;
+  if(!confirm(`🗑️ 删除订单 ${o.id}?\n${o.date} ${o.time} · ${RM(o.total)} · ${o.method}\n\n确定删除？此操作无法撤销！`)) return;
+  DB.orders = DB.orders.filter(x=>x.id!==id);
+  DB.save();
+  renderHistory(); renderDashboard(); renderReport();
+  showToast('🗑️ 订单已删除');
+};
+function renderEditItems(){
+  const box = document.getElementById('editItemsList');
+  box.innerHTML = _editingOrder.items.map((it, idx)=>{
+    const qty = +it.qty || 1;
+    return `<div class="order-item" style="background:#fffaf6;border:1.5px dashed var(--line);border-radius:12px;padding:10px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px;">
+        <input data-edit="name" data-idx="${idx}" value="${(it.name||'').replace(/"/g,'&quot;')}" style="flex:1;border:none;background:transparent;font-weight:900;font-size:14px;font-family:var(--font);color:#3a2e25;" />
+        <input data-edit="line" data-idx="${idx}" type="number" step="0.01" value="${(it.line||0).toFixed(2)}" style="width:90px;border:1.5px dashed var(--line);border-radius:8px;padding:6px;font-size:13px;text-align:right;font-weight:700;background:#fff;" />
+      </div>
+      <div style="font-size:11px;color:var(--ink-soft);margin-bottom:4px;">
+        ${(it.noodles&&it.noodles.length)?'🍜 '+it.noodles.map(n=>tagLabel(n)).join('/')+' · ':''}${it.protein?'🥩 '+tagLabel(it.protein)+' · ':''}${(it.opts&&it.opts.length)?'➕ '+it.opts.map(o=>tagLabel(o)).join('/'):''}
+      </div>
+      ${it.desc?`<div style="font-size:11px;color:var(--ink-soft);font-style:italic;margin-bottom:4px;">📝 ${it.desc}</div>`:''}
+      <div style="display:flex;gap:6px;margin-top:6px;">
+        <input data-edit="qty" data-idx="${idx}" type="number" min="1" value="${qty}" style="width:60px;border:1.5px dashed var(--line);border-radius:8px;padding:4px;font-size:12px;text-align:center;" />
+        <span style="font-size:11px;color:var(--ink-soft);">×</span>
+        <input data-edit="price" data-idx="${idx}" type="number" step="0.01" value="${(+it.line/(+it.qty||1)).toFixed(2)}" style="width:80px;border:1.5px dashed var(--line);border-radius:8px;padding:4px;font-size:12px;text-align:right;" placeholder="单价" />
+        <span style="font-size:11px;color:var(--ink-soft);">each</span>
+        <button data-edit-del="${idx}" style="margin-left:auto;background:#fce0e0;border:none;color:#7a3a3a;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{
+    box.querySelectorAll('input[data-edit]').forEach(el=>{
+      el.oninput = ()=>{
+        const i = +el.dataset.idx, k = el.dataset.edit;
+        if(k==='name') _editingOrder.items[i].name = el.value;
+        else if(k==='qty'){
+          const v = Math.max(1, parseInt(el.value)||1);
+          _editingOrder.items[i].qty = v;
+        }
+        else if(k==='price'){
+          const v = parseFloat(el.value)||0;
+          _editingOrder.items[i].line = v * (+_editingOrder.items[i].qty||1);
+          el.parentElement.parentElement.querySelector('[data-edit="line"]').value = (+_editingOrder.items[i].line).toFixed(2);
+        }
+        else if(k==='line'){
+          _editingOrder.items[i].line = parseFloat(el.value)||0;
+        }
+        recalcEditTotal();
+      };
+    });
+    box.querySelectorAll('[data-edit-del]').forEach(btn=>{
+      btn.onclick=()=>{
+        const i = +btn.dataset.editDel;
+        _editingOrder.items.splice(i,1);
+        renderEditItems();
+        recalcEditTotal();
+      };
+    });
+  },0);
+}
+function recalcEditTotal(){
+  const total = _editingOrder.items.reduce((s,it)=>s+(parseFloat(it.line)||0),0);
+  document.getElementById('editTotal').value = total.toFixed(2);
+  _toggleEditCashFields();
+}
+function _toggleEditCashFields(){
+  const m = document.getElementById('editMethod').value;
+  const isCash = m==='Cash';
+  document.getElementById('editCashRow').style.display = isCash ? 'block' : 'none';
+  if(isCash){
+    const rcv = parseFloat(document.getElementById('editReceived').value)||0;
+    const tot = parseFloat(document.getElementById('editTotal').value)||0;
+    document.getElementById('editChange').value = Math.max(0, rcv-tot).toFixed(2);
+  }
+}
+document.getElementById('editMethod').onchange = _toggleEditCashFields;
+document.getElementById('editTotal').oninput = _toggleEditCashFields;
+document.getElementById('editReceived').oninput = _toggleEditCashFields;
+document.getElementById('editAddItem').onclick = ()=>{
+  // 用第一条菜的 dish 加一行默认
+  _editingOrder.items.push({name:'', qty:1, line:0, noodles:[], opts:[], desc:''});
+  renderEditItems();
+  recalcEditTotal();
+};
+document.getElementById('editSave').onclick=()=>{
+  // 应用表单字段
+  _editingOrder.date = document.getElementById('editDate').value || dateKey(now());
+  _editingOrder.time = document.getElementById('editTime').value || dateTime(now());
+  _editingOrder.method = document.getElementById('editMethod').value;
+  _editingOrder.total = parseFloat(document.getElementById('editTotal').value)||0;
+  if(_editingOrder.method==='Cash'){
+    const rcv = parseFloat(document.getElementById('editReceived').value)||0;
+    _editingOrder.received = rcv;
+    _editingOrder.change = Math.max(0, rcv - _editingOrder.total);
+  } else {
+    _editingOrder.received = _editingOrder.total;
+    _editingOrder.change = 0;
+  }
+  // 找原订单替换
+  const idx = DB.orders.findIndex(x=>x.id===_editingOrder.id);
+  if(idx<0){ alert('❌ 找不到原订单'); return; }
+  if(!confirm(`💾 确认保存修改？\n\n订单 ${_editingOrder.id}\n日期: ${_editingOrder.date} ${_editingOrder.time}\n支付: ${_editingOrder.method}\n总额: ${RM(_editingOrder.total)}\n\n覆盖后无法还原！`)) return;
+  DB.orders[idx] = _editingOrder;
+  DB.save();
+  document.getElementById('editOrderModal').classList.remove('show');
+  renderHistory(); renderDashboard(); renderReport();
+  showToast('✅ 订单已保存');
+};
+document.getElementById('editCancel').onclick=()=>document.getElementById('editOrderModal').classList.remove('show');
+document.getElementById('editClose').onclick=()=>document.getElementById('editOrderModal').classList.remove('show');
 document.getElementById('histFilter').onclick=renderHistory;
 document.getElementById('histClear').onclick=()=>{document.getElementById('histFrom').value='';document.getElementById('histTo').value='';document.getElementById('histMethod').value='';renderHistory();};
 document.getElementById('printAllHist').onclick=()=>{
@@ -1704,6 +1890,16 @@ function getFilteredReport(){
     const b = buckets[k];
     return {label:k, rev:b.rev, exp:b.exp, count:b.count, profit:b.rev-b.exp};
   });
+}
+const NOODLE_LB = {kt:'Keow Teow',bh:'Bihun',mee:'Mee',mag:'Maggie',mtmk:'Meetaimuk'};
+const PROTEIN_LB = {pork:'Pork', chicken:'Chicken', fishOnly:'Fishball Only'};
+const OPTION_LB = {small:'Small',big:'Big',egg:'Egg',fish:'Fish',veg:'Vegetable',pork:'Pork',chicken:'Chicken',fishball:'Fishball'};
+function tagLabel(k){
+  if(!k) return '';
+  if(NOODLE_LB[k]) return NOODLE_LB[k];
+  if(PROTEIN_LB[k]) return PROTEIN_LB[k];
+  if(OPTION_LB[k]) return OPTION_LB[k];
+  return k;
 }
 function labelOf(k){
   if(repMode==='daily') return k;
