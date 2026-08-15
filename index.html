@@ -1538,17 +1538,33 @@ function exportData(){
   const ts = dateKey(now()) + '_' + String(new Date().getTime()).slice(-5);
   const filename = `GYH-POS-Backup-${ts}.json`;
   const text = _buildBackupJSON();
-  // 方法 1: Blob + 下载 (桌面 / Chrome 浏览器)
+  // ✅ 多管齐下
+  // 1) 触发下载 (桌面 / Chrome)
   try{
     const blob = new Blob([text],{type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = filename;
+    a.href = url; a.download = filename; a.style.display='none';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    setTimeout(()=>{ try{URL.revokeObjectURL(url);}catch(e){} },2000);
   }catch(e){ console.warn('download failed', e); }
-  // 方法 2: iOS Safari 一定看得到的弹窗 (用 textarea 让用户可以全选 + 复制)
-  showBackupModal(filename, text);
+  // 2) 写进剪贴簿 (可能成功, 可能被 iOS 阻塞)
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(()=>{
+        showToast('✅ 已自动复制到剪贴簿！\n现在打开 Notes → 长按 → 粘贴',6000);
+      }).catch(()=>{});
+    }
+  }catch(e){}
+  // 3) 显示弹窗备份文字 (保证看得到)
+  setTimeout(()=>showBackupModal(filename, text), 250);
+}
+function showToast(msg, duration){
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#3f8a63;color:#fff;padding:14px 22px;border-radius:14px;font-weight:800;font-size:13px;z-index:999999;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:90vw;line-height:1.6;white-space:pre-line;text-align:center;';
+  document.body.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .4s'; setTimeout(()=>t.remove(),500); }, duration||4000);
 }
 function showBackupModal(filename, text){
   // 先移除旧的
