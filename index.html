@@ -498,27 +498,27 @@
         </div>
       </div>
 
-      <!-- 普通统计卡 -->
+      <!-- 普通统计卡 (今日统计) -->
       <div class="stats">
         <div class="stat s1">
           <div class="emoji-circle">🛎️</div>
           <div class="v" id="stOrders">0</div>
-          <div class="l">Total Orders</div>
+          <div class="l">今日订单 · Today Orders</div>
         </div>
         <div class="stat s2">
           <div class="emoji-circle">💰</div>
           <div class="v" id="stRevenue">RM 0.00</div>
-          <div class="l">Total Revenue</div>
+          <div class="l">今日收入 · Today Revenue</div>
         </div>
         <div class="stat s3">
           <div class="emoji-circle">🛒</div>
           <div class="v" id="stExpense">RM 0.00</div>
-          <div class="l">Total Expense</div>
+          <div class="l">今日支出 · Today Expense</div>
         </div>
         <div class="stat s4">
           <div class="emoji-circle">📈</div>
           <div class="v" id="stProfit">RM 0.00</div>
-          <div class="l">Total Profit</div>
+          <div class="l">今日利润 · Today Profit</div>
         </div>
       </div>
       <div class="card">
@@ -968,19 +968,18 @@ function highlightMenu(){
 
 /* ============ Dashboard ============ */
 function renderDashboard(){
-  const orders = DB.orders;
-  const expenses = DB.expenses;
+  const today = dateKey(now());
+  // 只用今天的数据 (不再加历史)
+  const orders = DB.orders.filter(o=>o.date===today);
+  const expenses = DB.expenses.filter(e=>e.date===today);
   const revenue = orders.reduce((s,o)=>s+o.total,0);
   const expense = expenses.reduce((s,e)=>s+e.amount,0);
-  const today = dateKey(now());
-  const todayOrders = orders.filter(o=>o.date===today);
-  const todayRev = todayOrders.reduce((s,o)=>s+o.total,0);
 
   document.getElementById('stOrders').textContent = orders.length;
   document.getElementById('stRevenue').textContent = RM(revenue);
   document.getElementById('stExpense').textContent = RM(expense);
   document.getElementById('stProfit').textContent = RM(revenue-expense);
-  document.getElementById('stToday').textContent = RM(todayRev);
+  document.getElementById('stToday').textContent = RM(revenue);
 
   // Hero 文案：随时间问候 + 今日订单数
   const h = new Date().getHours();
@@ -989,15 +988,16 @@ function renderDashboard(){
   const greetEl = document.getElementById('dashGreet');
   if(greetEl) greetEl.textContent = greet;
   if(sub){
-    if(!todayOrders.length) sub.textContent = '今天还没有订单，准备好开始接单了吗？ 🍜';
-    else sub.textContent = `今天已接 ${todayOrders.length} 单 · 收入 ${RM(todayRev)} ✨`;
+    if(!orders.length) sub.textContent = '今天还没有订单，准备好开始接单了吗？ 🍜';
+    else sub.textContent = `今天已接 ${orders.length} 单 · 收入 ${RM(revenue)} ✨`;
   }
 
   renderProfitChart();
 
   const box = document.getElementById('recentOrders');
-  if(!orders.length){ box.innerHTML='<div class="recent-empty">🌸 还没有订单，去 New Order 开始接单吧～</div>'; return; }
-  const recent = [...orders].reverse().slice(0,8);
+  if(!DB.orders.length){ box.innerHTML='<div class="recent-empty">🌸 还没有订单，去 New Order 开始接单吧～</div>'; return; }
+  // 最近订单 - 展示最新 8 笔 (不限今日，方便回顾)
+  const recent = [...DB.orders].reverse().slice(0,8);
   box.innerHTML = recent.map(o=>{
     const t = o.time.split(' ')[1] || o.time;
     const itemsTxt = o.items.map(i=>i.name+'×'+i.qty).join(', ');
