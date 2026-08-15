@@ -1524,21 +1524,89 @@ document.getElementById('clearExpenses').onclick=()=>{ if(confirm('确认清空�
 document.getElementById('clearAll').onclick=()=>{ if(confirm('⚠️ 确认清空全部订单与支出？此操作不可恢复！')) doClear('all'); };
 
 /* ============ Export / Import Backup ============ */
-function exportData(){
-  const blob = new Blob([JSON.stringify({
+function _buildBackupJSON(){
+  return JSON.stringify({
     version:1,
     exportedAt: new Date().toISOString(),
+    exportedDateMY: dateKey(now()),
+    counts:{orders:DB.orders.length, expenses:DB.expenses.length},
     orders: DB.orders,
     expenses: DB.expenses
-  },null,2)],{type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  const ts = dateKey(now()) + '_' + (new Date().getTime()%100000);
-  a.download = `GYH-POS-Backup-${ts}.json`;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(()=>URL.revokeObjectURL(url),1500);
-  alert('✅ 备份文件已下载\n📁 GYH-POS-Backup-'+ts+'.json\n\n请存到 iCloud / Files / Telegram 收藏 自己保留');
+  },null,2);
+}
+function exportData(){
+  const ts = dateKey(now()) + '_' + String(new Date().getTime()).slice(-5);
+  const filename = `GYH-POS-Backup-${ts}.json`;
+  const text = _buildBackupJSON();
+  // 方法 1: Blob + 下载 (桌面 / Chrome 浏览器)
+  try{
+    const blob = new Blob([text],{type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+  }catch(e){ console.warn('download failed', e); }
+  // 方法 2: iOS Safari 一定看得到的弹窗 (用 textarea 让用户可以全选 + 复制)
+  showBackupModal(filename, text);
+}
+function showBackupModal(filename, text){
+  // 先移除旧的
+  const old = document.getElementById('backupModal');
+  if(old) old.remove();
+  const m = document.createElement('div');
+  m.id = 'backupModal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;display:flex;align-items:center;justify-content:center;padding:14px;';
+  m.innerHTML = `
+    <div style="background:#fffaf6;border-radius:20px;padding:20px;max-width:520px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 style="margin:0;color:#6b544b;font-size:18px;">📤 Backup · 备份</h3>
+        <button id="backupClose" style="background:none;border:none;font-size:24px;cursor:pointer;color:#9a8a7e;line-height:1;">✕</button>
+      </div>
+      <div style="background:#f7eee5;border-radius:10px;padding:8px 12px;font-size:12px;color:#6b544b;margin-bottom:10px;">
+        📁 <b>${filename}</b><br>
+        📊 订单 ${DB.orders.length} 笔 · 支出 ${DB.expenses.length} 笔
+      </div>
+      <textarea id="backupText" readonly style="flex:1;min-height:200px;max-height:50vh;border:1.5px dashed #d8b38d;border-radius:10px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#fff;color:#3a2e25;resize:vertical;">${text.replace(/</g,'&lt;')}</textarea>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button id="backupCopy" style="flex:1;min-width:100px;background:linear-gradient(135deg,#7fc4a6,#bfe3d2);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px;">📋 Copy to Clipboard</button>
+        <button id="backupSelect" style="flex:1;min-width:100px;background:linear-gradient(135deg,#d8b38d,#f0e3d2);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px;">🔘 Select All</button>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:#9a8a7e;text-align:center;line-height:1.5;">
+        💡 iPhone: 先按 <b>Copy to Clipboard</b><br>然后打开 Notes/Files/Telegram 直接贴上保存
+      </div>
+    </div>`;
+  document.body.appendChild(m);
+  document.getElementById('backupClose').onclick = ()=>m.remove();
+  document.getElementById('backupSelect').onclick = ()=>{
+    const ta = document.getElementById('backupText');
+    ta.focus(); ta.select();
+    try{ document.execCommand('selectAll'); }catch(e){}
+  };
+  document.getElementById('backupCopy').onclick = async ()=>{
+    const ta = document.getElementById('backupText');
+    ta.focus(); ta.select();
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById('backupCopy');
+        const orig = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        btn.style.background = 'linear-gradient(135deg,#3f8a63,#7fc4a6)';
+        setTimeout(()=>{ btn.textContent = orig; btn.style.background = 'linear-gradient(135deg,#7fc4a6,#bfe3d2)'; },1500);
+      }else{
+        document.execCommand('copy');
+        alert('✅ 已复制');
+      }
+    }catch(err){
+      try{
+        document.execCommand('copy');
+        alert('✅ 已复制 (fallback)');
+      }catch(e2){
+        alert('❌ 复制失败，请用手选 + Cmd/Ctrl+C');
+      }
+    }
+  };
 }
 document.getElementById('importFile').addEventListener('change', (e)=>{
   const file = e.target.files[0];
