@@ -435,6 +435,9 @@
     <button class="nav-btn" data-view="neworder">
       <span class="ic" style="background:var(--pink)">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#f5b75c;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
+    <button class="nav-btn" onclick="openCartDirect()" style="color:#7a5e54;background:rgba(216,179,141,.16);">
+      <span class="ic" style="background:#f0e3d2">🛒</span> View Cart <span id="badgeCart" style="display:none;background:#e89b9b;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
+    </button>
     <button class="nav-btn" data-view="expense">
       <span class="ic" style="background:var(--butter)">🛒</span> Expense
     </button>
@@ -640,7 +643,10 @@
   <div id="orderItems"></div>
   <div class="order-foot">
     <div class="total-row"><span>Draft Total</span><span id="orderTotal">RM 0.00</span></div>
-    <button class="pay-btn" id="sendToKitchen" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;">🍳 Send to Kitchen · 送厨房</button>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
+      <button class="pay-btn" id="sendToKitchen" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;flex:1;">🍳 Send to Kitchen · 送厨房</button>
+      <button onclick="confirmClearCart()" title="清空 cart" style="background:#fce0e0;color:#7a3a3a;border:none;width:54px;height:auto;padding:0;border-radius:14px;font-size:18px;cursor:pointer;">🗑️</button>
+    </div>
     <button class="pay-btn" id="toPayment" disabled style="margin-top:8px;">💳 结账草稿 (Proceed to Payment)</button>
   </div>
 </div>
@@ -922,6 +928,32 @@ let activeOrders = [];         // [orderObj, ...] 已送出厨房未结账的订
 let selectedOrderId = null;    // 抽屉里目前查看的活跃订单
 let selectedSupplier = '';
 let _editingOrder = null;      // Edit Order modal 当前正在编辑的对象
+
+/* ============ Cart 持久化 (防止误关丢失) ============ */
+const CART_KEY = 'gyh_current_cart';
+function saveCart(){
+  try{
+    if(currentOrder.length){
+      localStorage.setItem(CART_KEY, JSON.stringify({items:currentOrder, ts:Date.now()}));
+    } else {
+      localStorage.removeItem(CART_KEY);
+    }
+  }catch(e){ console.warn('cart save fail', e); }
+}
+function restoreCart(){
+  try{
+    const raw = localStorage.getItem(CART_KEY);
+    if(!raw) return false;
+    const data = JSON.parse(raw);
+    if(!data || !Array.isArray(data.items) || !data.items.length) return false;
+    currentOrder = data.items;
+    return true;
+  }catch(e){ console.warn('cart restore fail', e); return false; }
+}
+function clearCart(){
+  currentOrder = [];
+  localStorage.removeItem(CART_KEY);
+}
 
 /* ============ 导航 ============ */
 const titles = {dashboard:'Dashboard',neworder:'New Order',expense:'Expense',history:'History',report:'Report'};
@@ -1285,6 +1317,7 @@ document.getElementById('sendToKitchen').onclick=()=>{
     items: currentOrder.map(it=>({...it}))
   });
   currentOrder = [];
+  clearCart();
   renderOrder();
   // 简洁动画提示
   showToast(`🍳 已送出厨房 · ${code}${name?' ('+name+')':''}`);
@@ -1484,6 +1517,35 @@ function renderOrder(){
       badge.style.display='none';
     }
   }
+  // 自动保存 cart
+  saveCart();
+  updateCartBadge();
+}
+function updateCartBadge(){
+  const badge = document.getElementById('badgeCart');
+  if(!badge) return;
+  if(currentOrder.length){
+    badge.style.display = 'inline-block';
+    badge.textContent = currentOrder.length;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+function openCartDirect(){
+  // 简单粗暴：跳到 New Order view + 打开右侧抽屉
+  switchView('neworder');
+  setTimeout(()=>{
+    openDrawer();
+    renderOrder();
+  }, 80);
+}
+function confirmClearCart(){
+  if(!currentOrder.length){ showToast('🛒 Cart 已经空了'); return; }
+  const cnt = currentOrder.length;
+  if(!confirm(`🗑️ 确认清空 Cart？\n\n当前有 ${cnt} 项未送出\n清空后无法撤销，确定吗？`)) return;
+  clearCart();
+  renderOrder();
+  showToast('🗑️ Cart 已清空');
 }
 
 /* ============ Payment ============ */
@@ -1537,7 +1599,7 @@ function finishOrder(method, change){
     document.getElementById('payStep1').classList.remove('hidden');
     document.getElementById('payStep2').classList.add('hidden');
     showReceipt(order);
-    currentOrder=[]; renderOrder(); closeDrawer();
+    clearCart(); currentOrder=[]; renderOrder(); closeDrawer();
   }
 }
 function openBatchPay(orderIds){
@@ -2215,6 +2277,20 @@ document.getElementById('todayDate').textContent = now().toLocaleDateString('en-
 renderMenu();
 renderSuppliers();
 renderDashboard();
+
+// 自动恢复 Cart (防误关丢失)
+const _restored = restoreCart();
+if(_restored && currentOrder.length){
+  // 显示恢复提示 + 自动打开抽屉
+  const itemNames = currentOrder.map(it=>{
+    const d = findDish(it.dishId);
+    return d ? `${d.emoji} ${d.name}×${it.qty}` : `×${it.qty}`;
+  }).slice(0,4).join(', ');
+  const more = currentOrder.length>4 ? ` 等 ${currentOrder.length} 项` : '';
+  setTimeout(()=>{
+    showToast(`🛒 上次有未完成的订单\n${itemNames}${more}\n\n打开 Cart 查看 →`, 5000);
+  }, 800);
+}
 </script>
 </body>
 </html>
