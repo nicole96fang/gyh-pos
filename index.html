@@ -432,7 +432,7 @@
       <span class="ic" style="background:var(--sky)">🏠</span> Dashboard
     </button>
     <button class="nav-btn" data-view="neworder">
-      <span class="ic" style="background:var(--pink)">🧾</span> New Order
+      <span class="ic" style="background:var(--pink)">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#f5b75c;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
     <button class="nav-btn" data-view="expense">
       <span class="ic" style="background:var(--butter)">🛒</span> Expense
@@ -446,9 +446,12 @@
     <button class="nav-btn" id="clearDataBtn" style="color:#c06a64;background:rgba(232,155,155,.14);">
       <span class="ic" style="background:var(--pink-deep)">🗑️</span> Clear Data
     </button>
-    <button class="nav-btn" onclick="exportData()" style="color:#3f8a63;background:rgba(127,196,166,.14);">
+    <button class="nav-btn" onclick="exportData()" style="color:#3f8a63;background:rgba(127,196,166,.22);font-weight:900;border:2px solid rgba(127,196,166,.5);">
       <span class="ic" style="background:#bfe3d2">📤</span> Export Backup
     </button>
+    <a class="nav-btn" href="./backup.html" style="color:#7a5e54;background:rgba(216,179,141,.18);font-weight:900;border:2px solid rgba(216,179,141,.5);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;">
+      <span class="ic" style="background:#f0e3d2">🛟</span> Backup Page (备用)
+    </a>
     <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#9a8a7e;background:rgba(216,179,141,.14);">
       <span class="ic" style="background:#f0e3d2">📥</span> Import Backup
     </button>
@@ -623,11 +626,53 @@
 <div class="overlay" id="overlay"></div>
 <div class="drawer" id="drawer">
   <button class="close" id="drawerClose">✕</button>
-  <h3>🛒 Current Order</h3>
+  <h3>📋 Orders · 订单</h3>
+  <div style="font-size:12px;color:var(--ink-soft);margin:-4px 0 8px;line-height:1.5;">
+    已经送出厨房但还没结账的订单 ↓
+  </div>
+  <div id="activeOrdersList"></div>
+  <hr style="border:none;border-top:1.5px dashed var(--line);margin:14px 0;">
+  <h3 style="margin-bottom:4px;">🛒 New Order · 草稿</h3>
+  <div style="font-size:12px;color:var(--ink-soft);margin:0 0 8px;">
+    加菜进来 · 准备好了就送厨房
+  </div>
   <div id="orderItems"></div>
   <div class="order-foot">
-    <div class="total-row"><span>Total</span><span id="orderTotal">RM 0.00</span></div>
-    <button class="pay-btn" id="toPayment" disabled>Proceed to Payment 💳</button>
+    <div class="total-row"><span>Draft Total</span><span id="orderTotal">RM 0.00</span></div>
+    <button class="pay-btn" id="sendToKitchen" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;">🍳 Send to Kitchen · 送厨房</button>
+    <button class="pay-btn" id="toPayment" disabled style="margin-top:8px;">💳 结账草稿 (Proceed to Payment)</button>
+  </div>
+</div>
+
+<!-- 结账所有活跃订单 (一键结清) -->
+<div class="modal" id="batchPayModal">
+  <div class="modal-box" style="max-width:460px;">
+    <h3>💰 批量结账 · Batch Payment</h3>
+    <div style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;">未结账订单共 <b id="batchCount">0</b> 张</div>
+    <div id="batchPayList" style="max-height:42vh;overflow-y:auto;border:1.5px dashed var(--line);border-radius:12px;padding:8px;margin-bottom:12px;background:#fff8ee;"></div>
+    <div style="background:#fff5e6;padding:12px;border-radius:12px;text-align:center;margin-bottom:12px;">
+      <div style="font-size:11px;color:var(--ink-soft);">总应付</div>
+      <div style="font-size:26px;font-weight:900;color:#6b544b;" id="batchTotal">RM 0.00</div>
+    </div>
+    <div id="batchPayStep1">
+      <div class="pay-methods">
+        <div class="pay-method" id="batchPayCash"><div class="e">💵</div>Cash</div>
+        <div class="pay-method" id="batchPayTng"><div class="e">📱</div>Tng Ewallet</div>
+      </div>
+    </div>
+    <div id="batchPayStep2" class="hidden">
+      <div style="font-size:13px;color:var(--ink-soft);">应付金额</div>
+      <div style="font-size:22px;font-weight:900;color:#6b544b;margin:2px 0 10px;" id="batchPayDue">RM 0.00</div>
+      <label style="font-size:12px;color:var(--ink-soft);font-weight:700;">💵 收到金额</label>
+      <input id="batchCashReceived" type="number" step="0.01" placeholder="0.00" style="width:100%;border:1.5px dashed var(--line);border-radius:10px;padding:10px;font-size:18px;font-weight:900;background:#fffaf6;margin:4px 0 10px;" />
+      <div style="display:flex;justify-content:space-between;background:#f0f8f4;padding:10px;border-radius:10px;margin-bottom:10px;">
+        <span>💰 找零</span>
+        <b style="color:#3f8a63;font-size:18px;" id="batchCashChange">RM 0.00</b>
+      </div>
+      <button class="pay-btn" id="batchPayConfirm">✅ 完成结账</button>
+      <button style="background:none;border:none;color:var(--ink-soft);width:100%;padding:8px;cursor:pointer;font-weight:700;" id="batchPayBack">← 返回选支付方式</button>
+    </div>
+    <button style="background:none;border:none;color:var(--ink-soft);width:100%;padding:10px;cursor:pointer;font-weight:700;margin-top:6px;" onclick="document.getElementById('batchPayModal').classList.remove('show')">关闭 ✕</button>
   </div>
 </div>
 
@@ -816,7 +861,9 @@ const SUPPLIERS = [
 ];
 
 /* ============ 当前订单状态 ============ */
-let currentOrder = []; // {dishId, qty, opts:[], desc}
+let currentOrder = [];          // {dishId, qty, opts:[], desc}  当前草稿（未送出厨房）
+let activeOrders = [];         // [orderObj, ...] 已送出厨房未结账的订单
+let selectedOrderId = null;    // 抽屉里目前查看的活跃订单
 let selectedSupplier = '';
 
 /* ============ 导航 ============ */
@@ -1083,10 +1130,42 @@ document.getElementById('optDate').addEventListener('input',e=>updateOptDateHint
 document.getElementById('optConfirm').onclick=()=>{
   if(!picking.noodles.length){ document.getElementById('optNoodleWarn').style.display='block'; return; }
   if(!picking.protein){ document.getElementById('optProteinWarn').style.display='block'; return; }
-  currentOrder.push({dishId:picking.dishId, qty:picking.qty, noodles:[...picking.noodles], protein:picking.protein, opts:[...picking.opts], desc:document.getElementById('optDesc').value, date: document.getElementById('optDate').value || dateKey(now())});
+  const newItem = {dishId:picking.dishId, qty:picking.qty, noodles:[...picking.noodles], protein:picking.protein, opts:[...picking.opts], desc:document.getElementById('optDesc').value, date: document.getElementById('optDate').value || dateKey(now())};
+  // 若有选中的活跃订单 → 加到那张；否则加到草稿
+  if(selectedOrderId){
+    const o = activeOrders.find(x=>x.id===selectedOrderId);
+    if(o){
+      o.items.push(newItem);
+      document.getElementById('optModal').classList.remove('show');
+      openDrawer();
+      renderOrder();
+      return;
+    }
+  }
+  currentOrder.push(newItem);
   document.getElementById('optModal').classList.remove('show');
   openDrawer();
   renderOrder();
+};
+// 送出厨房 = 把草稿变成活跃订单
+document.getElementById('sendToKitchen').onclick=()=>{
+  if(!currentOrder.length) return;
+  const d = now();
+  const code = 'K' + String(activeOrders.length+1).padStart(2,'0');
+  const orderDate = currentOrder[0].date || dateKey(d);
+  const name = (document.getElementById('orderName') && document.getElementById('orderName').value.trim()) || '';
+  activeOrders.push({
+    id:'A'+Date.now(),
+    code,
+    name,
+    date:orderDate,
+    sentAt:dateTime(d),
+    items: currentOrder.map(it=>({...it}))
+  });
+  currentOrder = [];
+  renderOrder();
+  // 简洁动画提示
+  showToast(`🍳 已送出厨房 · ${code}${name?' ('+name+')':''}`);
 };
 
 /* ============ 订单抽屉 ============ */
@@ -1107,10 +1186,74 @@ function itemLineTotal(it){
   const optAdd = it.opts.reduce((s,oid)=>s+(OPTIONS.find(o=>o.id===oid)?.add||0),0);
   return (dish.price + optAdd) * it.qty;
 }
+function orderTotalOf(items){
+  return items.reduce((s,it)=>s+itemLineTotal(it),0);
+}
+function renderActiveOrders(){
+  const box = document.getElementById('activeOrdersList');
+  if(!activeOrders.length){
+    box.innerHTML = '<div class="empty" style="padding:18px;font-size:12px;">没有未结账订单</div>';
+    return;
+  }
+  box.innerHTML = activeOrders.map(o=>{
+    const total = orderTotalOf(o.items);
+    const isSel = (selectedOrderId===o.id);
+    const nameStr = o.name ? ` · ${o.name}` : '';
+    const itemStr = o.items.map(it=>{
+      const d = findDish(it.dishId);
+      return `${d.emoji}×${it.qty}`;
+    }).join(' ');
+    return `
+      <div class="active-order-card ${isSel?'sel':''}" data-id="${o.id}" style="border:2px solid ${isSel?'var(--mint)':'transparent'};background:${isSel?'#f0f8f4':'#fff8ee'};border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;">
+          <div style="font-weight:900;color:#6b544b;font-size:13px;">🍳 ${o.code}${nameStr}</div>
+          <div style="font-weight:900;color:#6b544b;font-size:14px;">${RM(total)}</div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;line-height:1.4;">${itemStr}</div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <button data-act="addMore" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#7fc4a6,#bfe3d2);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">➕ Add 菜</button>
+          <button data-act="rename" data-id="${o.id}" style="background:#f0e3d2;color:#7a5e54;border:none;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">✏️</button>
+          <button data-act="payOne" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">💰 结账</button>
+        </div>
+      </div>`;
+  }).join('');
+  // 总计 + 批量结账
+  const grandTotal = activeOrders.reduce((s,o)=>s+orderTotalOf(o.items),0);
+  box.innerHTML += `
+    <div style="background:linear-gradient(135deg,#fff5e6,#ffe8d2);padding:10px 12px;border-radius:10px;margin-top:6px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-weight:900;color:#7a5e54;font-size:13px;">🧾 All Unpaid</span>
+      <span style="font-weight:900;color:#7a5e54;font-size:15px;">${RM(grandTotal)}</span>
+    </div>
+    <button id="batchPayBtn" style="width:100%;background:linear-gradient(135deg,#3f8a63,#7fc4a6);color:#fff;border:none;padding:10px;border-radius:10px;margin-top:8px;font-weight:900;cursor:pointer;font-size:13px;">💰 一键结账所有 (Batch All)</button>`;
+  setTimeout(()=>{
+    const bb = document.getElementById('batchPayBtn');
+    if(bb) bb.onclick = openBatchPay;
+    box.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{
+      const id = b.dataset.id, act = b.dataset.act;
+      const o = activeOrders.find(x=>x.id===id);
+      if(!o) return;
+      if(act==='addMore'){
+        selectedOrderId = id;
+        closeDrawer();
+        const el = document.querySelector(`[data-dish="${o.items[0].dishId}"]`);
+        if(el) el.click();
+      }else if(act==='rename'){
+        const newName = prompt('给这张订单一个名字 (比如 "打包 / 桌 5 / Ah Beng")', o.name || '');
+        if(newName!==null){ o.name = newName.trim().slice(0,20); renderActiveOrders(); }
+      }else if(act==='payOne'){
+        openBatchPay([id]);
+      }
+    });
+  },0);
+}
 function renderOrder(){
+  // 1) 活跃订单区
+  renderActiveOrders();
+  // 2) 草稿区
   const box = document.getElementById('orderItems');
-  if(!currentOrder.length){ box.innerHTML='<div class="empty">订单是空的，点击左侧 Menu 添加菜品 🍜</div>'; }
-  else{
+  if(!currentOrder.length){
+    box.innerHTML = '<div class="empty" style="padding:18px;">草稿是空的，点下方 Menu 加菜 🍜</div>';
+  } else {
     box.innerHTML = currentOrder.map((it,idx)=>{
       const dish = findDish(it.dishId);
       const noodleHtml = NOODLES.map(n=>`<span class="opt noodle ${it.noodles.includes(n.id)?'on':''}" data-idx="${idx}" data-noodle="${n.id}">${n.emoji} ${n.name}</span>`).join('');
@@ -1135,14 +1278,12 @@ function renderOrder(){
         </div>
       </div>`;
     }).join('');
-    // 必选 Noodles 点击
     box.querySelectorAll('.opt[data-noodle]').forEach(el=>el.onclick=()=>{
       const i=+el.dataset.idx, n=el.dataset.noodle;
       const arr=currentOrder[i].noodles;
       arr.includes(n)?arr.splice(arr.indexOf(n),1):arr.push(n);
       renderOrder();
     });
-    // 必选 Protein 单选
     box.querySelectorAll('.opt[data-protein]').forEach(el=>el.onclick=()=>{
       const i=+el.dataset.idx, p=el.dataset.protein;
       currentOrder[i].protein = (currentOrder[i].protein===p) ? null : p;
@@ -1163,37 +1304,136 @@ function renderOrder(){
       renderOrder();
     });
   }
-  const total = currentOrder.reduce((s,it)=>s+itemLineTotal(it),0);
+  // 底部统计
+  const total = orderTotalOf(currentOrder);
   document.getElementById('orderTotal').textContent = RM(total);
-  document.getElementById('toPayment').disabled = currentOrder.length===0;
+  const btnKitchen = document.getElementById('sendToKitchen');
+  const btnPay = document.getElementById('toPayment');
+  const empty = currentOrder.length===0;
+  if(btnKitchen) btnKitchen.disabled = empty;
+  if(btnPay) btnPay.disabled = empty;
+  // 更新侧栏徽章
+  const badge = document.getElementById('badgeNeworder');
+  if(badge){
+    const n = activeOrders.length;
+    if(n>0){
+      badge.style.display='inline-block';
+      badge.textContent = n;
+    } else {
+      badge.style.display='none';
+    }
+  }
 }
 
 /* ============ Payment ============ */
 let _payDue = 0;     // 当前应付
 let _payReceived = 0; // 现金收款（仅记录）
+let _batchOrderIds = null; // null = 草稿直接付, [id,id] = 批量结账活跃订单
 function finishOrder(method, change){
-  const total = _payDue;
   const d = now();
-  // 整单日期取当前订单第一个 item 的 date，否则用今天
-  const orderDate = (currentOrder[0] && currentOrder[0].date) ? currentOrder[0].date : dateKey(d);
-  const order = {
-    id:'ORD'+Date.now(),
-    date:orderDate, time:dateTime(d),
-    items:currentOrder.map(it=>({name:findDish(it.dishId).name, qty:it.qty, noodles:[...(it.noodles||[])], protein:it.protein||null, opts:[...it.opts], desc:it.desc, line:itemLineTotal(it)})),
-    total, method,
-    received: method==='Cash'? _payReceived : total,
-    change: method==='Cash'? change : 0,
-  };
-  DB.orders.push(order); DB.save();
-  document.getElementById('payModal').classList.remove('show');
-  document.getElementById('payStep1').classList.remove('hidden');
-  document.getElementById('payStep2').classList.add('hidden');
-  showReceipt(order);
-  currentOrder=[]; renderOrder(); closeDrawer();
+  let savedOrders = [];
+  if(_batchOrderIds){
+    // 批量结账：把选中的活跃订单变存档
+    _batchOrderIds.forEach(oid=>{
+      const o = activeOrders.find(x=>x.id===oid);
+      if(!o) return;
+      const tot = orderTotalOf(o.items);
+      const rec = {
+        id: 'ORD'+Date.now()+'_'+oid.slice(-4),
+        code: o.code, name:o.name||'', sentAt:o.sentAt,
+        date:o.date||dateKey(d), time:dateTime(d),
+        items: o.items.map(it=>({name:findDish(it.dishId).name, qty:it.qty, noodles:[...(it.noodles||[])], protein:it.protein||null, opts:[...it.opts], desc:it.desc, line:itemLineTotal(it)})),
+        total: tot, method,
+        received: method==='Cash'? _payReceived : tot,
+        change: method==='Cash'? change : 0,
+      };
+      savedOrders.push(rec);
+      DB.orders.push(rec);
+      activeOrders = activeOrders.filter(x=>x.id!==oid);
+    });
+    DB.save();
+    renderDashboard(); renderHistory();
+    document.getElementById('batchPayModal').classList.remove('show');
+    document.getElementById('batchPayStep1').classList.remove('hidden');
+    document.getElementById('batchPayStep2').classList.add('hidden');
+    showReceipt(savedOrders[0]);
+    if(typeof renderOrder==='function') renderOrder();
+    closeDrawer();
+  } else {
+    // 单笔草稿付款（保持原逻辑）
+    const total = _payDue;
+    const orderDate = (currentOrder[0] && currentOrder[0].date) ? currentOrder[0].date : dateKey(d);
+    const order = {
+      id:'ORD'+Date.now(),
+      date:orderDate, time:dateTime(d),
+      items:currentOrder.map(it=>({name:findDish(it.dishId).name, qty:it.qty, noodles:[...(it.noodles||[])], protein:it.protein||null, opts:[...it.opts], desc:it.desc, line:itemLineTotal(it)})),
+      total, method,
+      received: method==='Cash'? _payReceived : total,
+      change: method==='Cash'? change : 0,
+    };
+    DB.orders.push(order); DB.save();
+    document.getElementById('payModal').classList.remove('show');
+    document.getElementById('payStep1').classList.remove('hidden');
+    document.getElementById('payStep2').classList.add('hidden');
+    showReceipt(order);
+    currentOrder=[]; renderOrder(); closeDrawer();
+  }
 }
+function openBatchPay(orderIds){
+  _batchOrderIds = orderIds || activeOrders.map(o=>o.id);
+  if(!_batchOrderIds.length){ alert('没有未结账订单'); return; }
+  const list = _batchOrderIds.map(oid=>activeOrders.find(o=>o.id===oid)).filter(Boolean);
+  const total = list.reduce((s,o)=>s+orderTotalOf(o.items),0);
+  _payDue = total;
+  document.getElementById('batchCount').textContent = list.length;
+  document.getElementById('batchTotal').textContent = RM(total);
+  document.getElementById('batchPayDue').textContent = RM(total);
+  document.getElementById('batchPayList').innerHTML = list.map(o=>{
+    const t = orderTotalOf(o.items);
+    return `<div style="display:flex;justify-content:space-between;padding:6px 8px;border-bottom:1px dashed #ddd;font-size:12px;">
+      <span>🍳 ${o.code}${o.name?' · '+o.name:''} (${o.items.length} 菜)</span>
+      <b>${RM(t)}</b>
+    </div>`;
+  }).join('') + `<div style="display:flex;justify-content:space-between;padding:8px;font-weight:900;background:#fff5e6;border-radius:8px;margin-top:6px;">
+    <span>Total</span><span>${RM(total)}</span></div>`;
+  document.getElementById('batchCashReceived').value='';
+  document.getElementById('batchCashChange').textContent='RM 0.00';
+  document.getElementById('batchPayStep1').classList.remove('hidden');
+  document.getElementById('batchPayStep2').classList.add('hidden');
+  document.getElementById('batchPayModal').classList.add('show');
+}
+document.getElementById('batchPayCash').onclick=()=>{
+  document.getElementById('batchPayStep1').classList.add('hidden');
+  document.getElementById('batchPayStep2').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('batchCashReceived').focus(),100);
+};
+document.getElementById('batchPayTng').onclick=()=>{
+  finishOrder('Tng Ewallet', 0);
+};
+document.getElementById('batchPayBack').onclick=()=>{
+  document.getElementById('batchPayStep2').classList.add('hidden');
+  document.getElementById('batchPayStep1').classList.remove('hidden');
+};
+document.getElementById('batchCashReceived').oninput=(e)=>{
+  const v = parseFloat(e.target.value)||0;
+  _payReceived = v;
+  const change = v - _payDue;
+  document.getElementById('batchCashChange').textContent = RM(Math.max(0,change));
+  const btn = document.getElementById('batchPayConfirm');
+  btn.disabled = v < _payDue;
+  btn.style.opacity = v < _payDue ? '0.5' : '1';
+};
+document.getElementById('batchPayConfirm').onclick=()=>{
+  const v = parseFloat(document.getElementById('batchCashReceived').value)||0;
+  if(v < _payDue){ alert(`❌ 收到 ${RM(v)} 少于应付 ${RM(_payDue)}`); return; }
+  finishOrder('Cash', v - _payDue);
+};
+
 document.getElementById('toPayment').onclick=()=>{
   const total = currentOrder.reduce((s,it)=>s+itemLineTotal(it),0);
   if(total<=0) return;
+  // 直接用草稿付款（不走批量）
+  _batchOrderIds = null;
   _payDue = total;
   document.getElementById('payAmount').textContent = RM(total);
   document.getElementById('payDue').textContent = RM(total);
@@ -1538,8 +1778,29 @@ function exportData(){
   const ts = dateKey(now()) + '_' + String(new Date().getTime()).slice(-5);
   const filename = `GYH-POS-Backup-${ts}.json`;
   const text = _buildBackupJSON();
-  // ✅ 多管齐下
-  // 1) 触发下载 (桌面 / Chrome)
+  // 1) 写入隐藏 textarea + 自动 select (iOS Safari 最稳的复制方案)
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '-1000px';
+  ta.style.left = '-1000px';
+  ta.setAttribute('readonly','');
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  ta.setSelectionRange(0, 99999);
+  let copied = false;
+  try{
+    copied = document.execCommand('copy');
+  }catch(e){}
+  document.body.removeChild(ta);
+  // 2) 新 API 备份
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).catch(()=>{});
+    }
+  }catch(e){}
+  // 3) 触发下载
   try{
     const blob = new Blob([text],{type:'application/json'});
     const url = URL.createObjectURL(blob);
@@ -1547,17 +1808,9 @@ function exportData(){
     a.href = url; a.download = filename; a.style.display='none';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(()=>{ try{URL.revokeObjectURL(url);}catch(e){} },2000);
-  }catch(e){ console.warn('download failed', e); }
-  // 2) 写进剪贴簿 (可能成功, 可能被 iOS 阻塞)
-  try{
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(()=>{
-        showToast('✅ 已自动复制到剪贴簿！\n现在打开 Notes → 长按 → 粘贴',6000);
-      }).catch(()=>{});
-    }
   }catch(e){}
-  // 3) 显示弹窗备份文字 (保证看得到)
-  setTimeout(()=>showBackupModal(filename, text), 250);
+  // 4) 大弹窗总是出现 (用 setTimeout 避开 Safari 拦截)
+  setTimeout(()=>showBackupModal(filename, text, copied), 300);
 }
 function showToast(msg, duration){
   const t = document.createElement('div');
