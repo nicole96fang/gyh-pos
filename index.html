@@ -883,11 +883,12 @@ const MENU = [
   {id:'so', name:'Sup Only', price:4.30, emoji:'🥣', cls:'d6'},
   {id:'ty', name:'Tomyum', price:9.00, emoji:'🌶️', cls:'d4'},
 ];
-/* 单选项（蛋白选择·必选一）：Pork / Chicken / Fishball Only */
+/* 单选项（蛋白选择·必选一）：Pork / Chicken / Fishball Only / Egg Only */
 const SINGLE_PROTEIN = [
   {id:'pro_pork',      name:'Pork',           add:0.00},
   {id:'pro_chicken',   name:'Chicken',        add:0.00},
   {id:'pro_fishballonly', name:'Fishball Only',add:0.00},
+  {id:'pro_eggOnly',  name:'Egg Only',       add:0.00},
 ];
 const OPTIONS = [
   {id:'small', name:'Small', add:0.00},
@@ -1894,7 +1895,7 @@ function getFilteredReport(){
   });
 }
 const NOODLE_LB = {kt:'Keow Teow',bh:'Bihun',mee:'Mee',mag:'Maggie',mtmk:'Meetaimuk'};
-const PROTEIN_LB = {pork:'Pork', chicken:'Chicken', fishOnly:'Fishball Only'};
+const PROTEIN_LB = {pork:'Pork', chicken:'Chicken', fishOnly:'Fishball Only', eggOnly:'Egg Only'};
 const OPTION_LB = {small:'Small',big:'Big',egg:'Egg',fish:'Fish',veg:'Vegetable',pork:'Pork',chicken:'Chicken',fishball:'Fishball'};
 function tagLabel(k){
   if(!k) return '';
