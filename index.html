@@ -446,6 +446,13 @@
     <button class="nav-btn" id="clearDataBtn" style="color:#c06a64;background:rgba(232,155,155,.14);">
       <span class="ic" style="background:var(--pink-deep)">🗑️</span> Clear Data
     </button>
+    <button class="nav-btn" onclick="exportData()" style="color:#3f8a63;background:rgba(127,196,166,.14);">
+      <span class="ic" style="background:#bfe3d2">📤</span> Export Backup
+    </button>
+    <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#9a8a7e;background:rgba(216,179,141,.14);">
+      <span class="ic" style="background:#f0e3d2">📥</span> Import Backup
+    </button>
+    <input id="importFile" type="file" accept="application/json" style="display:none;" />
     <div class="nav-foot">
       💾 数据本地永久保存<br/>GOH YEAN HUAN POS
     </div>
@@ -1515,6 +1522,52 @@ function doClear(kind){
 document.getElementById('clearOrders').onclick=()=>{ if(confirm('确认清空所有订单？此操作不可恢复。')) doClear('orders'); };
 document.getElementById('clearExpenses').onclick=()=>{ if(confirm('确认清空所有支出？此操作不可恢复。')) doClear('expenses'); };
 document.getElementById('clearAll').onclick=()=>{ if(confirm('⚠️ 确认清空全部订单与支出？此操作不可恢复！')) doClear('all'); };
+
+/* ============ Export / Import Backup ============ */
+function exportData(){
+  const blob = new Blob([JSON.stringify({
+    version:1,
+    exportedAt: new Date().toISOString(),
+    orders: DB.orders,
+    expenses: DB.expenses
+  },null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const ts = dateKey(now()) + '_' + (new Date().getTime()%100000);
+  a.download = `GYH-POS-Backup-${ts}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+  alert('✅ 备份文件已下载\n📁 GYH-POS-Backup-'+ts+'.json\n\n请存到 iCloud / Files / Telegram 收藏 自己保留');
+}
+document.getElementById('importFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = (ev)=>{
+    try{
+      const data = JSON.parse(ev.target.result);
+      if(!data || typeof data!=='object') throw new Error('Not a valid JSON');
+      const orders = Array.isArray(data.orders) ? data.orders : [];
+      const expenses = Array.isArray(data.expenses) ? data.expenses : [];
+      if(!orders.length && !expenses.length){ alert('⚠️ 文件里没有订单或支出数据'); return; }
+      const ok = confirm(`📥 准备汇入：\n\n• 订单 ${orders.length} 笔\n• 支出 ${expenses.length} 笔\n\n⚠️ 这会「追加」到现在的资料（不会覆盖），\n合并重复是按 id 去重。\n\n继续？`);
+      if(!ok) return;
+      // 按 id 去重合并
+      const seen = new Set(DB.orders.map(o=>o.id));
+      orders.forEach(o=>{ if(!seen.has(o.id)){ DB.orders.push(o); seen.add(o.id); } });
+      const seen2 = new Set(DB.expenses.map(x=>x.id));
+      expenses.forEach(x=>{ if(!seen2.has(x.id)){ DB.expenses.push(x); seen2.add(x.id); } });
+      DB.save();
+      renderDashboard(); renderHistory(); renderReport(); renderExpenses();
+      alert(`✅ 汇入完成！\n• 加入订单 ${orders.length - (DB.orders.length-orders.length)} 笔（实际为新增数）\n• 现在订单总数：${DB.orders.length} 笔\n• 现在支出总数：${DB.expenses.length} 笔`);
+    }catch(err){
+      alert('❌ 汇入失败：文件不是有效备份\n\n'+err.message);
+    }
+    e.target.value=''; // 重置以便重复汇入同一文件
+  };
+  r.readAsText(file);
+});
 
 /* ============ 初始化 ============ */
 document.getElementById('todayDate').textContent = now().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
