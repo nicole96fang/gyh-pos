@@ -802,6 +802,7 @@ const SUPPLIERS = [
   {n:'Cp Lim', e:'🥬'}, {n:'Utc Fishball', e:'⚪'}, {n:'Utc Pork', e:'🥩'},
   {n:'Keow Teow Xiong', e:'🍜'}, {n:'Keow Teow Edwin', e:'🍲'}, {n:'Lotus', e:'🌸'},
   {n:'Gmart', e:'🛒'}, {n:'Cmart', e:'🏪'}, {n:'Padang Serai Ikan', e:'🐠'},
+  {n:'Montana', e:'🛍️'}, {n:'Others', e:'📦'},
 ];
 
 /* ============ 当前订单状态 ============ */
@@ -1276,7 +1277,7 @@ document.getElementById('printReceipt').onclick=()=>window.print();
 /* ============ Expense ============ */
 function renderSuppliers(){
   const g = document.getElementById('supplierGrid');
-  g.innerHTML = SUPPLIERS.map((s,i)=>`<button class="sup" data-i="${i}" style="background:${['#ffe6e6','#e6f6ee','#e6f1fb','#fff3d6','#efe6fb','#ffe6e6','#e6f6ee','#e6f1fb','#fff3d6','#efe6fb','#e6f6ee','#e6f1fb'][i]}">
+  g.innerHTML = SUPPLIERS.map((s,i)=>`<button class="sup" data-i="${i}" style="background:${['#ffe6e6','#e6f6ee','#e6f1fb','#fff3d6','#efe6fb','#fbe6f0','#ffe6e6','#e6f6ee','#e6f1fb','#fff3d6','#efe6fb','#fbe6f0','#e6f6ee','#e6f1fb'][i]}">
     <span class="e">${s.e}</span>${s.n}</button>`).join('');
   g.querySelectorAll('.sup').forEach(b=>b.onclick=()=>{
     selectedSupplier = SUPPLIERS[+b.dataset.i].n;
