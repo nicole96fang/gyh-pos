@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>GOH YEAN HUAN · Backup Helper</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;}
+  body{min-height:100vh;background:linear-gradient(160deg,#fff5e6 0%,#fce8e0 100%);padding:16px;color:#3a2e25;}
+  .card{background:#fffaf6;border-radius:20px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.08);max-width:680px;margin:0 auto;}
+  h1{color:#7a5e54;font-size:22px;margin-bottom:6px;}
+  .sub{color:#9a8a7e;font-size:13px;margin-bottom:16px;line-height:1.5;}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .stat{background:#f7eee5;border-radius:12px;padding:14px;text-align:center;}
+  .stat b{display:block;font-size:26px;color:#8a5e3a;margin-top:4px;}
+  .stat small{color:#9a8a7e;font-size:11px;}
+  textarea{width:100%;min-height:280px;border:1.5px dashed #d8b38d;border-radius:12px;padding:12px;font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#fff;color:#3a2e25;resize:vertical;line-height:1.5;}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+  button{padding:14px;border-radius:14px;border:none;font-weight:900;cursor:pointer;font-size:14px;color:#fff;}
+  .btn-green{background:linear-gradient(135deg,#7fc4a6,#bfe3d2);}
+  .btn-pink{background:linear-gradient(135deg,#e89b9b,#fce0e0);color:#7a3a3a;}
+  .btn-brown{background:linear-gradient(135deg,#d8b38d,#f0e3d2);color:#5a3f2a;}
+  .hint{font-size:12px;color:#9a8a7e;margin-top:10px;line-height:1.6;background:#fff5e6;border-radius:10px;padding:10px 12px;}
+  .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#3f8a63;color:#fff;padding:14px 22px;border-radius:14px;font-weight:800;font-size:13px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:90vw;text-align:center;line-height:1.5;opacity:1;transition:opacity .3s;}
+  .toast.hide{opacity:0;}
+  a.go-home{display:inline-block;margin-top:14px;background:#fff;color:#7a5e54;padding:10px 16px;border-radius:12px;text-decoration:none;font-weight:700;font-size:13px;border:1px dashed #d8b38d;}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>📤 Backup Helper · 备份小帮手</h1>
+  <div class="sub">独立页面 — 直接读取主站的 localStorage 资料。<br>即使主页面 JS 出问题，这里也能备份。</div>
+
+  <div class="stats">
+    <div class="stat">📋 Orders<small>订单</small><b id="cntOrders">0</b></div>
+    <div class="stat">🛒 Expenses<small>支出</small><b id="cntExpenses">0</b></div>
+  </div>
+
+  <textarea id="backupText" readonly></textarea>
+
+  <div class="btn-row">
+    <button class="btn-green" id="btnCopy">📋 Copy to Clipboard</button>
+    <button class="btn-brown" id="btnSelect">🔘 Select All</button>
+  </div>
+  <div class="btn-row" style="grid-template-columns:1fr;margin-top:8px;">
+    <button class="btn-pink" id="btnDownload">⬇️ Download File (.json)</button>
+  </div>
+
+  <div class="hint">
+    💡 <b>iPhone 使用步骤：</b><br>
+    1️⃣ 按 <b>Copy to Clipboard</b><br>
+    2️⃣ 打开 <b>Notes (备忘录)</b><br>
+    3️⃣ 新增 Note → <b>长按空白处</b> → <b>粘贴</b><br>
+    4️⃣ 备份就在你 iPhone 里了 ✅
+  </div>
+
+  <a href="./index.html" class="go-home">← 回到主页面 POS</a>
+</div>
+
+<script>
+(function(){
+  // 马来西亚时间
+  const MY_TZ_OFFSET_MIN = 8*60;
+  const _myParts = d => {
+    const L = new Date(d.getTime() + MY_TZ_OFFSET_MIN*60000);
+    return {y:L.getUTCFullYear(),m:L.getUTCMonth()+1,d:L.getUTCDate(),
+            h:L.getUTCHours(),mi:L.getUTCMinutes(),s:L.getUTCSeconds()};
+  };
+  const pad2 = n => String(n).padStart(2,'0');
+  const dateKey = d => {
+    const p = _myParts(d);
+    return p.y+'-'+pad2(p.m)+'-'+pad2(p.d);
+  };
+
+  // 读取主站 localStorage (key 名称跟主站一致)
+  let orders = [];
+  let expenses = [];
+  try{
+    orders = JSON.parse(localStorage.getItem('gyh_orders') || '[]');
+    expenses = JSON.parse(localStorage.getItem('gyh_expenses') || '[]');
+  }catch(e){ console.warn('localStorage parse error',e); }
+
+  document.getElementById('cntOrders').textContent = orders.length;
+  document.getElementById('cntExpenses').textContent = expenses.length;
+
+  const ts = dateKey(new Date()) + '_' + String(Date.now()).slice(-5);
+  const payload = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    exportedDateMY: dateKey(new Date()),
+    counts: {orders: orders.length, expenses: expenses.length},
+    orders: orders,
+    expenses: expenses
+  };
+  const text = JSON.stringify(payload, null, 2);
+
+  const ta = document.getElementById('backupText');
+  ta.value = text;
+
+  function toast(msg, dur){
+    const t = document.createElement('div');
+    t.className = 'toast'; t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(()=>{ t.classList.add('hide'); setTimeout(()=>t.remove(),400); }, dur||3500);
+  }
+
+  document.getElementById('btnSelect').onclick = ()=>{
+    ta.focus(); ta.select();
+    try{ document.execCommand('selectAll'); }catch(e){}
+    toast('🔘 文字已选，按 ⌘+C / 长按 → 拷贝');
+  };
+
+  document.getElementById('btnCopy').onclick = ()=>{
+    ta.focus(); ta.select();
+    ta.setSelectionRange(0, 99999);
+    let ok = false;
+    try{ ok = document.execCommand('copy'); }catch(e){}
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(()=>{
+          toast('✅ 已复制！\n打开 Notes → 长按 → 粘贴');
+        }).catch(()=>{
+          if(ok) toast('✅ 已复制 (iOS 旧版通道)');
+          else toast('⚠️ 请用 Select All + 手动复制');
+        });
+      }else{
+        toast(ok ? '✅ 已复制' : '⚠️ 请用 Select All');
+      }
+    }catch(e){
+      toast(ok ? '✅ 已复制' : '⚠️ 请用 Select All');
+    }
+  };
+
+  document.getElementById('btnDownload').onclick = ()=>{
+    try{
+      const blob = new Blob([text], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'GYH-POS-Backup-' + ts + '.json';
+      a.style.display = 'none';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url), 2000);
+      toast('⬇️ 已触发下载');
+    }catch(e){
+      toast('❌ 下载失败 — 用 Copy');
+    }
+  };
+
+  // 自动尝试一次复制 + 提示
+  setTimeout(()=>{
+    ta.focus(); ta.select();
+    try{
+      document.execCommand('copy');
+      toast('✨ 备份已就绪\n按 Copy to Clipboard 或 Select All', 4000);
+    }catch(e){}
+  }, 600);
+})();
+</script>
+</body>
+</html>
