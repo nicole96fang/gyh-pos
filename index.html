@@ -643,6 +643,7 @@
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <input type="date" id="expListDate" style="border:1.5px dashed var(--line);border-radius:10px;padding:6px 10px;font-family:var(--font);font-size:12px;background:#fffaf6;" />
             <button type="button" onclick="if(typeof _todayExpList==='function'){_todayExpList();}else{window.__todayExpList && window.__todayExpList();}" style="border:none;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.35);min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 今日</button>
+            <button type="button" id="printTodayExp" style="border:none;background:linear-gradient(135deg,#d4b854,#e8d58a);color:#3a2d52;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(212,184,84,.35);min-height:36px;">🖨️ Print Today</button>
           </div>
         </div>
         <div id="expenseList"><div class="empty">今天还没有支出记录</div></div>
@@ -843,6 +844,52 @@
     <div style="margin-top:16px;display:flex;gap:10px;" class="no-print">
       <button class="btn mint" id="printReceipt" style="flex:1;">🖨️ Print</button>
       <button class="btn" id="closeReceipt" style="flex:1;">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑支出弹窗 -->
+<div class="modal" id="editExpModal">
+  <div class="modal-box" style="max-width:420px;text-align:left;">
+    <button class="close" id="editExpClose" style="position:absolute;top:14px;right:16px;border:none;background:var(--purple-pink);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--purple-deep);">✕</button>
+    <h3 style="margin:0 0 4px;color:var(--purple-deep);font-size:18px;" id="editExpTitle">✏️ Edit Expense · 编辑支出</h3>
+    <div style="font-size:11px;color:var(--purple);margin-bottom:14px;">ID: <span id="editExpOrderId" style="font-family:monospace;font-weight:700;"></span></div>
+    <div class="field">
+      <label>Supplier · 供应商</label>
+      <input id="editExpSupplier" type="text" placeholder="供应商名称" />
+    </div>
+    <div class="field" style="margin-top:8px;">
+      <label>Amount · 金额 (RM)</label>
+      <input id="editExpAmount" type="number" step="0.01" min="0" placeholder="0.00" />
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+      <div class="field">
+        <label>Date · 日期</label>
+        <input id="editExpDate" type="date" />
+      </div>
+      <div class="field">
+        <label>Time · 时间</label>
+        <input id="editExpTime" type="text" placeholder="HH:MM:SS" />
+      </div>
+    </div>
+    <div class="field" style="margin-top:8px;">
+      <label>Note · 备注</label>
+      <input id="editExpNote" type="text" placeholder="备注说明" />
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;">
+      <button id="editExpCancel" style="flex:1;background:#fff;color:var(--purple);border:1.5px dashed var(--line);padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">Cancel</button>
+      <button id="editExpSave" style="flex:2;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">💾 Save · 保存修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- Expense Print Preview Modal · 今日份支出记录 -->
+<div class="modal" id="expReceiptModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="receipt print-area" id="expReceiptContent"></div>
+    <div style="margin-top:16px;display:flex;gap:10px;" class="no-print">
+      <button class="btn mint" id="expReceiptPrint" style="flex:1;">🖨️ Print</button>
+      <button class="btn" id="expReceiptClose" style="flex:1;">Done</button>
     </div>
   </div>
 </div>
@@ -1972,9 +2019,50 @@ function renderExpenses(){
     return;
   }
   const total = list.reduce((s,e)=>s+e.amount,0);
-  box.innerHTML = `<table class="list"><thead><tr><th>Time</th><th>Supplier</th><th>Note</th><th>Amount</th></tr></thead><tbody>`+
-    list.map(e=>`<tr><td>${e.time}</td><td>${e.supplier}</td><td>${e.note||'-'}</td><td>${RM(e.amount)}</td></tr>`).join('')+
-    `</tbody></table><div style="text-align:right;font-weight:800;margin-top:10px;color:var(--purple-deep);">Total: ${RM(total)}</div>`;
+  // 按供应商分组聚合 (便于一眼看出各供应商花费)
+  const bySupplier = {};
+  list.forEach(e=>{
+    const k = e.supplier||'(未填)';
+    if(!bySupplier[k]) bySupplier[k] = {count:0, amt:0};
+    bySupplier[k].count++;
+    bySupplier[k].amt += e.amount;
+  });
+  const grouped = Object.keys(bySupplier).map(k=>({k, ...bySupplier[k]}))
+    .sort((a,b)=>b.amt-a.amt);
+  const groupedHtml = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:14px 0;">
+      ${grouped.map(g=>`<div style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:12px;text-align:center;">
+        <div style="font-size:11px;color:var(--purple);font-weight:700;letter-spacing:.5px;">${escapeHtml(g.k)}</div>
+        <div style="font-size:20px;font-weight:900;color:var(--purple-deep);margin-top:4px;">${RM(g.amt)}</div>
+        <div style="font-size:10px;color:var(--purple-light);font-weight:700;">${g.count} 笔</div>
+      </div>`).join('')}
+    </div>`;
+  box.innerHTML = `
+    <table class="list">
+      <thead>
+        <tr>
+          <th style="width:90px;">Time</th>
+          <th>Supplier</th>
+          <th>Note</th>
+          <th style="text-align:right;">Amount</th>
+          <th class="no-print" style="width:96px;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${list.map(e=>`<tr>
+          <td>${escapeHtml(e.time)}</td>
+          <td><b>${escapeHtml(e.supplier||'-')}</b></td>
+          <td>${escapeHtml(e.note||'-')}</td>
+          <td style="text-align:right;font-weight:800;color:var(--purple-deep);">${RM(e.amount)}</td>
+          <td class="no-print" style="white-space:nowrap;">
+            <button class="mini-btn" onclick="editExpense('${e.id}')" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;" title="编辑">✏️</button>
+            <button class="mini-btn" onclick="deleteExpense('${e.id}')" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);" title="删除">🗑️</button>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    ${list.length>1 ? groupedHtml : ''}
+    <div style="text-align:right;font-weight:900;margin-top:14px;padding:10px 16px;background:linear-gradient(135deg,#e8dff0,#d9c9e8);border-radius:12px;color:var(--purple-deep);font-size:17px;">Total: ${RM(total)} <span style="font-size:12px;font-weight:700;opacity:.7;margin-left:6px;">(${list.length} 笔)</span></div>`;
 }
 // 跳回今日 + 重渲染
 function _todayExpList(){
@@ -1991,7 +2079,91 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(dateEl){
     dateEl.addEventListener('input',()=>renderExpenses());
   }
+  // Print Today's Expense 按钮
+  const pbtn = document.getElementById('printTodayExp');
+  if(pbtn) pbtn.onclick = () => printExpenses(dateKey(now()));
 });
+
+// XSS-safe 转义 (供应商/备注里可能有 '<')
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// 删除 expense
+window.deleteExpense = id => {
+  const e = DB.expenses.find(x=>x.id===id);
+  if(!e) return;
+  if(!confirm(`确认删除该支出?\n\n${e.time} · ${e.supplier||'(未填)'} · ${RM(e.amount)}\n${e.note||''}`)) return;
+  DB.expenses = DB.expenses.filter(x=>x.id!==id);
+  DB.save();
+  renderExpenses();
+  renderDashboard(); renderReport();
+  toast('🗑️ 已删除支出');
+};
+
+// 编辑 expense
+window.editExpense = id => {
+  const e = DB.expenses.find(x=>x.id===id);
+  if(!e) return;
+  _editExpId = id;
+  document.getElementById('editExpSupplier').value = e.supplier || '';
+  selectedSupplier = e.supplier || '';
+  document.getElementById('editExpAmount').value = e.amount;
+  document.getElementById('editExpDate').value = e.date || dateKey(now());
+  document.getElementById('editExpTime').value = e.time || '';
+  document.getElementById('editExpNote').value = e.note || '';
+  document.getElementById('editExpTitle').textContent = '✏️ Edit Expense · 编辑支出';
+  document.getElementById('editExpOrderId').textContent = e.id;
+  document.getElementById('editExpModal').classList.add('show');
+};
+let _editExpId = null;
+// 编辑保存
+document.addEventListener('DOMContentLoaded',()=>{
+  const saveBtn = document.getElementById('editExpSave');
+  if(saveBtn) saveBtn.onclick = ()=>{
+    if(!_editExpId) return;
+    const e = DB.expenses.find(x=>x.id===_editExpId);
+    if(!e) return;
+    const newAmt = parseFloat(document.getElementById('editExpAmount').value);
+    if(!(newAmt>0)){ alert('请输入有效金额 💰'); return; }
+    e.supplier = document.getElementById('editExpSupplier').value.trim() || '(未填)';
+    e.amount = newAmt;
+    e.note = document.getElementById('editExpNote').value;
+    e.date = document.getElementById('editExpDate').value || dateKey(now());
+    e.time = document.getElementById('editExpTime').value || e.time;
+    DB.save();
+    _editExpId = null;
+    document.getElementById('editExpModal').classList.remove('show');
+    renderExpenses();
+    renderDashboard(); renderReport();
+    toast('✅ 已保存修改');
+  };
+  const cancelBtn = document.getElementById('editExpCancel');
+  if(cancelBtn) cancelBtn.onclick = ()=>{
+    _editExpId = null;
+    document.getElementById('editExpModal').classList.remove('show');
+  };
+  const closeBtn = document.getElementById('editExpClose');
+  if(closeBtn) closeBtn.onclick = ()=>{
+    _editExpId = null;
+    document.getElementById('editExpModal').classList.remove('show');
+  };
+});
+
+// 简易 toast (复用 receipt 关闭反馈)
+function toast(msg){
+  let t = document.getElementById('appToast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'appToast';
+    t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--purple-deep);color:#fff;font-weight:800;padding:10px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(106,91,140,.45);z-index:9999;opacity:0;transition:.25s;pointer-events:none;font-size:13px;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  requestAnimationFrame(()=>{ t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(-6px)'; });
+  clearTimeout(toast._tm);
+  toast._tm = setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(0)'; }, 1800);
+}
 
 /* ============ History ============ */
 function getFilteredOrders(){
@@ -2272,6 +2444,69 @@ function doClear(kind){
 document.getElementById('clearOrders').onclick=()=>{ if(confirm('确认清空所有订单？此操作不可恢复。')) doClear('orders'); };
 document.getElementById('clearExpenses').onclick=()=>{ if(confirm('确认清空所有支出？此操作不可恢复。')) doClear('expenses'); };
 document.getElementById('clearAll').onclick=()=>{ if(confirm('⚠️ 确认清空全部订单与支出？此操作不可恢复！')) doClear('all'); };
+
+/* ============ Expense Print · 今日份支出记录 ============ */
+function printExpenses(date){
+  date = date || dateKey(now());
+  const items = DB.expenses.filter(e=>e.date===date).sort((a,b)=>a.time.localeCompare(b.time));
+  const total = items.reduce((s,e)=>s+e.amount,0);
+  // 按供应商汇总
+  const bySup = {};
+  items.forEach(e=>{
+    const k = e.supplier||'(未填)';
+    if(!bySup[k]) bySup[k] = {amt:0, count:0};
+    bySup[k].amt += e.amount;
+    bySup[k].count++;
+  });
+  const supList = Object.keys(bySup).map(k=>({k, ...bySup[k]})).sort((a,b)=>b.amt-a.amt);
+
+  const content = document.getElementById('expReceiptContent');
+  content.innerHTML = `
+    <div class="r-brand" style="padding-top:6px;">
+      <div class="r-shop" style="font-size:22px;margin-top:0;">📒 EXPENSE RECORD</div>
+      <div style="font-size:12px;font-weight:800;color:var(--purple-deep);margin-top:2px;">GOH YEAN HUAN · 今日支出</div>
+      <div class="r-reg" style="margin-top:4px;">${date} · ${items.length} 笔 · 共 ${RM(total)}</div>
+    </div>
+    <div class="r-deco"><span>🌹</span><span>✨</span><span>🌙</span></div>
+    ${supList.length>1 ? `
+      <div style="margin:10px 0;padding:10px;background:rgba(217,201,232,.25);border-radius:10px;border:1px dashed var(--purple-pink);">
+        <div style="font-size:10.5px;font-weight:800;color:var(--purple-deep);letter-spacing:.5px;margin-bottom:6px;">📊 按供应商汇总</div>
+        ${supList.map(s=>`<div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--purple-deep);font-weight:700;padding:3px 0;border-bottom:1px dotted var(--purple-pink);">
+          <span>${escapeHtml(s.k)} <span style="opacity:.6;font-weight:500;">×${s.count}</span></span>
+          <span>${RM(s.amt)}</span>
+        </div>`).join('')}
+      </div>
+    `: ''}
+    <div class="r-items" style="border-top:1.5px dashed var(--purple);border-bottom:1.5px dashed var(--purple);padding:10px 0;">
+      ${items.length === 0 ? `
+        <div style="text-align:center;color:var(--purple-light);font-weight:700;font-size:13px;padding:18px 0;">该日期暂无支出记录</div>
+      ` : items.map((e,i)=>{
+        const t = (e.time||'').split(' ')[1] || e.time||'';
+        return `
+        <div class="r-item">
+          <div class="r-left">
+            <div class="rname">${i+1}. ${escapeHtml(e.supplier||'(未填)')}</div>
+            <div class="ropt">🕒 ${escapeHtml(t)}${e.note?' · 📝 '+escapeHtml(e.note):''}</div>
+          </div>
+          <div class="r-price" style="color:var(--purple-deep);">${RM(e.amount)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="rtotal" style="font-size:17px;padding:10px 14px;">
+      <span>💰 TOTAL</span>
+      <span>${RM(total)}</span>
+    </div>
+    <div class="rfoot" style="border-top:1.5px dashed var(--gold);margin-top:14px;">
+      📒 Expense Record · 支出明细<br/>
+      <span style="font-size:9.5px;opacity:.8;">${date} generated by GOH YEAN HUAN POS</span>
+    </div>
+  `;
+  const modal = document.getElementById('expReceiptModal');
+  modal.classList.add('show');
+  // 关闭 + 打印
+  document.getElementById('expReceiptClose').onclick = ()=> modal.classList.remove('show');
+  document.getElementById('expReceiptPrint').onclick = ()=> window.print();
+}
 
 /* ============ Export / Import Backup ============ */
 function _buildBackupJSON(){
