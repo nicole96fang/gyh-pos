@@ -727,7 +727,7 @@
   </div>
   <div id="activeOrdersList"></div>
   <hr style="border:none;border-top:1.5px dashed var(--line);margin:14px 0;">
-  <h3 style="margin-bottom:4px;">🛒 New Order · 草稿</h3>
+  <h3 style="margin-bottom:4px;">🛒 New Order · 草稿 <span id="draftCount" style="display:inline-block;background:var(--purple);color:#fff;font-size:11px;font-weight:900;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:4px;">0</span></h3>
   <div style="font-size:12px;color:var(--ink-soft);margin:0 0 8px;">
     加菜进来 · 准备好了就送厨房
   </div>
@@ -807,8 +807,8 @@
     </div>
     <div id="batchPayStep1">
       <div class="pay-methods">
-        <div class="pay-method" id="batchPayCash"><div class="e">💵</div>Cash</div>
-        <div class="pay-method" id="batchPayTng"><div class="e">📱</div>Tng Ewallet</div>
+        <div class="pay-method" id="batchPayCash" data-batch-method="Cash"><div class="e">💵</div>Cash</div>
+        <div class="pay-method" id="batchPayTng" data-batch-method="Tng"><div class="e">📱</div>Tng Ewallet</div>
       </div>
     </div>
     <div id="batchPayStep2" class="hidden">
@@ -1878,6 +1878,13 @@ function renderOrder(){
   saveCart();
   updateCartBadge();
   updateActiveSummary();
+  // 草稿数量徽章
+  const dc = document.getElementById('draftCount');
+  if(dc){
+    const cnt = currentOrder.length;
+    dc.textContent = cnt;
+    dc.style.display = cnt>0 ? 'inline-block' : 'none';
+  }
 }
 function updateCartBadge(){
   const badge = document.getElementById('badgeCart');
@@ -1890,12 +1897,13 @@ function updateCartBadge(){
   }
 }
 function openCartDirect(){
-  // 简单粗暴：跳到 New Order view + 打开右侧抽屉
+  // 跳到 New Order view + 立刻打开右侧抽屉
   switchView('neworder');
+  // 等视图切换完成,立刻重新渲染并开抽屉
   setTimeout(()=>{
+    renderOrder();   // 确保 currentOrder 重新绘制到 #orderItems
     openDrawer();
-    renderOrder();
-  }, 80);
+  }, 60);
 }
 function confirmClearCart(){
   if(!currentOrder.length){ showToast('🛒 Cart 已经空了'); return; }
@@ -1987,18 +1995,30 @@ function openBatchPay(orderIds){
   document.getElementById('batchPayStep2').classList.add('hidden');
   document.getElementById('batchPayModal').classList.add('show');
 }
-document.getElementById('batchPayCash').onclick=()=>{
-  document.getElementById('batchPayStep1').classList.add('hidden');
-  document.getElementById('batchPayStep2').classList.remove('hidden');
-  setTimeout(()=>document.getElementById('batchCashReceived').focus(),100);
-};
-document.getElementById('batchPayTng').onclick=()=>{
-  finishOrder('Tng Ewallet', 0);
-};
-document.getElementById('batchPayBack').onclick=()=>{
-  document.getElementById('batchPayStep2').classList.add('hidden');
-  document.getElementById('batchPayStep1').classList.remove('hidden');
-};
+document.getElementById('batchPayModal').addEventListener('click',(e)=>{
+  // Event delegation — 永远生效 (即使 DOM 被重建)
+  // 1) Back 按钮
+  if(e.target.closest('#batchPayBack')){
+    e.preventDefault();
+    document.getElementById('batchPayStep2').classList.add('hidden');
+    document.getElementById('batchPayStep1').classList.remove('hidden');
+    return;
+  }
+  // 2) Cash
+  if(e.target.closest('#batchPayCash')){
+    e.preventDefault();
+    document.getElementById('batchPayStep1').classList.add('hidden');
+    document.getElementById('batchPayStep2').classList.remove('hidden');
+    setTimeout(()=>document.getElementById('batchCashReceived').focus(),100);
+    return;
+  }
+  // 3) Tng
+  if(e.target.closest('#batchPayTng')){
+    e.preventDefault();
+    finishOrder('Tng Ewallet', 0);
+    return;
+  }
+});
 document.getElementById('batchCashReceived').oninput=(e)=>{
   const v = parseFloat(e.target.value)||0;
   _payReceived = v;
@@ -2032,7 +2052,26 @@ document.getElementById('toPayment').onclick=()=>{
   document.getElementById('payStep2').classList.add('hidden');
   document.getElementById('payModal').classList.add('show');
 };
-document.querySelectorAll('#payModal .pay-method').forEach(m=>m.onclick=()=>{
+document.getElementById('payModal').addEventListener('click',(e)=>{
+  // 1) Back 按钮
+  if(e.target.closest('#payBack')){
+    e.preventDefault();
+    document.getElementById('payStep2').classList.add('hidden');
+    document.getElementById('payStep1').classList.remove('hidden');
+    return;
+  }
+  // 2) Confirm 按钮
+  if(e.target.closest('#payConfirm')){
+    e.preventDefault();
+    const change = _payReceived - _payDue;
+    if(change<0) return;
+    finishOrder('Cash', change);
+    return;
+  }
+  // 3) Pay Method (Cash / Tng)
+  const m = e.target.closest('.pay-method');
+  if(!m) return;
+  e.preventDefault();
   const method = m.dataset.method;
   if(method==='Cash'){
     document.getElementById('payStep1').classList.add('hidden');
@@ -2061,11 +2100,7 @@ document.getElementById('cashReceived').oninput=(e)=>{
     document.getElementById('payConfirm').disabled=false;
   }
 };
-document.getElementById('payConfirm').onclick=()=>{
-  const change = _payReceived - _payDue;
-  if(change<0) return;
-  finishOrder('Cash', change);
-};
+// payConfirm 在 #payModal 的 delegation 中已经处理,无需重复
 function showReceipt(o){
   const content = document.getElementById('receiptContent');
   const itemRows = o.items.map(i=>{
