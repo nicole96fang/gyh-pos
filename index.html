@@ -1966,6 +1966,7 @@ function openBatchPay(orderIds){
   const list = _batchOrderIds.map(oid=>activeOrders.find(o=>o.id===oid)).filter(Boolean);
   const total = list.reduce((s,o)=>s+orderTotalOf(o.items),0);
   _payDue = total;
+  _payReceived = 0;          // 重置 — 避免上次残留
   document.getElementById('batchCount').textContent = list.length;
   document.getElementById('batchTotal').textContent = RM(total);
   document.getElementById('batchPayDue').textContent = RM(total);
@@ -1979,6 +1980,9 @@ function openBatchPay(orderIds){
     <span>Total</span><span>${RM(total)}</span></div>`;
   document.getElementById('batchCashReceived').value='';
   document.getElementById('batchCashChange').textContent='RM 0.00';
+  // 重置 confirm 按钮 (避免残留 disabled)
+  const bc = document.getElementById('batchPayConfirm');
+  if(bc){ bc.disabled = true; bc.style.opacity = '0.5'; }
   document.getElementById('batchPayStep1').classList.remove('hidden');
   document.getElementById('batchPayStep2').classList.add('hidden');
   document.getElementById('batchPayModal').classList.add('show');
@@ -2016,6 +2020,7 @@ document.getElementById('toPayment').onclick=()=>{
   // 直接用草稿付款（不走批量）
   _batchOrderIds = null;
   _payDue = total;
+  _payReceived = 0;          // 重置 — 避免上次残留
   document.getElementById('payAmount').textContent = RM(total);
   document.getElementById('payDue').textContent = RM(total);
   document.getElementById('cashReceived').value='';
@@ -2027,7 +2032,7 @@ document.getElementById('toPayment').onclick=()=>{
   document.getElementById('payStep2').classList.add('hidden');
   document.getElementById('payModal').classList.add('show');
 };
-document.querySelectorAll('.pay-method').forEach(m=>m.onclick=()=>{
+document.querySelectorAll('#payModal .pay-method').forEach(m=>m.onclick=()=>{
   const method = m.dataset.method;
   if(method==='Cash'){
     document.getElementById('payStep1').classList.add('hidden');
