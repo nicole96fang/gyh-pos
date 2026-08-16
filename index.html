@@ -894,6 +894,17 @@
   </div>
 </div>
 
+<!-- History Print Preview Modal · 多单小票合集 -->
+<div class="modal" id="histReceiptModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="receipt print-area" id="histReceiptContent"></div>
+    <div style="margin-top:16px;display:flex;gap:10px;" class="no-print">
+      <button class="btn mint" id="histReceiptPrint" style="flex:1;">🖨️ Print</button>
+      <button class="btn" id="histReceiptClose" style="flex:1;">Done</button>
+    </div>
+  </div>
+</div>
+
 <!-- 清空数据确认弹窗 -->
 <div class="modal" id="clearModal">
   <div class="modal-box" style="max-width:380px;">
@@ -2326,13 +2337,97 @@ document.getElementById('histClear').onclick=()=>{document.getElementById('histF
 document.getElementById('printAllHist').onclick=()=>{
   const orders=getFilteredOrders().reverse();
   if(!orders.length){alert('没有可打印的订单');return;}
-  const w=window.open('','_blank');
-  w.document.write(`<html><head><title>History</title><style>body{font-family:sans-serif;padding:20px;color:var(--purple)}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px dashed #ccc;padding:8px;text-align:left;font-size:13px}h1{color:var(--purple-deep)}@media print{body{padding:0}}</style></head><body>
-    <h1>GOH YEAN HUAN · Order History</h1>
-    <table><thead><tr><th>Date</th><th>Time</th><th>Items</th><th>Pay</th><th>Total</th></tr></thead><tbody>`+
-    orders.map(o=>`<tr><td>${o.date}</td><td>${o.time}</td><td>${o.items.map(i=>i.name+'×'+i.qty).join(', ')}</td><td>${o.method}</td><td>${RM(o.total)}</td></tr>`).join('')+
-    `</tbody></table><p style="margin-top:20px">Total Revenue: ${RM(orders.reduce((s,o)=>s+o.total,0))}</p></body></html>`);
-  w.document.close(); setTimeout(()=>w.print(),300);
+  // === 设计: 与 receipt 风格一致的水彩紫主题 ===
+  // 按日期分组聚合
+  const byDate = {};
+  orders.forEach(o=>{
+    if(!byDate[o.date]) byDate[o.date] = {orders:[], total:0, count:0};
+    byDate[o.date].orders.push(o);
+    byDate[o.date].total += o.total;
+    byDate[o.date].count++;
+  });
+  const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+  const grandTotal = orders.reduce((s,o)=>s+o.total,0);
+  const grandCount = orders.length;
+  // 支付方式汇总
+  const payStat = {};
+  orders.forEach(o=>{ payStat[o.method] = (payStat[o.method]||0) + o.total; });
+  const payRows = Object.keys(payStat).map(k=>`<span style="display:inline-block;margin:2px 4px;padding:3px 10px;background:rgba(217,201,232,.45);border:1px dashed var(--purple-pink);border-radius:10px;font-weight:800;color:var(--purple-deep);">${escapeHtml(k)} · ${RM(payStat[k])}</span>`).join('');
+  // 起止日期 (用于 header)
+  const dateRange = dates.length === 1
+    ? dates[0]
+    : `${dates[dates.length-1]} → ${dates[0]}`;
+
+  const content = document.getElementById('histReceiptContent');
+  content.innerHTML = `
+    <!-- 顶部品牌区 (与 receipt 同款) -->
+    <div class="r-brand">
+      <div class="r-shop" style="font-size:21px;margin-top:6px;">📜 ORDER HISTORY</div>
+      <div style="font-size:12px;font-weight:800;color:var(--purple-deep);margin-top:2px;">GOH YEAN HUAN · 销售记录</div>
+      <div class="r-reg" style="margin-top:4px;">${dateRange} · ${grandCount} 单</div>
+    </div>
+    <div class="r-deco"><span>🌹</span><span>✨</span><span>🌙</span></div>
+    <!-- 总览区 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;">
+      <div style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);padding:10px;border-radius:10px;border:1px dashed var(--purple-pink);text-align:center;">
+        <div style="font-size:9.5px;font-weight:800;color:var(--purple);letter-spacing:.5px;">总订单数</div>
+        <div style="font-size:22px;font-weight:900;color:var(--purple-deep);margin-top:2px;">${grandCount}</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#e8dff0,#d9c9e8);padding:10px;border-radius:10px;border:1px dashed var(--pink-deep);text-align:center;">
+        <div style="font-size:9.5px;font-weight:800;color:var(--purple);letter-spacing:.5px;">总营业额</div>
+        <div style="font-size:22px;font-weight:900;color:var(--purple-deep);margin-top:2px;">${RM(grandTotal)}</div>
+      </div>
+    </div>
+    ${payRows ? `<div style="text-align:center;margin:8px 0 4px;">${payRows}</div>` : ''}
+    <!-- 按日期分组合计 -->
+    ${dates.map(date=>{
+      const g = byDate[date];
+      const dayOrders = g.orders.slice().sort((a,b)=>(a.time>b.time?1:-1));
+      return `
+        <div style="margin-top:14px;">
+          <!-- 日期组标题 -->
+          <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#886ba8,#3a2d52);color:#fff;padding:8px 14px;border-radius:12px 12px 0 0;">
+            <span style="font-weight:900;font-size:13px;">📅 ${date}</span>
+            <span style="font-size:11px;opacity:.85;">${g.count} 单 · ${RM(g.total)}</span>
+          </div>
+          <!-- 订单列表 -->
+          <div style="border:1px dashed var(--purple-pink);border-top:none;border-radius:0 0 12px 12px;padding:8px 10px;background:rgba(255,255,255,.55);">
+            ${dayOrders.map((o,i)=>{
+              const t = (o.time||'').split(' ')[1] || o.time || '';
+              const itemsTxt = o.items.map(it=>`${escapeHtml(it.name)}×${it.qty}`).join(', ');
+              return `
+                <div style="padding:8px 0;${i<dayOrders.length-1?'border-bottom:1px dotted var(--purple-pink);':''}">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                    <span style="font-weight:800;color:var(--purple-deep);font-size:12.5px;">🧾 ${escapeHtml(o.code||'—')}</span>
+                    <span style="font-weight:900;color:var(--purple-deep);font-size:13.5px;">${RM(o.total)}</span>
+                  </div>
+                  <div style="font-size:10.5px;color:var(--purple);font-weight:600;margin-top:2px;">
+                    <span style="display:inline-block;margin-right:6px;">🕒 ${escapeHtml(t)}</span>
+                    <span style="display:inline-block;padding:1px 6px;background:rgba(217,201,232,.55);border-radius:6px;">${escapeHtml(o.method)}</span>
+                  </div>
+                  <div style="font-size:11.5px;color:var(--purple-deep);margin-top:3px;line-height:1.4;">${itemsTxt}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }).join('')}
+    <!-- Grand Total -->
+    <div class="rtotal" style="margin-top:18px;font-size:18px;">
+      <span>💰 GRAND TOTAL</span>
+      <span>${RM(grandTotal)}</span>
+    </div>
+    <!-- 页脚 -->
+    <div class="rfoot" style="border-top:1.5px dashed var(--gold);margin-top:14px;">
+      📜 Order History · 销售记录汇总<br/>
+      <span style="font-size:9.5px;opacity:.8;">${dateRange} · generated by GOH YEAN HUAN POS</span>
+    </div>
+  `;
+  const modal = document.getElementById('histReceiptModal');
+  modal.classList.add('show');
+  document.getElementById('histReceiptClose').onclick = ()=> modal.classList.remove('show');
+  document.getElementById('histReceiptPrint').onclick = ()=> window.print();
 };
 
 /* ============ Report ============ */
