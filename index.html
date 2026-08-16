@@ -334,9 +334,9 @@
     background:radial-gradient(circle, rgba(212,184,84,.45),transparent 70%);pointer-events:none;
   }
   .r-brand{text-align:center;padding-bottom:10px;border-bottom:1.5px dashed var(--purple);position:relative;z-index:1;}
-  .r-logo{display:flex;justify-content:center;align-items:center;height:118px;margin-top:4px;}
-  .r-shop{font-weight:900;font-size:22px;letter-spacing:1px;color:var(--purple-deep);margin-top:6px;text-shadow:0 1px 0 rgba(255,255,255,.6);}
-  .r-reg{font-size:11px;color:var(--purple);margin-top:3px;font-weight:600;}
+  .r-logo{display:none;}
+  .r-shop{font-weight:900;font-size:24px;letter-spacing:1.5px;color:var(--purple-deep);margin-top:8px;text-shadow:0 1px 0 rgba(255,255,255,.6);}
+  .r-reg{font-size:11px;color:var(--purple);margin-top:4px;font-weight:600;}
   .r-deco{text-align:center;font-size:11px;color:var(--purple-light);margin:8px 0 6px;letter-spacing:2px;}
   .r-deco span{margin:0 3px;}
   .r-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--purple);margin:4px 0 8px;}
@@ -1853,47 +1853,6 @@ function showReceipt(o){
   }).join('');
   content.innerHTML = `
     <div class="r-brand">
-      <div class="r-logo"><svg viewBox="-50 -50 180 140" width="180" height="140" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;filter:drop-shadow(0 4px 8px rgba(106,91,140,.4));"><defs><linearGradient id="flogoBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f3e5f5"/><stop offset="40%" stop-color="#c987c8"/><stop offset="100%" stop-color="#3a2d52"/></linearGradient><linearGradient id="flogoF" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff5cc"/><stop offset="50%" stop-color="#d4b854"/><stop offset="100%" stop-color="#a98a3c"/></linearGradient><radialGradient id="flogoGlow" cx="0.35" cy="0.35" r="0.7"><stop offset="0%" stop-color="rgba(255,255,255,.55)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs>
-        <!-- 两侧紫玫瑰 · 左 -->
-        <g transform="translate(-32 8)">
-          <ellipse cx="0" cy="14" rx="14" ry="12" fill="#b885c4" opacity=".9"/>
-          <ellipse cx="-7" cy="11" rx="8" ry="11" fill="#d9a8d8" transform="rotate(-25 -7 11)"/>
-          <ellipse cx="7" cy="11" rx="8" ry="11" fill="#d9a8d8" transform="rotate(25 7 11)"/>
-          <ellipse cx="0" cy="14" rx="9" ry="8" fill="#c987c8"/>
-          <ellipse cx="-3" cy="14" rx="5" ry="4" fill="#e8c5e0"/>
-          <ellipse cx="3" cy="14" rx="5" ry="4" fill="#e8c5e0"/>
-          <circle cx="0" cy="14" r="2.2" fill="#d4b854"/>
-          <circle cx="0" cy="14" r="1" fill="#a98a3c"/>
-        </g>
-        <!-- 两侧紫玫瑰 · 右 -->
-        <g transform="translate(112 28)">
-          <ellipse cx="0" cy="14" rx="14" ry="12" fill="#b885c4" opacity=".9"/>
-          <ellipse cx="-7" cy="11" rx="8" ry="11" fill="#d9a8d8" transform="rotate(-25 -7 11)"/>
-          <ellipse cx="7" cy="11" rx="8" ry="11" fill="#d9a8d8" transform="rotate(25 7 11)"/>
-          <ellipse cx="0" cy="14" rx="9" ry="8" fill="#c987c8"/>
-          <ellipse cx="-3" cy="14" rx="5" ry="4" fill="#e8c5e0"/>
-          <ellipse cx="3" cy="14" rx="5" ry="4" fill="#e8c5e0"/>
-          <circle cx="0" cy="14" r="2.2" fill="#d4b854"/>
-          <circle cx="0" cy="14" r="1" fill="#a98a3c"/>
-        </g>
-        <!-- 主圆 (紫粉渐变) -->
-        <circle cx="40" cy="20" r="36" fill="url(#flogoBg)"/>
-        <!-- 高光 -->
-        <circle cx="40" cy="20" r="36" fill="url(#flogoGlow)"/>
-        <!-- 圆环装饰 -->
-        <circle cx="40" cy="20" r="30" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.2"/>
-        <circle cx="40" cy="20" r="22" fill="none" stroke="#d4b854" stroke-width=".6" stroke-dasharray="2 3" opacity=".6"/>
-        <!-- "F" 字母：竖 + 上横 + 中横 -->
-        <rect x="27" y="-3" width="10" height="46" rx="2" fill="url(#flogoF)"/>
-        <rect x="27" y="-3" width="24" height="9" rx="2" fill="url(#flogoF)"/>
-        <rect x="27" y="17" width="18" height="8" rx="2" fill="url(#flogoF)"/>
-        <!-- 金色装饰星 · 字母顶部右上 -->
-        <polygon points="62,-12 64,-7 69,-7 65,-4 67,1 62,-2 57,1 59,-4 55,-7 60,-7" fill="#d4b854"/>
-        <!-- 金色装饰星 · 字母左下 -->
-        <polygon points="16,40 17,43 20,43 18,45 19,48 16,46 13,48 14,45 12,43 15,43" fill="#d4b854" opacity=".85"/>
-        <!-- 顶部一颗大金月星 (5 角 + 旋转月) -->
-        <path d="M40,-30 a8,8 0 1 0 6,6 a6,6 0 1 1 -6,-6 Z" fill="#d4b854"/>
-      </svg></div>
       <div class="r-shop">GOH YEAN HUAN</div>
       <div class="r-reg">202403172359 ( 003618842-W )</div>
     </div>
