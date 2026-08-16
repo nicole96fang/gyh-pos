@@ -1101,7 +1101,7 @@ function renderDashboard(){
   box.innerHTML = recent.map(o=>{
     const t = o.time.split(' ')[1] || o.time;
     const itemsTxt = o.items.map(i=>i.name+'×'+i.qty).join(', ');
-    return `<div class="recent-card">
+    return `<div class="recent-card" onclick="reprint('${o.id}')" style="cursor:pointer;" title="点击打印小票">
       <div class="recent-time"><b>${o.date.slice(5)}</b>${t}</div>
       <div class="recent-items">${itemsTxt}</div>
       <span class="recent-pill ${o.method==='Cash'?'cash':'tng'}">${o.method==='Cash'?'💵 Cash':'📱 Tng'}</span>
@@ -1876,6 +1876,14 @@ function showReceipt(o){
 }
 document.getElementById('closeReceipt').onclick=()=>document.getElementById('receiptModal').classList.remove('show');
 document.getElementById('printReceipt').onclick=()=>window.print();
+// History 页重打小票: 打开 receipt 并稍后触发打印
+window.reprint = id => {
+  const o = DB.orders.find(x=>x.id===id);
+  if(!o){ alert('找不到该订单'); return; }
+  showReceipt(o);
+  // 给 DOM 一点时间渲染 receipt, 再弹出打印对话框
+  setTimeout(()=>{ try{ window.print(); }catch(_){} }, 80);
+};
 
 /* ============ Expense ============ */
 function renderSuppliers(){
@@ -2006,7 +2014,8 @@ function renderHistory(){
       <td><span class="pill ${o.method==='Cash'?'cash':'tng'}">${o.method}</span></td>
       <td>${RM(o.total)}</td>
       <td class="no-print">
-        <button class="mini-btn" onclick="reprint('${o.id}')">🖨️</button>
+        <button class="mini-btn" onclick="showReceipt(DB.orders.find(x=>x.id==='${o.id}'))" title="查看小票">🧾</button>
+        <button class="mini-btn" onclick="reprint('${o.id}')" title="打印小票">🖨️</button>
         <button class="mini-btn" onclick="editOrder('${o.id}')" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;">✏️ Edit</button>
         <button class="mini-btn" onclick="deleteOrder('${o.id}')" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);">🗑️</button>
       </td></tr>`).join('')+
