@@ -77,7 +77,7 @@
   /* ===== 侧边导航 ===== */
   .sidebar{
     width:230px;flex-shrink:0;padding:22px 16px;
-    background:rgba(255,253,251,.72);
+    background:rgba(243,229,245,.55);
     backdrop-filter:blur(8px);
     border-right:2px solid var(--line);
     display:flex;flex-direction:column;gap:8px;
@@ -124,12 +124,10 @@
   /* Dashboard Hero 欢迎条 · 极简：只保留奶黄格纹底 */
   .dash-hero{
     display:flex;align-items:center;justify-content:space-between;gap:24px;
-    padding:32px 36px;border-radius:28px;
+    padding:32px 36px;border-radius:28px;position:relative;overflow:hidden;
     background:
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><rect width='40' height='40' fill='%23fbf6e8'/><path d='M0,0 L40,0 M0,40 L40,40 M0,0 L0,40 M40,0 L40,40' stroke='%23ead7a6' stroke-width='1' opacity='.7'/></svg>"),
-      linear-gradient(135deg,#fffbef,#fbf3df);
-    background-size:40px 40px,100% 100%;
-    background-repeat:repeat,no-repeat;
+      linear-gradient(135deg,#f3e5f5,#ede7f6 50%,#fce4ec);
+    box-shadow:0 8px 24px rgba(106,91,140,.18);
     border:1.5px solid var(--line);box-shadow:var(--shadow);
     margin-bottom:24px;position:relative;overflow:hidden;flex-wrap:wrap;
   }
@@ -444,38 +442,38 @@
       <div class="reg" style="color:#a98fd6;">003618842-W</div>
     </div>
     <button class="nav-btn active" data-view="dashboard">
-      <span class="ic" style="background:var(--sky)">🏠</span> Dashboard
+      <span class="ic" style="background:linear-gradient(135deg,#d9c9e8,#f3e5f5);display:flex;align-items:center;justify-content:center;font-size:18px;">🏠</span> Dashboard
     </button>
     <button class="nav-btn" data-view="neworder">
-      <span class="ic" style="background:var(--pink)">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#f5b75c;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
+      <span class="ic" style="background:linear-gradient(135deg,#c987c8,#e8c5e0);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#d4b854;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
-    <button class="nav-btn" onclick="openCartDirect()" style="color:#7a5e54;background:rgba(216,179,141,.16);">
-      <span class="ic" style="background:#f0e3d2">🛒</span> View Cart <span id="badgeCart" style="display:none;background:#e89b9b;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
+    <button class="nav-btn" onclick="openCartDirect()" style="color:#3a2d52;background:rgba(217,201,232,.35);">
+      <span class="ic" style="background:linear-gradient(135deg,#a89bc9,#d9c9e8);display:flex;align-items:center;justify-content:center;font-size:17px;">🛒</span> View Cart <span id="badgeCart" style="display:none;background:#e89b9b;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
     <button class="nav-btn" data-view="expense">
-      <span class="ic" style="background:var(--butter)">🛒</span> Expense
+      <span class="ic" style="background:linear-gradient(135deg,#d9a8d8,#c987c8);display:flex;align-items:center;justify-content:center;font-size:17px;">🌹</span> Expense
     </button>
     <button class="nav-btn" data-view="history">
-      <span class="ic" style="background:var(--mint)">📜</span> History
+      <span class="ic" style="background:linear-gradient(135deg,#a98fd6,#886ba8);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📜</span> History
     </button>
     <button class="nav-btn" data-view="report">
-      <span class="ic" style="background:var(--lav)">📊</span> Report
+      <span class="ic" style="background:linear-gradient(135deg,#d4b854,#e8d58a);display:flex;align-items:center;justify-content:center;font-size:18px;">📊</span> Report
     </button>
-    <button class="nav-btn" id="clearDataBtn" style="color:#c06a64;background:rgba(232,155,155,.14);">
-      <span class="ic" style="background:var(--pink-deep)">🗑️</span> Clear Data
+    <button class="nav-btn" id="clearDataBtn" style="color:#7a3a3a;background:rgba(232,155,155,.14);">
+      <span class="ic" style="background:linear-gradient(135deg,#e89b9b,#fce0e0);display:flex;align-items:center;justify-content:center;font-size:17px;">🗑️</span> Clear Data
     </button>
-    <button class="nav-btn" onclick="exportData()" style="color:#3f8a63;background:rgba(127,196,166,.22);font-weight:900;border:2px solid rgba(127,196,166,.5);">
-      <span class="ic" style="background:#bfe3d2">📤</span> Export Backup
+    <button class="nav-btn" onclick="exportData()" style="color:#3a2d52;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);">
+      <span class="ic" style="background:linear-gradient(135deg,#a89bc9,#6b5b8c);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📤</span> Export Backup
     </button>
-    <a class="nav-btn" href="./backup.html" style="color:#7a5e54;background:rgba(216,179,141,.18);font-weight:900;border:2px solid rgba(216,179,141,.5);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;">
-      <span class="ic" style="background:#f0e3d2">🛟</span> Backup Page (备用)
+    <a class="nav-btn" href="./backup.html" style="color:#3a2d52;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;">
+      <span class="ic" style="background:linear-gradient(135deg,#a98fd6,#d9a8d8);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">🛟</span> Backup Page (备用)
     </a>
-    <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#9a8a7e;background:rgba(216,179,141,.14);">
-      <span class="ic" style="background:#f0e3d2">📥</span> Import Backup
+    <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#3a2d52;background:rgba(217,201,232,.18);">
+      <span class="ic" style="background:linear-gradient(135deg,#c987c8,#d9a8d8);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📥</span> Import Backup
     </button>
     <input id="importFile" type="file" accept="application/json" style="display:none;" />
-    <div class="nav-foot">
-      💾 数据本地永久保存<br/>GOH YEAN HUAN POS
+    <div class="nav-foot" style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);padding:10px;border-radius:14px;border:1.5px dashed #d9c9e8;margin-top:auto;">
+      <span style="font-size:18px;">💾</span> 数据本地永久保存<br/><span style="font-size:9px;color:#6b5b8c;letter-spacing:.5px;">GOH YEAN HUAN POS</span>
     </div>
   </aside>
 
@@ -497,13 +495,14 @@
       <div class="dash-hero">
         <div class="dash-hero-text">
           <div class="dash-hero-greet" id="dashGreet">Welcome back ☀️</div>
-          <div class="dash-hero-title">GOH YEAN HUAN · POS</div>
-          <div class="dash-hero-sub" id="dashSub">今天还没有订单，准备好开始接单了吗？</div>
+          <div class="dash-hero-title" style="color:#3a2d52;">GOH YEAN HUAN · POS</div>
+          <div class="dash-hero-sub" id="dashSub" style="color:#6b5b8c;">今天还没有订单，准备好开始接单了吗？</div>
         </div>
         <div class="dash-hero-action">
           <button class="btn-neworder-lg no-print" id="dashNewOrder2">🧾 Start New Order</button>
-          <div class="dash-hero-deco">🍜 🍣 🌶️ 🥬</div>
+          <div class="dash-hero-deco" style="color:#d4b854;letter-spacing:8px;">✦ ✦ ✦ ✦</div>
         </div>
+        <div style="position:absolute;right:-30px;top:8px;opacity:.18;pointer-events:none;">${witchSVG('full',150)}</div>
       </div>
 
       <!-- 今日亮点卡（大字） -->
@@ -515,25 +514,25 @@
         </div>
       </div>
 
-      <!-- 普通统计卡 (今日统计) -->
+      <!-- 普通统计卡 (今日统计) · 巫女主题 -->
       <div class="stats">
         <div class="stat s1">
-          <div class="emoji-circle">🛎️</div>
+          <div class="emoji-circle">${witchSVG('full',32)}</div>
           <div class="v" id="stOrders">0</div>
           <div class="l">今日订单 · Today Orders</div>
         </div>
         <div class="stat s2">
-          <div class="emoji-circle">💰</div>
+          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(212,184,84,.3));"><path d="M15,5 L25,5 L25,30 Q20,38 15,30 Z" fill="#a89bc9"/><path d="M15,5 L20,5 L20,30 Q17,38 15,30 Z" fill="#d9c9e8"/><ellipse cx="20" cy="6" rx="5" ry="3" fill="#3a2d52"/><circle cx="18" cy="15" r="1.2" fill="#fff"/><circle cx="22" cy="22" r="1" fill="#fff"/><circle cx="17" cy="27" r="1" fill="#fff"/><circle cx="20" cy="36" r="2" fill="#d4b854" opacity=".8"/><polygon points="30,8 31,11 34,11 32,13 33,16 30,14 27,16 28,13 26,11 29,11" fill="#d4b854"/></svg></div>
           <div class="v" id="stRevenue">RM 0.00</div>
           <div class="l">今日收入 · Today Revenue</div>
         </div>
         <div class="stat s3">
-          <div class="emoji-circle">🛒</div>
+          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(201,135,200,.3));"><g transform="translate(20 18)"><ellipse cx="-7" cy="2" rx="6" ry="10" fill="#c987c8" transform="rotate(-30)"/><ellipse cx="0" cy="-3" rx="6" ry="10" fill="#d9a8d8" transform="rotate(20)"/><ellipse cx="0" cy="-12" rx="5" ry="9" fill="#c987c8" opacity=".9"/><ellipse cx="-8" cy="0" rx="5" ry="9" fill="#b885c4"/><ellipse cx="8" cy="3" rx="5" ry="8" fill="#a96bbe"/><circle cx="0" cy="-2" r="4" fill="#d4b854"/></g><polygon points="32,6 33,9 36,9 34,11 35,14 32,12 29,14 30,11 28,9 31,9" fill="#d4b854"/></svg></div>
           <div class="v" id="stExpense">RM 0.00</div>
           <div class="l">今日支出 · Today Expense</div>
         </div>
         <div class="stat s4">
-          <div class="emoji-circle">📈</div>
+          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(212,184,84,.35));"><path d="M8,30 Q15,28 18,22 Q21,28 28,30 Q24,15 18,15 Q12,15 8,30 Z" fill="#d4b854"/><circle cx="18" cy="20" r="6" fill="#fce4d0"/><polygon points="18,12 19,16 23,16 20,18 21,22 18,20 15,22 16,18 13,16 17,16" fill="#d4b854"/></svg></div>
           <div class="v" id="stProfit">RM 0.00</div>
           <div class="l">今日利润 · Today Profit</div>
         </div>
