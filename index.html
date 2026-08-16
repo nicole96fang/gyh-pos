@@ -509,7 +509,7 @@
           <button class="btn-neworder-lg no-print" id="dashNewOrder2">🧾 Start New Order</button>
           <div class="dash-hero-deco" style="color:#d4b854;letter-spacing:8px;">✦ ✦ ✦ ✦</div>
         </div>
-        <div style="position:absolute;right:-30px;top:8px;opacity:.18;pointer-events:none;">${witchSVG('full',150)}</div>
+        <div style="position:absolute;right:-30px;top:8px;opacity:.18;pointer-events:none;"><svg viewBox="0 0 120 100" width="150" height="125" xmlns="http://www.w3.org/2000/svg"><path d="M30,18 Q15,32 14,55 Q14,75 28,82 Q22,68 30,55 Q38,42 52,28 Q42,15 30,18 Z" fill="#2a1f38"/><path d="M76,20 Q92,32 95,55 Q96,75 82,82 Q87,68 80,55 Q72,42 60,30 Q72,16 76,20 Z" fill="#2a1f38" opacity=".9"/><ellipse cx="60" cy="32" rx="18" ry="15" fill="#fce4d0"/><path d="M28,22 Q40,8 60,7 Q80,8 92,22 Q90,24 60,26 Q30,24 28,22 Z" fill="#3a2d52"/><polygon points="64,-2 66,3 71,3 67,6 69,11 64,8 59,11 61,6 57,3 62,3" fill="#d4b854"/><path d="M30,48 Q30,68 25,90 L98,90 Q92,68 90,48 Q78,55 60,55 Q42,55 30,48 Z" fill="#3a2d52"/><ellipse cx="53" cy="32" rx="2" ry="2.8" fill="#6b5b8c"/><ellipse cx="67" cy="32" rx="2" ry="2.8" fill="#6b5b8c"/><g transform="translate(18 65)"><ellipse cx="10" cy="15" rx="10" ry="9" fill="#2a1f38"/><polygon points="0,4 4,-4 9,5" fill="#2a1f38"/><polygon points="11,5 16,-4 20,4" fill="#2a1f38"/></g></svg></div>
       </div>
 
       <!-- 今日亮点卡（大字） -->
@@ -524,7 +524,7 @@
       <!-- 普通统计卡 (今日统计) · 巫女主题 -->
       <div class="stats">
         <div class="stat s1">
-          <div class="emoji-circle">${witchSVG('full',32)}</div>
+          <div class="emoji-circle"><span id="stOrdersIcon"></span></div>
           <div class="v" id="stOrders">0</div>
           <div class="l">今日订单 · Today Orders</div>
         </div>
@@ -1032,6 +1032,9 @@ function renderDashboard(){
   document.getElementById('stExpense').textContent = RM(expense);
   document.getElementById('stProfit').textContent = RM(revenue-expense);
   document.getElementById('stToday').textContent = RM(revenue);
+  // 给 orders 卡片画上巫女图标 (32px)
+  const ordIcon = document.getElementById('stOrdersIcon');
+  if(ordIcon && !ordIcon.dataset.done){ ordIcon.innerHTML = witchSVG('full',32); ordIcon.dataset.done='1'; }
 
   // Hero 文案：随时间问候 + 今日订单数
   const h = new Date().getHours();
