@@ -2450,15 +2450,6 @@ function printExpenses(date){
   date = date || dateKey(now());
   const items = DB.expenses.filter(e=>e.date===date).sort((a,b)=>a.time.localeCompare(b.time));
   const total = items.reduce((s,e)=>s+e.amount,0);
-  // 按供应商汇总
-  const bySup = {};
-  items.forEach(e=>{
-    const k = e.supplier||'(未填)';
-    if(!bySup[k]) bySup[k] = {amt:0, count:0};
-    bySup[k].amt += e.amount;
-    bySup[k].count++;
-  });
-  const supList = Object.keys(bySup).map(k=>({k, ...bySup[k]})).sort((a,b)=>b.amt-a.amt);
 
   const content = document.getElementById('expReceiptContent');
   content.innerHTML = `
@@ -2468,15 +2459,6 @@ function printExpenses(date){
       <div class="r-reg" style="margin-top:4px;">${date} · ${items.length} 笔 · 共 ${RM(total)}</div>
     </div>
     <div class="r-deco"><span>🌹</span><span>✨</span><span>🌙</span></div>
-    ${supList.length>1 ? `
-      <div style="margin:10px 0;padding:10px;background:rgba(217,201,232,.25);border-radius:10px;border:1px dashed var(--purple-pink);">
-        <div style="font-size:10.5px;font-weight:800;color:var(--purple-deep);letter-spacing:.5px;margin-bottom:6px;">📊 按供应商汇总</div>
-        ${supList.map(s=>`<div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--purple-deep);font-weight:700;padding:3px 0;border-bottom:1px dotted var(--purple-pink);">
-          <span>${escapeHtml(s.k)} <span style="opacity:.6;font-weight:500;">×${s.count}</span></span>
-          <span>${RM(s.amt)}</span>
-        </div>`).join('')}
-      </div>
-    `: ''}
     <div class="r-items" style="border-top:1.5px dashed var(--purple);border-bottom:1.5px dashed var(--purple);padding:10px 0;">
       ${items.length === 0 ? `
         <div style="text-align:center;color:var(--purple-light);font-weight:700;font-size:13px;padding:18px 0;">该日期暂无支出记录</div>
