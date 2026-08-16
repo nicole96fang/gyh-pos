@@ -287,8 +287,12 @@
   .empty{text-align:center;color:var(--ink-soft);padding:30px 0;font-size:14px;}
 
   /* 支付弹窗 */
-  .modal{position:fixed;inset:0;background:rgba(90,70,65,.4);z-index:80;display:none;place-items:end center;padding:0;}
+  .modal{position:fixed;inset:0;background:rgba(90,70,65,.4);z-index:80;display:none;place-items:end center;padding:0;overflow:auto;}
   .modal.show{display:grid;}
+  /* 内容超长时: 桌面端 modal-box 自动居中可滚动; 手机端 bottom-sheet 已自带 max-height:88vh */
+  @media (min-width:821px){
+    .modal{place-items:center;}
+  }
 
   /* 底部上滑抽屉（手机 App 风格） */
   .bottom-sheet{
@@ -303,9 +307,9 @@
   /* Noodles 必选项（紫色系） */
   .opt.noodle.on{background:linear-gradient(135deg,#d9c9e8,#c987c8);border-color:var(--purple);color:#fff;}
   .opt.protein.on{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border-color:var(--pink-deep);color:var(--purple-deep);}
-  .modal-box{background:linear-gradient(180deg,#fefaf3,#f3e5f5);border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(106,91,140,.25);text-align:center;border:2px solid var(--purple-pink);}
+  .modal-box{background:linear-gradient(180deg,#fefaf3,#f3e5f5);border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(106,91,140,.25);text-align:center;border:2px solid var(--purple-pink);max-height:calc(100vh - 32px);overflow:auto;}
   /* 收据弹窗里允许透明，露出水彩底色 */
-  #receiptModal .modal-box{background:transparent;box-shadow:none;padding:8px;border:none;}
+  #receiptModal .modal-box,#expReceiptModal .modal-box,#histReceiptModal .modal-box{background:transparent;box-shadow:none;padding:8px;border:none;max-height:none;overflow:visible;}
   .modal-box h3{margin:0 0 6px;color:var(--purple-deep);}
   .pay-methods{display:flex;gap:12px;margin:18px 0;}
   .pay-method{flex:1;border:2px solid var(--purple-pink);border-radius:18px;padding:18px 8px;cursor:pointer;font-weight:800;color:var(--purple-deep);background:#fff;transition:.15s;}
@@ -323,7 +327,11 @@
       linear-gradient(180deg,#fefaf3,#f3e5f5);
     border:1.5px solid var(--purple-pink);border-radius:14px;padding:18px 16px 16px;
     font-family:var(--font);color:#3a2d52;
-    position:relative;overflow:hidden;
+    position:relative;overflow:auto;
+    max-height:calc(100vh - 140px);
+  }
+  @media print{
+    .receipt{max-height:none;overflow:visible;}
   }
   .receipt::before{
     content:"";position:absolute;top:-10px;left:-10px;width:54px;height:54px;
@@ -601,6 +609,23 @@
 
     <!-- NEW ORDER -->
     <section id="view-neworder" class="hidden">
+      <!-- 已送厨房订单摘要 (sticky 卡片) -->
+      <div id="activeOrdersSummary" style="display:none;margin-bottom:14px;">
+        <div style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);border:2px solid var(--purple-pink);border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;" onclick="openDrawer()">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-size:13px;font-weight:900;color:var(--purple-deep);">📋 已送厨房 · <span id="aosCount">0</span> 张未结账</div>
+              <div style="font-size:11px;color:var(--purple);margin-top:2px;">点击查看 / 继续结账</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:11px;color:var(--purple);font-weight:700;">未结账金额</div>
+              <div style="font-size:20px;font-weight:900;color:var(--purple-deep);" id="aosTotal">RM 0.00</div>
+            </div>
+          </div>
+          <div id="aosChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+        </div>
+      </div>
+
       <div class="card">
         <h2>🍽️ Menu · 点击任意菜品即可跳岀选项选择 ✨</h2>
         <div class="menu-grid" id="menuGrid"></div>
@@ -901,6 +926,28 @@
     <div style="margin-top:16px;display:flex;gap:10px;" class="no-print">
       <button class="btn mint" id="histReceiptPrint" style="flex:1;">🖨️ Print</button>
       <button class="btn" id="histReceiptClose" style="flex:1;">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Active Order Detail Modal · 已送厨房订单完整查看 -->
+<div class="modal" id="activeOrderDetailModal">
+  <div class="modal-box" style="max-width:480px;text-align:left;">
+    <button class="close" id="aodClose" style="position:absolute;top:14px;right:16px;border:none;background:var(--purple-pink);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--purple-deep);">✕</button>
+    <div style="background:linear-gradient(135deg,#886ba8,#3a2d52);color:#fff;padding:14px 18px;border-radius:16px 16px 0 0;margin:-26px -0px 16px;">
+      <div style="font-size:11px;opacity:.85;font-weight:700;letter-spacing:.5px;">📋 已送厨房订单 · Active Order</div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px;">
+        <span style="font-weight:900;font-size:18px;" id="aodCode">K01</span>
+        <span style="font-weight:900;font-size:13px;opacity:.85;" id="aodName"></span>
+      </div>
+      <div style="font-size:11px;opacity:.8;margin-top:4px;" id="aodTime"></div>
+    </div>
+    <div id="aodItems"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button id="aodAdd" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">➕ 加菜</button>
+      <button id="aodRename" style="flex:0;background:rgba(217,201,232,.5);color:var(--purple-deep);border:none;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">✏️</button>
+      <button id="aodPay" style="flex:1;background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">💰 结账</button>
+      <button id="aodCancel" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);border:none;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">🗑️</button>
     </div>
   </div>
 </div>
@@ -1548,6 +1595,7 @@ function renderActiveOrders(){
         </div>
         <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;line-height:1.4;">${itemStr}</div>
         <div style="display:flex;gap:6px;margin-top:8px;">
+          <button data-act="view" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,var(--purple),var(--purple-deep));color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">📋 查看</button>
           <button data-act="addMore" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">➕ Add 菜</button>
           <button data-act="rename" data-id="${o.id}" style="background:#f0e3d2;color:var(--purple-deep);border:none;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">✏️</button>
           <button data-act="payOne" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">💰 结账</button>
@@ -1569,6 +1617,7 @@ function renderActiveOrders(){
       const id = b.dataset.id, act = b.dataset.act;
       const o = activeOrders.find(x=>x.id===id);
       if(!o) return;
+      if(act==='view'){ viewActiveOrder(id); return; }
       if(act==='addMore'){
         selectedOrderId = id;
         closeDrawer();
@@ -1582,6 +1631,127 @@ function renderActiveOrders(){
       }
     });
   },0);
+  // 同步更新顶部摘要卡
+  updateActiveSummary();
+}
+
+// 顶部 Summary 卡 (New Order 视图)
+function updateActiveSummary(){
+  const summary = document.getElementById('activeOrdersSummary');
+  if(!summary) return;
+  if(!activeOrders.length){
+    summary.style.display='none';
+    return;
+  }
+  summary.style.display='block';
+  const total = activeOrders.reduce((s,o)=>s+orderTotalOf(o.items),0);
+  document.getElementById('aosCount').textContent = activeOrders.length;
+  document.getElementById('aosTotal').textContent = RM(total);
+  // chip 显示每张订单的前几个菜
+  document.getElementById('aosChips').innerHTML = activeOrders.map((o,i)=>{
+    const itemTxt = o.items.map(it=>{
+      const d = findDish(it.dishId);
+      return d ? `${d.name.split(' ')[0]}×${it.qty}` : `×${it.qty}`;
+    }).slice(0,2).join(' · ');
+    const total = orderTotalOf(o.items);
+    return `<span style="background:rgba(255,255,255,.7);color:var(--purple-deep);padding:5px 10px;border-radius:10px;font-size:11px;font-weight:800;border:1px dashed var(--purple-pink);">🍳 ${o.code}${o.name?' ('+o.name+')':''} · ${itemTxt} · ${RM(total)}</span>`;
+  }).join('');
+}
+
+// 查看完整 active order 详情 · 弹出 modal
+window.viewActiveOrder = id => {
+  const o = activeOrders.find(x=>x.id===id);
+  if(!o){ alert('找不到该订单'); return; }
+  document.getElementById('aodCode').textContent = '🍳 ' + o.code;
+  document.getElementById('aodName').textContent = o.name ? `「${o.name}」` : '';
+  document.getElementById('aodTime').textContent = '送厨房时间: ' + (o.sentAt || '');
+  document.getElementById('aodItems').innerHTML = renderActiveOrderItemsHtml(o);
+  document.getElementById('activeOrderDetailModal').classList.add('show');
+  // 绑定 action 按钮
+  document.getElementById('aodAdd').onclick = ()=>{
+    selectedOrderId = id;
+    document.getElementById('activeOrderDetailModal').classList.remove('show');
+    closeDrawer();
+    const el = document.querySelector(`[data-dish="${o.items[0].dishId}"]`);
+    if(el) el.click();
+    else openDrawer();
+  };
+  document.getElementById('aodRename').onclick = ()=>{
+    const newName = prompt('给这张订单一个名字 (桌号/打包/名字):', o.name || '');
+    if(newName!==null){
+      o.name = newName.trim().slice(0,20);
+      document.getElementById('aodName').textContent = o.name ? `「${o.name}」` : '';
+      renderActiveOrders();
+    }
+  };
+  document.getElementById('aodPay').onclick = ()=>{
+    document.getElementById('activeOrderDetailModal').classList.remove('show');
+    openBatchPay([id]);
+  };
+  document.getElementById('aodCancel').onclick = ()=>{
+    if(!confirm(`删除已送厨房订单 ${o.code}?\n\n注意: 这只是清掉"未结账"队列,不会写入订单历史。`)) return;
+    activeOrders = activeOrders.filter(x=>x.id!==id);
+    if(selectedOrderId===id) selectedOrderId = null;
+    renderActiveOrders();
+    document.getElementById('activeOrderDetailModal').classList.remove('show');
+    toast(`🗑️ 已清除 ${o.code}`);
+  };
+};
+
+// 关闭 modal
+document.addEventListener('DOMContentLoaded',()=>{
+  const aodCloseBtn = document.getElementById('aodClose');
+  if(aodCloseBtn) aodCloseBtn.onclick = ()=>{
+    document.getElementById('activeOrderDetailModal').classList.remove('show');
+  };
+});
+
+function renderActiveOrderItemsHtml(o){
+  if(!o.items.length) return '<div style="text-align:center;color:var(--purple-light);padding:20px;">(空订单)</div>';
+  let html = '<div style="background:rgba(255,255,255,.55);border:1.5px dashed var(--purple-pink);border-radius:12px;padding:10px 14px;">';
+  o.items.forEach((it,i)=>{
+    const dish = findDish(it.dishId);
+    if(!dish) return;
+    const dishName = dish.name;
+    const dishEmoji = dish.emoji;
+    // 还原选项
+    const noodleStr = (it.noodles||[]).map(nid=>{
+      const n = NOODLES.find(x=>x.id===nid);
+      return n ? n.name : '';
+    }).filter(Boolean).join(' · ');
+    let proteinStr = '';
+    if(it.protein){
+      const p = SINGLE_PROTEIN.find(x=>x.id===it.protein);
+      if(p) proteinStr = p.name;
+    }
+    let optStr = '';
+    if(it.opts && it.opts.length){
+      optStr = it.opts.map(oo=>{
+        const op = OPTIONS.find(x=>x.id===oo.id);
+        return op ? (oo.qty>1 ? `${op.name}×${oo.qty}` : op.name) : '';
+      }).filter(Boolean).join(', ');
+    }
+    const line = itemLineTotal(it);
+    html += `
+      <div style="padding:10px 0;${i<o.items.length-1?'border-bottom:1px dotted var(--purple-pink);':''}">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+          <span style="font-weight:900;color:var(--purple-deep);font-size:13px;">${dishEmoji} ${escapeHtml(dishName)} <span style="background:var(--purple-light);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;margin-left:4px;">×${it.qty}</span></span>
+          <span style="font-weight:900;color:var(--purple-deep);font-size:13px;white-space:nowrap;">${RM(line)}</span>
+        </div>
+        ${noodleStr ? `<div style="font-size:11px;color:var(--purple);margin-top:3px;font-weight:700;">🍜 ${escapeHtml(noodleStr)}</div>` : ''}
+        ${proteinStr ? `<div style="font-size:11px;color:var(--purple);margin-top:1px;font-weight:700;">🥩 ${escapeHtml(proteinStr)}</div>` : ''}
+        ${optStr ? `<div style="font-size:11px;color:var(--purple);margin-top:1px;font-weight:700;">➕ ${escapeHtml(optStr)}</div>` : ''}
+        ${it.desc ? `<div style="font-size:11px;color:var(--pink-deep);margin-top:3px;font-style:italic;">📝 ${escapeHtml(it.desc)}</div>` : ''}
+      </div>`;
+  });
+  const total = orderTotalOf(o.items);
+  html += `
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:linear-gradient(135deg,#e8dff0,#d9c9e8);border-radius:12px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-weight:900;color:var(--purple-deep);font-size:14px;">💰 Order Total</span>
+      <span style="font-weight:900;color:var(--purple-deep);font-size:18px;">${RM(total)}</span>
+    </div>`;
+  return html;
 }
 function renderOrder(){
   // 1) 活跃订单区
@@ -1707,6 +1877,7 @@ function renderOrder(){
   // 自动保存 cart
   saveCart();
   updateCartBadge();
+  updateActiveSummary();
 }
 function updateCartBadge(){
   const badge = document.getElementById('badgeCart');
