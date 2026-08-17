@@ -432,22 +432,6 @@
     .receipt::before,.receipt::after{display:none;}
     .no-print{display:none !important;}
   }
-  /* === History 打印模式: 多单内容多, 改成 A4 + 自适应缩放, 1 页印出 === */
-  @media print{
-    body.printing-history .print-area,
-    body.printing-history .print-area *{visibility:visible !important;}
-    body.printing-history .print-area{
-      position:absolute !important;left:0 !important;top:0 !important;
-      width:100% !important;max-width:194mm !important;
-      box-shadow:none !important;border:none !important;
-      border-radius:0 !important;background:#fff !important;
-      transform:scale(0.78);transform-origin:top left;
-    }
-    body.printing-history .modal{display:none !important;}
-    body.printing-history aside,
-    body.printing-history .topbar,
-    body.printing-history .no-print{display:none !important;}
-  }
 
   /* ===== 手机端 ===== */
   .menu-toggle{display:none;}
@@ -2924,13 +2908,54 @@ document.getElementById('printAllHist').onclick=()=>{
   modal.classList.add('show');
   document.getElementById('histReceiptClose').onclick = ()=> modal.classList.remove('show');
   document.getElementById('histReceiptPrint').onclick = ()=>{
-    // 进入 history 打印模式: A4 + 缩放, 让 1 页印出
-    const cleanup = ()=> document.body.classList.remove('printing-history');
-    window.addEventListener('afterprint', cleanup, {once:true});
-    document.body.classList.add('printing-history');
-    window.print();
-    // 兜底:某些浏览器 afterprint 不触发,2 秒后强制清理
-    setTimeout(cleanup, 2000);
+    // 把同一份收据内容塞到一个独立的打印窗口, 强制定制 80mm 纸张
+    // 解决 iOS Safari 弹出的 print dialog 把内容切成 N 张的问题
+    const src = document.getElementById('histReceiptContent').innerHTML;
+    const w = window.open('','_blank','width=400,height=900');
+    if(!w){ alert('请允许 popup 后再试一次 ⚙️'); return; }
+    w.document.open();
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Print History</title>
+<style>
+  @page{size:80mm auto;margin:0;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#fff;font-family:'Segoe UI','Microsoft YaHei',system-ui,sans-serif;color:#3a2d52;}
+  body{width:80mm;padding:6mm 4mm;font-size:9.5px;line-height:1.3;}
+  body *{visibility:visible !important;}
+  .r-brand{text-align:center;padding-bottom:6px;border-bottom:1.5px dashed #6b5b8c;}
+  .r-shop{font-size:14px !important;font-weight:900;color:#3a2d52;}
+  .r-reg{font-size:9px !important;margin-top:2px;color:#6b5b8c;}
+  .r-deco{text-align:center;margin:3px 0;color:#d4b854;letter-spacing:6px;font-size:11px;}
+  /* 总览 3 格:紧凑 */
+  div[style*="grid-template-columns"]{gap:4px !important;margin:6px 0 !important;}
+  div[style*="grid-template-columns"] > div{padding:5px !important;border-radius:6px !important;}
+  div[style*="grid-template-columns"] [style*="font-size:9.5px"]{font-size:7.5px !important;letter-spacing:.4px;}
+  div[style*="grid-template-columns"] [style*="font-size:22px"]{font-size:14px !important;margin-top:1px;}
+  /* 支付方式 pill */
+  .pays,.pays span{font-size:8.5px !important;}
+  /* 日期组头 */
+  div[style*="linear-gradient(135deg,#886ba8"]{padding:5px 8px !important;border-radius:6px 6px 0 0 !important;font-size:10px !important;}
+  div[style*="linear-gradient(135deg,#886ba8"] [style*="font-size:13px"]{font-size:10px !important;}
+  div[style*="linear-gradient(135deg,#886ba8"] [style*="font-size:11px"]{font-size:8px !important;}
+  /* 日期组体 */
+  div[style*="border:1px dashed var(--purple-pink);border-top:none"]{padding:5px 6px !important;border-radius:0 0 6px 6px !important;}
+  /* 订单行 */
+  div[style*="border-bottom:1px dotted var(--purple-pink);padding:8px 0"],
+  div[style*="border-bottom:1px dotted var(--purple-pink);"]{padding:3px 0 !important;}
+  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:12.5px"]{font-size:9.5px !important;}
+  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:13.5px"]{font-size:10px !important;}
+  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:10.5px"]{font-size:8.5px !important;}
+  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:11.5px"]{font-size:9px !important;line-height:1.25;}
+  /* 日期组之间间距 */
+  div[style*="margin-top:14px"]{margin-top:8px !important;}
+  /* Grand total */
+  .rtotal{margin-top:10px !important;padding-top:5px !important;font-size:14px !important;}
+  .rfoot{border-top:1px dashed #d4b854 !important;margin-top:8px !important;padding-top:5px !important;font-size:8.5px !important;}
+  .rfoot [style*="font-size:9.5px"]{font-size:7.5px !important;}
+  /* 强制一条连续内容, 不强行分页 */
+  body, body div{page-break-inside:avoid;}
+</style>
+</head><body>${src}<script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script></body></html>`);
+    w.document.close();
   };
 };
 
