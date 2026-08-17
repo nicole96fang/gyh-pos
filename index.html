@@ -18,10 +18,10 @@
   }
   :root{
     /* 🌸 浅蓝 + 粉色 主题 (圆润可爱风) */
-    --bg-1:#fff5f8;
+    --bg-1:#f0f5fa;                  /* 冷蓝白 (参考图背景色) */
     --bg-2:#eaf6fb;
-    --bg-3:#fceaf0;
-    --paper:#fffafd;
+    --bg-3:#eaf4fb;                  /* 冷浅蓝 (替代原浅粉) */
+    --paper:#f5f9fc;                 /* 冷蓝白纸面 */
     --ink:#3d4a5c;
     --ink-soft:#7c8a9c;
     --line:#d4e6f0;
@@ -56,9 +56,9 @@
       /* 漂浮的星点 (浅蓝+粉) */
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><g opacity='.55'><polygon points='40,40 42,46 48,46 43,49 45,55 40,52 35,55 37,49 32,46 38,46' fill='%23ffd87a'/><polygon points='180,80 182,86 188,86 183,89 185,95 180,92 175,95 177,89 172,86 178,86' fill='%237ec4dd' opacity='.5'/><polygon points='320,160 322,166 328,166 323,169 325,175 320,172 315,175 317,169 312,166 318,166' fill='%23ffb6c1' opacity='.6'/><polygon points='60,200 62,206 68,206 63,209 65,215 60,212 55,215 57,209 52,206 58,206' fill='%237ec4dd' opacity='.5'/><polygon points='350,300 352,306 358,306 353,309 355,315 350,312 345,315 347,309 342,306 348,306' fill='%23ffd87a'/><polygon points='120,320 122,326 128,326 123,329 125,335 120,332 115,335 117,329 112,326 118,326' fill='%23ffb6c1' opacity='.55'/><polygon points='250,360 252,366 258,366 253,369 255,375 250,372 245,375 247,369 242,366 248,366' fill='%237ec4dd' opacity='.55'/><circle cx='200' cy='40' r='2' fill='%234ba7ca'/><circle cx='90' cy='120' r='2' fill='%23ffb6c1' opacity='.6'/><circle cx='270' cy='220' r='2' fill='%234ba7ca' opacity='.5'/><circle cx='30' cy='280' r='1.5' fill='%23ffb6c1' opacity='.7'/><circle cx='380' cy='60' r='1.5' fill='%234ba7ca'/><circle cx='140' cy='380' r='1.5' fill='%23ffb6c1' opacity='.6'/></g></svg>"),
       /* 浅蓝 + 粉 水彩底纹 (横向渐变 + 多层叠加) */
-      radial-gradient(ellipse at 20% 10%, rgba(191,227,242,.55) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(255,182,193,.45) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 80%, rgba(255,208,217,.45) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 10%, rgba(191,227,242,.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(191,227,242,.4) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(218,236,247,.55) 0%, transparent 60%),
       radial-gradient(ellipse at 90% 90%, rgba(191,227,242,.5) 0%, transparent 50%),
       linear-gradient(135deg,var(--bg-1) 0%,var(--bg-2) 50%,var(--bg-3) 100%);
     background-attachment:fixed,fixed,fixed,fixed,fixed,fixed;
