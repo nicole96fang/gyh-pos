@@ -972,16 +972,20 @@
     <div class="sheet-grip"></div>
     <button class="close" id="optClose" style="position:absolute;top:14px;right:16px;border:none;background:var(--pink);width:32px;height:32px;border-radius:50%;font-size:17px;cursor:pointer;color:var(--purple-deep);">✕</button>
     <div id="optHeader" style="text-align:center;"></div>
+    <div id="noodleBlock">
     <div style="font-size:13px;color:var(--ink-soft);text-align:center;margin:4px 0 8px;">🍜 必选：Noodle Choosing（可多选 mix）</div>
 
     <!-- 必选 · Noodle Choosing -->
     <div class="opts" id="optNoodles" style="justify-content:flex-start;gap:8px;margin-bottom:6px;"></div>
     <div id="optNoodleWarn" style="display:none;color:#d06a64;font-size:12px;font-weight:700;margin:2px 0 6px;text-align:center;">⚠️ 请至少选一种面条</div>
+    </div>
 
+    <div id="proteinBlock">
     <!-- 必选 · Protein 单选 -->
     <div style="font-size:13px;color:var(--ink-soft);margin:8px 0 4px;text-align:center;">🥩 必选：Protein（只能选一）</div>
     <div class="opts" id="optProtein" style="justify-content:flex-start;gap:8px;margin-bottom:6px;"></div>
     <div id="optProteinWarn" style="display:none;color:#d06a64;font-size:12px;font-weight:700;margin:2px 0 6px;text-align:center;">⚠️ 请选择一项蛋白</div>
+    </div>
 
     <div style="font-size:13px;color:var(--ink-soft);margin:8px 0 4px;">➕ 加料选项（可多选）</div>
     <div class="opts" id="optPicker" style="justify-content:flex-start;gap:8px;"></div>
@@ -1341,16 +1345,11 @@ let picking = {dishId:null, noodles:[], protein:null, opts:[], qty:1};
 function openOptionPicker(id){
   _addToOrderId = null;             // 主动选菜 → 始终进草稿,不要进旧 active order
   const dish = findDish(id);
-  // 快速项（如 Other · Rm 0）：无需选 noodle/protein，直接加入草稿
-  if(dish && dish.quick){
-    const newItem = {dishId:id, qty:1, noodles:[], protein:null, opts:[], desc:'', date: dateKey(now())};
-    currentOrder.push(newItem);
-    showToast(`✅ 已加入草稿 · ${dish.name}`);
-    openDrawer();
-    renderOrder();
-    return;
-  }
   picking = {dishId:id, noodles:[], protein:null, opts:[], qty:1};
+  // 快速项（如 Other · Rm 0）：隐藏 noodle / protein，只保留 add-on / date / desc / qty
+  const isQuick = !!(dish && dish.quick);
+  document.getElementById('noodleBlock').style.display = isQuick ? 'none' : '';
+  document.getElementById('proteinBlock').style.display = isQuick ? 'none' : '';
   document.getElementById('optHeader').innerHTML =
     `<div style="font-size:42px;">${dish.emoji}</div>
      <div style="font-weight:800;font-size:19px;color:var(--purple-deep);">${dish.name}</div>
@@ -1403,7 +1402,8 @@ function renderOptPicker(){
   const hasProtein = !!picking.protein;
   document.getElementById('optNoodleWarn').style.display = hasNoodle?'none':'block';
   document.getElementById('optProteinWarn').style.display = hasProtein?'none':'block';
-  document.getElementById('optConfirm').disabled = !(hasNoodle && hasProtein);
+  const _dish = findDish(picking.dishId);
+  document.getElementById('optConfirm').disabled = !!(_dish && _dish.quick) ? false : !(hasNoodle && hasProtein);
 
   // 加料 OPTIONS - 支持多份 (add>0 的可多次点；add=0 的还是 0/1 切换)
   const box = document.getElementById('optPicker');
@@ -1486,8 +1486,10 @@ window.addEventListener('DOMContentLoaded',()=>{
 });
 document.getElementById('optDate').addEventListener('input',e=>updateOptDateHint(e.target.value));
 document.getElementById('optConfirm').onclick=()=>{
-  if(!picking.noodles.length){ document.getElementById('optNoodleWarn').style.display='block'; return; }
-  if(!picking.protein){ document.getElementById('optProteinWarn').style.display='block'; return; }
+  const dish = findDish(picking.dishId);
+  const skipReq = !!(dish && dish.quick);   // 快速项无需 noodle/protein
+  if(!skipReq && !picking.noodles.length){ document.getElementById('optNoodleWarn').style.display='block'; return; }
+  if(!skipReq && !picking.protein){ document.getElementById('optProteinWarn').style.display='block'; return; }
   const newItem = {dishId:picking.dishId, qty:picking.qty, noodles:[...picking.noodles], protein:picking.protein, opts:[...picking.opts], desc:document.getElementById('optDesc').value, date: document.getElementById('optDate').value || dateKey(now())};
   document.getElementById('optModal').classList.remove('show');
   // 优先用 _addToOrderId (一次性), 否则回退 selectedOrderId, 否则进草稿
