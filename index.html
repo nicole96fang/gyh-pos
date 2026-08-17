@@ -2544,11 +2544,11 @@ function renderHistory(){
           <div style="font-size:22px;font-weight:900;color:var(--purple-deep);">${totalOrders} 单</div>
         </div>
       </div>
-      <div style="background:linear-gradient(135deg,#fff8ee,#ffd0d9);border:1.5px dashed #e8b870;border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+      <div style="background:linear-gradient(135deg,#fceaf2,#eaf6fb);border:1.5px solid #4ba7ca;border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:22px;">🍜</span>
         <div>
-          <div style="font-size:10px;color:#a8825a;font-weight:900;letter-spacing:.5px;">总碗数</div>
-          <div style="font-size:22px;font-weight:900;color:#7a4e2a;">${totalBowls} 碗</div>
+          <div style="font-size:10px;color:#4ba7ca;font-weight:900;letter-spacing:.5px;">总碗数</div>
+          <div style="font-size:22px;font-weight:900;color:#4ba7ca;">${totalBowls} 碗</div>
         </div>
       </div>
     </div>
@@ -2557,7 +2557,7 @@ function renderHistory(){
       const bowls = (o.items||[]).reduce((s,it)=>s+(+it.qty||0),0);
       return `<tr><td>${o.date}</td><td>${o.time}</td>
       <td>${o.items.map(i=>i.name+'×'+i.qty).join(', ')}</td>
-      <td style="font-weight:900;color:#7a4e2a;text-align:center;background:rgba(255,235,200,.4);">${bowls} 碗</td>
+      <td style="font-weight:900;color:#4ba7ca;text-align:center;background:rgba(255,182,193,.18);">${bowls} 碗</td>
       <td><span class="pill ${o.method==='Cash'?'cash':'tng'}">${o.method}</span></td>
       <td>${RM(o.total)}</td>
       <td class="no-print">
@@ -2780,12 +2780,12 @@ function renderReport(){
   const tRev=rows.reduce((s,r)=>s+r.rev,0), tExp=rows.reduce((s,r)=>s+r.exp,0), tPro=tRev-tExp, tBowls=rows.reduce((s,r)=>s+(r.bowls||0),0);
   const labelHeader = repMode==='daily'?'Date':repMode==='weekly'?'Week':'Month';
   box.innerHTML=`<table class="list"><thead><tr><th>${labelHeader}</th><th>Orders</th><th>🍜 碗</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr></thead><tbody>`+
-    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td style="font-weight:900;color:#7a4e2a;">${r.bowls||0}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td>
+    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td style="font-weight:900;color:#4ba7ca;">${r.bowls||0}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td>
       <td class="${r.profit>=0?'profit-good':'profit-bad'}">${RM(r.profit)}</td></tr>`).join('')+
     `</tbody></table>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-weight:800;color:var(--purple-deep);">
       <span>Total Orders: ${rows.reduce((s,r)=>s+r.count,0)}</span>
-      <span style="color:#7a4e2a;">Total 🍜 碗数: ${tBowls}</span>
+      <span style="color:#4ba7ca;">Total 🍜 碗数: ${tBowls}</span>
       <span>Total Revenue: ${RM(tRev)}</span><span>Total Expense: ${RM(tExp)}</span>
       <span class="${tPro>=0?'profit-good':'profit-bad'}">Total Profit: ${RM(tPro)}</span></div>`;
 }
