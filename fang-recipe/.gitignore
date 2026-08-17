@@ -1,0 +1,10 @@
+# 预览截图与示例（非站点资源）
+字体预览.png
+字体预览_鸡肉页.png
+打印食谱示例_A4.pdf
+
+# 本地缓存 / 系统文件
+.codebuddy/
+.DS_Store
+Thumbs.db
+*.log

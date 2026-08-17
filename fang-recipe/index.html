@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fang的食谱 · 工作台</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+  <!-- 左侧菜单 -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">🌸</div>
+      <div class="brand-text">
+        <div class="brand-title">Fang的食谱</div>
+        <div class="brand-subtitle">家的味道 · 慢慢收藏</div>
+      </div>
+    </div>
+
+    <nav class="menu" id="menu"></nav>
+
+    <div class="sidebar-footer">
+      <div class="footer-flower">🌷</div>
+      <div class="footer-tip">每一道菜都是<br/>一段小幸福 ✿</div>
+    </div>
+  </aside>
+
+  <!-- 主体 -->
+  <main class="main">
+    <!-- 首页 -->
+    <section class="page active" data-page="home">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title"><span class="flower-icon">🌼</span> 欢迎来到 Fang 的小厨房</h1>
+          <p class="page-subtitle">把好吃的都收藏起来，做个有爱的人 ✿</p>
+        </div>
+        <div class="header-deco">
+          <span class="deco-flower">🌸</span>
+          <span class="deco-flower">🌺</span>
+        </div>
+      </header>
+
+      <div class="greet-card">
+        <div class="greet-text">
+          <div class="greet-title">嗨，Fang 👋</div>
+          <div class="greet-sub">今天想做点什么呢？</div>
+        </div>
+        <div class="greet-emoji">
+          <span>🍰</span><span>🥗</span><span>🍵</span>
+        </div>
+      </div>
+
+      <h3 class="section-title"><span class="flower-icon">🌷</span> 今日推荐分类</h3>
+      <div class="category-grid" id="categoryGrid"></div>
+
+      <h3 class="section-title"><span class="flower-icon">🌺</span> 最近添加</h3>
+      <div class="recent-list" id="recentList">
+        <div class="empty">还没有收藏过食谱哦～先去左侧选一个分类加一个吧！</div>
+      </div>
+
+      <div class="encourage">
+        ❤️ 专注每一餐，温暖每一口 🌸
+      </div>
+    </section>
+
+    <!-- 分类页模板 -->
+    <section class="page" data-page="category">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title"><span id="catIcon">🍗</span> <span id="catName">分类</span></h1>
+          <p class="page-subtitle" id="catSubtitle">把所有美味都收进这里吧～</p>
+        </div>
+        <button class="btn-add-recipe" id="addRecipeBtn">
+          <span>＋</span> 加入食谱
+        </button>
+      </header>
+
+      <div class="toolbar">
+        <div class="search">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="搜搜菜名或食材…" />
+        </div>
+        <div class="count-tag" id="countTag">共 0 道</div>
+      </div>
+
+      <div class="recipe-grid" id="recipeGrid">
+        <div class="empty-card">
+          <div class="empty-emoji">🍳</div>
+          <div>还没有食谱，点击右上角<strong>加入食谱</strong>开始记录第一道菜吧～</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 详情页 -->
+    <section class="page" data-page="detail">
+      <button class="back-btn" id="backBtn">← 返回列表</button>
+      <div id="detailContent"></div>
+    </section>
+  </main>
+</div>
+
+<!-- 模态框：添加/编辑食谱 -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal">
+    <div class="modal-header">
+      <span>🌸</span>
+      <h2 id="modalTitle">加入食谱</h2>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>菜名</label>
+        <input type="text" id="fName" placeholder="例如：妈妈的红烧鸡" />
+      </div>
+
+      <div class="form-row">
+        <label>分类</label>
+        <select id="fCategory"></select>
+      </div>
+
+      <div class="form-row">
+        <label>照片</label>
+        <div class="upload-area">
+          <input type="file" id="fImageFile" accept="image/*" hidden />
+          <div class="upload-preview" id="uploadPreview">
+            <span class="upload-tip">点击上传照片</span>
+          </div>
+          <button type="button" class="btn-mini" id="clearImage">清空</button>
+          <div class="upload-hint">支持 jpg/png，建议方形或 4:3</div>
+        </div>
+      </div>
+
+      <div class="form-row two-col">
+        <div>
+          <label>份量</label>
+          <input type="text" id="fServings" placeholder="例如：2 人份" />
+        </div>
+        <div>
+          <label>用时</label>
+          <input type="text" id="fDuration" placeholder="例如：30 分钟" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>所需食材</label>
+        <textarea id="fIngredients" rows="4" placeholder="每行一个，例如：&#10;鸡腿 500g&#10;生姜 3 片&#10;料酒 1 勺"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>烹饪步骤</label>
+        <textarea id="fSteps" rows="6" placeholder="每行一步，例如：&#10;1. 鸡腿洗净切块&#10;2. 冷水下锅焯水去腥&#10;3. 热锅冷油爆香姜蒜"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label>小贴士（可选）</label>
+        <textarea id="fTips" rows="2" placeholder="可以写下你最爱的小技巧～"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="modalCancel">取消</button>
+      <button class="btn-primary" id="modalSave">保存食谱</button>
+    </div>
+  </div>
+</div>
+
+<!-- 打印区（隐藏） -->
+<div id="printArea" class="print-area"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
