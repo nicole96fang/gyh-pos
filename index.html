@@ -1057,6 +1057,7 @@ const MENU = [
   {id:'ktse', name:'Keow Teow Sup Egg', price:4.50, emoji:'🥚', cls:'d5'},
   {id:'so', name:'Sup Only', price:4.50, emoji:'🥣', cls:'d6'},
   {id:'ty', name:'Tomyum', price:9.00, emoji:'🌶️', cls:'d4'},
+  {id:'other_rm0', name:'Other · Rm 0', price:0.00, emoji:'📋', cls:'d1'},
 ];
 /* 单选项（蛋白选择·必选一）：Pork / Chicken / Fishball Only / Egg Only */
 const SINGLE_PROTEIN = [
@@ -1302,7 +1303,7 @@ function renderMenu(){
   // 4 种可爱 emoji 轮换
   const emojis = ['🍜','🥣','🌶️','🥚','🐟','🍝','🍥','☁️'];
   g.innerHTML = MENU.map((m,i)=>{
-    const em = emojis[i % emojis.length];
+    const em = m.emoji || emojis[i % emojis.length];
     return `<div class="dish ${m.cls}" data-id="${m.id}">
       <div class="emoji" style="display:flex;align-items:center;justify-content:center;height:54px;font-size:42px;filter:drop-shadow(0 3px 6px rgba(75,167,202,.25));">${em}</div>
       <div class="nm">${m.name}</div>
