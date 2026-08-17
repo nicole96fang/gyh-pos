@@ -487,45 +487,7 @@
   <!-- 侧边导航 -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
-      <div class="logo"><svg viewBox="0 0 120 100" width="58" height="48" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;filter:drop-shadow(0 3px 6px rgba(106,91,140,.35));">
-        <!-- 玫瑰：5瓣叠层浪漫紫玫瑰 + 金色花心 + 绿叶 + 水彩高光 -->
-        <!-- 后层花瓣 (深紫) -->
-        <ellipse cx="60" cy="50" rx="32" ry="28" fill="#b885c4" opacity=".9"/>
-        <ellipse cx="42" cy="40" rx="18" ry="22" fill="#a96bbe" opacity=".85" transform="rotate(-25 42 40)"/>
-        <ellipse cx="78" cy="40" rx="18" ry="22" fill="#a96bbe" opacity=".85" transform="rotate(25 78 40)"/>
-        <!-- 中层花瓣 (中紫) -->
-        <ellipse cx="60" cy="42" rx="24" ry="20" fill="#ffb6c1"/>
-        <ellipse cx="48" cy="50" rx="16" ry="18" fill="#ffd0d9" opacity=".95" transform="rotate(-15 48 50)"/>
-        <ellipse cx="72" cy="50" rx="16" ry="18" fill="#ffd0d9" opacity=".95" transform="rotate(15 72 50)"/>
-        <ellipse cx="60" cy="58" rx="20" ry="14" fill="#ffd0d9"/>
-        <!-- 前层小花瓣 (浅紫) -->
-        <ellipse cx="56" cy="48" rx="10" ry="9" fill="#e8c5e0" opacity=".95"/>
-        <ellipse cx="64" cy="48" rx="10" ry="9" fill="#e8c5e0" opacity=".95"/>
-        <ellipse cx="60" cy="42" rx="9" ry="7" fill="#f3e5f5"/>
-        <!-- 浪漫卷边 -->
-        <path d="M40,55 Q45,62 52,60" stroke="#a96bbe" stroke-width="1.2" fill="none" opacity=".7"/>
-        <path d="M80,55 Q75,62 68,60" stroke="#a96bbe" stroke-width="1.2" fill="none" opacity=".7"/>
-        <!-- 金色花心 -->
-        <circle cx="60" cy="48" r="4" fill="#ffd87a"/>
-        <circle cx="60" cy="48" r="2" fill="#e8b845"/>
-        <circle cx="58.5" cy="47" r=".8" fill="#fff5cc"/>
-        <!-- 浪漫叶子 (深紫+绿) -->
-        <path d="M30,68 Q22,72 18,80 Q28,82 38,76 Q36,70 30,68 Z" fill="#5fa8c7" opacity=".9"/>
-        <path d="M32,70 L36,78" stroke="#7ec4dd" stroke-width=".8" opacity=".7"/>
-        <path d="M92,68 Q100,72 104,80 Q94,82 84,76 Q86,70 92,68 Z" fill="#5fa8c7" opacity=".9"/>
-        <path d="M90,70 L86,78" stroke="#7ec4dd" stroke-width=".8" opacity=".7"/>
-        <!-- 茎 -->
-        <path d="M58,72 Q58,82 56,90" stroke="#7ec4dd" stroke-width="1.5" fill="none" opacity=".7"/>
-        <path d="M64,72 Q66,82 68,90" stroke="#7ec4dd" stroke-width="1.5" fill="none" opacity=".7"/>
-        <!-- 水彩高光小圆点 -->
-        <circle cx="48" cy="38" r="1.8" fill="#fff" opacity=".7"/>
-        <circle cx="74" cy="42" r="1.4" fill="#fff" opacity=".6"/>
-        <circle cx="65" cy="60" r="1.2" fill="#fff" opacity=".5"/>
-        <!-- 散落金粉 -->
-        <polygon points="22,30 23,33 26,33 24,35 25,38 22,36 19,38 20,35 18,33 21,33" fill="#ffd87a" opacity=".75"/>
-        <polygon points="98,30 99,33 102,33 100,35 101,38 98,36 95,38 96,35 94,33 97,33" fill="#ffd87a" opacity=".7"/>
-        <polygon points="60,8 61,11 64,11 62,13 63,16 60,14 57,16 58,13 56,11 59,11" fill="#ffd87a"/>
-      </svg></div>
+      <div class="logo">🥀</div>
       <div class="name" style="color:#4ba7ca;">GOH YEAN HUAN</div>
       <div class="sub" style="color:#7ec4dd;">202403172359</div>
       <div class="reg" style="color:#9ed1e3;">003618842-W</div>
@@ -591,7 +553,7 @@
           <button class="btn-neworder-lg no-print" id="dashNewOrder2">🧾 Start New Order</button>
           <div class="dash-hero-deco" style="color:#ffd87a;letter-spacing:8px;">✦ ✦ ✦ ✦</div>
         </div>
-        <div style="position:absolute;right:-20px;top:8px;opacity:.85;pointer-events:none;">${cuteLogoSVG(140)}</div>
+        <div style="position:absolute;right:14px;top:6px;opacity:.7;pointer-events:none;font-size:64px;line-height:1;filter:drop-shadow(0 3px 6px rgba(75,167,202,.25));">🥀</div>
       </div>
 
       <!-- 今日亮点卡（大字） -->
@@ -1264,9 +1226,9 @@ function renderDashboard(){
   if(bowlsEl){
     bowlsEl.innerHTML = `${bowls} <span style="font-size:14px;font-weight:700;color:#a98a4a;">碗</span>`;
   }
-  // 给 orders 卡片画上巫女图标 (32px)
+  // 给 orders 卡片画上 🥀 图标
   const ordIcon = document.getElementById('stOrdersIcon');
-  if(ordIcon && !ordIcon.dataset.done){ ordIcon.innerHTML = witchSVG('full',32); ordIcon.dataset.done='1'; }
+  if(ordIcon && !ordIcon.dataset.done){ ordIcon.innerHTML = '🥀'; ordIcon.dataset.done='1'; }
 
   // Hero 文案：随时间问候 + 今日订单数 + 几碗
   const h = new Date().getHours();
@@ -1381,25 +1343,6 @@ function renderMenu(){
 }
 function findDish(id){return MENU.find(m=>m.id===id);}
 
-// ==== 可爱 Logo: 浅蓝粉渐变圆 + 中心字母 G + 装饰星 ====
-function cuteLogoSVG(size=44){
-  const id = `cute_${Math.random().toString(36).slice(2,7)}`;
-  const s = size;
-  return `<svg viewBox="0 0 80 80" width="${s}" height="${s}" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;filter:drop-shadow(0 3px 6px rgba(75,167,202,.3));vertical-align:middle;">
-    <defs>
-      <linearGradient id="${id}_g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#7ec4dd"/>
-        <stop offset="100%" stop-color="#ffb6c1"/>
-      </linearGradient>
-    </defs>
-    <circle cx="40" cy="40" r="36" fill="url(#${id}_g)" stroke="#fff" stroke-width="2.5"/>
-    <text x="40" y="54" text-anchor="middle" font-size="36" font-weight="900" fill="#fff" font-family="serif">G</text>
-    <text x="64" y="22" font-size="13" fill="#ffd87a" stroke="#fff" stroke-width=".4">★</text>
-    <text x="14" y="62" font-size="10" fill="#ffd87a" stroke="#fff" stroke-width=".4">✦</text>
-  </svg>`;
-}
-// 兼容旧名: 某些地方可能还在调用 witchSVG
-function witchSVG(pose='full', size=44){ return cuteLogoSVG(size); }
 // 计算 add-on 加价：接受 [{id, qty}] 或旧格式 [id, id, ...]
 function optsAddTotal(opts){
   if(!opts || !opts.length) return 0;
@@ -2379,9 +2322,9 @@ function renderSuppliers(){
   g.innerHTML = SUPPLIERS.map((s,i)=>{
     // 3 种角色循环 + 大小写混合
     const pose = ['full','cat','with-cat','full','full','cat','full','with-cat','cat','full','full','full','cat','with-cat'][i % 14];
-    const logo = witchSVG(pose, 30);
+    const logo = '🥀';
     return `<button class="sup" data-i="${i}" style="background:${cols[i%cols.length]};display:flex;align-items:center;gap:8px;">
-      <span class="e" style="font-size:0;width:34px;display:inline-flex;align-items:center;justify-content:center;">${logo}</span>${s.n}</button>`;
+      <span class="e" style="font-size:22px;width:34px;display:inline-flex;align-items:center;justify-content:center;line-height:1;">${logo}</span>${s.n}</button>`;
   }).join('');
   g.querySelectorAll('.sup').forEach(b=>b.onclick=()=>{
     selectedSupplier = SUPPLIERS[+b.dataset.i].n;
