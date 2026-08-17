@@ -1057,7 +1057,7 @@ const MENU = [
   {id:'ktse', name:'Keow Teow Sup Egg', price:4.50, emoji:'🥚', cls:'d5'},
   {id:'so', name:'Sup Only', price:4.50, emoji:'🥣', cls:'d6'},
   {id:'ty', name:'Tomyum', price:9.00, emoji:'🌶️', cls:'d4'},
-  {id:'other_rm0', name:'Other · Rm 0', price:0.00, emoji:'📋', cls:'d1'},
+  {id:'other_rm0', name:'Other · Rm 0', price:0.00, emoji:'📋', cls:'d1', quick:true},
 ];
 /* 单选项（蛋白选择·必选一）：Pork / Chicken / Fishball Only / Egg Only */
 const SINGLE_PROTEIN = [
@@ -1341,6 +1341,15 @@ let picking = {dishId:null, noodles:[], protein:null, opts:[], qty:1};
 function openOptionPicker(id){
   _addToOrderId = null;             // 主动选菜 → 始终进草稿,不要进旧 active order
   const dish = findDish(id);
+  // 快速项（如 Other · Rm 0）：无需选 noodle/protein，直接加入草稿
+  if(dish && dish.quick){
+    const newItem = {dishId:id, qty:1, noodles:[], protein:null, opts:[], desc:'', date: dateKey(now())};
+    currentOrder.push(newItem);
+    showToast(`✅ 已加入草稿 · ${dish.name}`);
+    openDrawer();
+    renderOrder();
+    return;
+  }
   picking = {dishId:id, noodles:[], protein:null, opts:[], qty:1};
   document.getElementById('optHeader').innerHTML =
     `<div style="font-size:42px;">${dish.emoji}</div>
