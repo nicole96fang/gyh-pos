@@ -1013,9 +1013,15 @@
 const DB = {
   orders: JSON.parse(localStorage.getItem('gyh_orders')||'[]'),
   expenses: JSON.parse(localStorage.getItem('gyh_expenses')||'[]'),
-  save(){ localStorage.setItem('gyh_orders',JSON.stringify(this.orders)); localStorage.setItem('gyh_expenses',JSON.stringify(this.expenses)); }
+  activeOrders: JSON.parse(localStorage.getItem('gyh_active')||'[]'),
+  save(){ localStorage.setItem('gyh_orders',JSON.stringify(this.orders)); localStorage.setItem('gyh_expenses',JSON.stringify(this.expenses)); localStorage.setItem('gyh_active',JSON.stringify(this.activeOrders)); }
 };
 const RM = n => 'RM ' + Number(n).toFixed(2);
+/* 把内存里的 activeOrders 同步回 DB + localStorage */
+function saveActiveOrders(){
+  DB.activeOrders = activeOrders.slice();
+  DB.save();
+}
 const now = () => new Date();
 // 马来西亚时间 (GMT+8) - 不受浏览器/UTC 影响
 const MY_TZ_OFFSET_MIN = 8 * 60;
@@ -1098,7 +1104,7 @@ const SUPPLIERS = [
 
 /* ============ 当前订单状态 ============ */
 let currentOrder = [];          // {dishId, qty, opts:[], desc}  当前草稿（未送出厨房）
-let activeOrders = [];         // [orderObj, ...] 已送出厨房未结账的订单
+let activeOrders = DB.activeOrders.slice();  // [orderObj, ...] 已送出厨房未结账的订单（从 localStorage 恢复）
 let selectedOrderId = null;    // 抽屉里目前查看的活跃订单
 let _addToOrderId = null;       // 一次性: 让下一道菜进入指定活跃订单 (非 selectedOrderId)
 let selectedSupplier = '';
@@ -1530,6 +1536,7 @@ document.getElementById('sendToKitchen').onclick=()=>{
   currentOrder = [];
   clearCart();
   renderOrder();
+  saveActiveOrders();
   // 简洁动画提示
   showToast(`🍳 已送出厨房 · ${code}${name?' ('+name+')':''}`);
 };
@@ -1675,6 +1682,7 @@ window.viewActiveOrder = id => {
     activeOrders = activeOrders.filter(x=>x.id!==id);
     if(selectedOrderId===id) selectedOrderId = null;
     renderActiveOrders();
+    saveActiveOrders();
     document.getElementById('activeOrderDetailModal').classList.remove('show');
     toast(`🗑️ 已清除 ${o.code}`);
   };
@@ -2084,6 +2092,7 @@ function finishOrder(method, change){
       activeOrders = activeOrders.filter(x=>x.id!==oid);
     });
     DB.save();
+    saveActiveOrders();
     renderDashboard(); renderHistory();
     document.getElementById('batchPayModal').classList.remove('show');
     document.getElementById('batchPayStep1').classList.remove('hidden');
@@ -3031,6 +3040,7 @@ document.getElementById('todayDate').textContent = now().toLocaleDateString('en-
 renderMenu();
 renderSuppliers();
 renderDashboard();
+renderActiveOrders();
 
 // 自动恢复 Cart (防误关丢失)
 const _restored = restoreCart();
