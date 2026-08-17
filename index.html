@@ -56,10 +56,10 @@
       /* 漂浮的星点 (浅蓝+粉) */
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><g opacity='.55'><polygon points='40,40 42,46 48,46 43,49 45,55 40,52 35,55 37,49 32,46 38,46' fill='%23ffd87a'/><polygon points='180,80 182,86 188,86 183,89 185,95 180,92 175,95 177,89 172,86 178,86' fill='%237ec4dd' opacity='.5'/><polygon points='320,160 322,166 328,166 323,169 325,175 320,172 315,175 317,169 312,166 318,166' fill='%23ffb6c1' opacity='.6'/><polygon points='60,200 62,206 68,206 63,209 65,215 60,212 55,215 57,209 52,206 58,206' fill='%237ec4dd' opacity='.5'/><polygon points='350,300 352,306 358,306 353,309 355,315 350,312 345,315 347,309 342,306 348,306' fill='%23ffd87a'/><polygon points='120,320 122,326 128,326 123,329 125,335 120,332 115,335 117,329 112,326 118,326' fill='%23ffb6c1' opacity='.55'/><polygon points='250,360 252,366 258,366 253,369 255,375 250,372 245,375 247,369 242,366 248,366' fill='%237ec4dd' opacity='.55'/><circle cx='200' cy='40' r='2' fill='%234ba7ca'/><circle cx='90' cy='120' r='2' fill='%23ffb6c1' opacity='.6'/><circle cx='270' cy='220' r='2' fill='%234ba7ca' opacity='.5'/><circle cx='30' cy='280' r='1.5' fill='%23ffb6c1' opacity='.7'/><circle cx='380' cy='60' r='1.5' fill='%234ba7ca'/><circle cx='140' cy='380' r='1.5' fill='%23ffb6c1' opacity='.6'/></g></svg>"),
       /* 浅蓝 + 粉 水彩底纹 (横向渐变 + 多层叠加) */
-      radial-gradient(ellipse at 20% 10%, rgba(217,201,232,.6) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(184,168,212,.5) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 80%, rgba(232,197,224,.4) 0%, transparent 60%),
-      radial-gradient(ellipse at 90% 90%, rgba(217,201,232,.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 10%, rgba(191,227,242,.55) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(255,182,193,.45) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(255,208,217,.45) 0%, transparent 60%),
+      radial-gradient(ellipse at 90% 90%, rgba(191,227,242,.5) 0%, transparent 50%),
       linear-gradient(135deg,var(--bg-1) 0%,var(--bg-2) 50%,var(--bg-3) 100%);
     background-attachment:fixed,fixed,fixed,fixed,fixed,fixed;
     background-size:400px 400px,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%;
@@ -68,7 +68,7 @@
   /* 角落花叶 + 鸭子 · 顶部 */
   body::before{
     content:"";position:fixed;inset:0;pointer-events:none;opacity:.95;z-index:0;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1200 800' preserveAspectRatio='xMidYMid slice'><g opacity='.85'><!-- 左上 紫玫瑰 --><g transform='translate(30,20)'><ellipse cx='25' cy='40' rx='10' ry='16' fill='%23ffb6c1' opacity='.75' transform='rotate(-30 25 40)'/><ellipse cx='42' cy='28' rx='10' ry='16' fill='%23ffd0d9' opacity='.85' transform='rotate(20 42 28)'/><ellipse cx='30' cy='18' rx='9' ry='14' fill='%23ffb6c1' opacity='.8' transform='rotate(-10 30 18)'/><ellipse cx='12' cy='38' rx='9' ry='14' fill='%23b885c4' opacity='.75' transform='rotate(-50 12 38)'/><ellipse cx='48' cy='48' rx='8' ry='12' fill='%23a96bbe' opacity='.75' transform='rotate(40 48 48)'/><circle cx='28' cy='30' r='6' fill='%23ffd87a'/><path d='M-5,75 Q5,68 15,72 Q20,80 8,82' stroke='%237ec4dd' stroke-width='1.5' fill='none' opacity='.7'/></g><!-- 右上 星书+药水瓶 --><g transform='translate(1020,30)'><rect x='0' y='20' width='44' height='35' rx='2' fill='%239ed1e3'/><rect x='0' y='20' width='44' height='6' fill='%23ffb6c1'/><line x1='6' y1='32' x2='38' y2='32' stroke='%23ffd87a' stroke-width='1.2'/><line x1='6' y1='38' x2='38' y2='38' stroke='%23ffd87a' stroke-width='1.2'/><line x1='6' y1='44' x2='30' y2='44' stroke='%23ffd87a' stroke-width='1.2'/><polygon points='42,8 44,14 50,14 45,18 47,24 42,21 37,24 39,18 34,14 40,14' fill='%23ffd87a'/><g transform='translate(60,15)'><path d='M15,5 L25,5 L25,40 Q20,48 15,40 Z' fill='%23bfe3f2'/><path d='M15,5 L20,5 L20,40 Q17,48 15,40 Z' fill='%23c5e2eb'/><ellipse cx='20' cy='6' rx='5' ry='3' fill='%237ec4dd'/><circle cx='18' cy='20' r='1.5' fill='%23fff'/><circle cx='22' cy='28' r='1' fill='%23fff'/><circle cx='17' cy='33' r='1' fill='%23fff'/><circle cx='20' cy='48' r='2.5' fill='%23ffd87a' opacity='.8'/></g></g><!-- 左下 睡姿黑猫 --><g transform='translate(20,650)'><ellipse cx='60' cy='50' rx='55' ry='28' fill='%234ba7ca'/><ellipse cx='20' cy='40' rx='22' ry='18' fill='%234ba7ca'/><polygon points='4,22 10,10 18,22' fill='%234ba7ca'/><polygon points='22,22 30,10 38,22' fill='%234ba7ca'/><polygon points='6,20 10,14 14,20' fill='%239ed1e3' opacity='.4'/><polygon points='24,20 30,14 34,20' fill='%239ed1e3' opacity='.4'/><ellipse cx='20' cy='44' rx='3' ry='4' fill='%23ffb6c1'/><ellipse cx='20' cy='43' rx='1' ry='2' fill='%231f1828'/><line x1='12' y1='50' x2='28' y2='50' stroke='%231f1828' stroke-width='1.2'/><path d='M110,40 Q130,30 140,55' stroke='%234ba7ca' stroke-width='4' fill='none' stroke-linecap='round'/></g><!-- 右下 紫植物+星 --><g transform='translate(1020,640)'><path d='M30,90 Q50,40 70,60 Q80,80 70,100 Q50,110 35,100 Z' fill='%23bfe3f2' opacity='.75'/><path d='M40,80 Q60,30 80,50 Q90,70 80,90 Q60,100 45,90 Z' fill='%235fa8c7' opacity='.8'/><path d='M20,110 Q40,80 60,100 Q70,115 55,125 Q35,130 25,120 Z' fill='%23bfe3f2' opacity='.7'/><polygon points='80,30 82,38 90,38 84,42 86,50 80,46 74,50 76,42 70,38 78,38' fill='%23ffd87a'/><polygon points='50,10 52,16 58,16 53,20 55,26 50,22 45,26 47,20 42,16 48,16' fill='%23ffd87a' opacity='.85'/><polygon points='110,20 112,26 118,26 113,30 115,36 110,32 105,36 107,30 102,26 108,26' fill='%23ffd87a' opacity='.7'/><circle cx='35' cy='55' r='4' fill='%23ffd0d9' opacity='.75'/><circle cx='60' cy='25' r='3' fill='%23ffb6c1' opacity='.8'/></g><!-- 散落小星 --><polygon points='250,150 252,156 258,156 253,160 255,166 250,162 245,166 247,160 242,156 248,156' fill='%23ffd87a' opacity='.7'/><polygon points='600,300 602,306 608,306 603,310 605,316 600,312 595,316 597,310 592,306 598,306' fill='%23ffd87a' opacity='.6'/><polygon points='900,500 902,506 908,506 903,510 905,516 900,512 895,516 897,510 892,506 898,506' fill='%23ffd87a' opacity='.7'/><polygon points='450,400 452,406 458,406 453,410 455,416 450,412 445,416 447,410 442,406 448,406' fill='%23ffd87a' opacity='.5'/><polygon points='700,180 702,186 708,186 703,190 705,196 700,192 695,196 697,190 692,186 698,186' fill='%23ffd87a' opacity='.55'/><polygon points='100,500 102,506 108,506 103,510 105,516 100,512 95,516 97,510 92,506 98,506' fill='%23ffd87a' opacity='.5'/><polygon points='1080,400 1082,406 1088,406 1083,410 1085,416 1080,412 1075,416 1077,410 1072,406 1078,406' fill='%23ffd87a' opacity='.45'/><polygon points='180,250 182,256 188,256 183,260 185,266 180,262 175,266 177,260 172,256 178,256' fill='%23ffd87a' opacity='.5'/><polygon points='850,250 852,256 858,256 853,260 855,266 850,262 845,266 847,260 842,256 848,256' fill='%23ffd87a' opacity='.55'/></g></svg>");
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1200 800' preserveAspectRatio='xMidYMid slice'><g opacity='.85'><!-- 左上 紫玫瑰 --><g transform='translate(30,20)'><ellipse cx='25' cy='40' rx='10' ry='16' fill='%23ffb6c1' opacity='.75' transform='rotate(-30 25 40)'/><ellipse cx='42' cy='28' rx='10' ry='16' fill='%23ffd0d9' opacity='.85' transform='rotate(20 42 28)'/><ellipse cx='30' cy='18' rx='9' ry='14' fill='%23ffb6c1' opacity='.8' transform='rotate(-10 30 18)'/><ellipse cx='12' cy='38' rx='9' ry='14' fill='%23ffb6c1' opacity='.75' transform='rotate(-50 12 38)'/><ellipse cx='48' cy='48' rx='8' ry='12' fill='%23ff9eb0' opacity='.75' transform='rotate(40 48 48)'/><circle cx='28' cy='30' r='6' fill='%23ffd87a'/><path d='M-5,75 Q5,68 15,72 Q20,80 8,82' stroke='%237ec4dd' stroke-width='1.5' fill='none' opacity='.7'/></g><!-- 右上 星书+药水瓶 --><g transform='translate(1020,30)'><rect x='0' y='20' width='44' height='35' rx='2' fill='%239ed1e3'/><rect x='0' y='20' width='44' height='6' fill='%23ffb6c1'/><line x1='6' y1='32' x2='38' y2='32' stroke='%23ffd87a' stroke-width='1.2'/><line x1='6' y1='38' x2='38' y2='38' stroke='%23ffd87a' stroke-width='1.2'/><line x1='6' y1='44' x2='30' y2='44' stroke='%23ffd87a' stroke-width='1.2'/><polygon points='42,8 44,14 50,14 45,18 47,24 42,21 37,24 39,18 34,14 40,14' fill='%23ffd87a'/><g transform='translate(60,15)'><path d='M15,5 L25,5 L25,40 Q20,48 15,40 Z' fill='%23bfe3f2'/><path d='M15,5 L20,5 L20,40 Q17,48 15,40 Z' fill='%23c5e2eb'/><ellipse cx='20' cy='6' rx='5' ry='3' fill='%237ec4dd'/><circle cx='18' cy='20' r='1.5' fill='%23fff'/><circle cx='22' cy='28' r='1' fill='%23fff'/><circle cx='17' cy='33' r='1' fill='%23fff'/><circle cx='20' cy='48' r='2.5' fill='%23ffd87a' opacity='.8'/></g></g><!-- 左下 睡姿黑猫 --><g transform='translate(20,650)'><ellipse cx='60' cy='50' rx='55' ry='28' fill='%234ba7ca'/><ellipse cx='20' cy='40' rx='22' ry='18' fill='%234ba7ca'/><polygon points='4,22 10,10 18,22' fill='%234ba7ca'/><polygon points='22,22 30,10 38,22' fill='%234ba7ca'/><polygon points='6,20 10,14 14,20' fill='%239ed1e3' opacity='.4'/><polygon points='24,20 30,14 34,20' fill='%239ed1e3' opacity='.4'/><ellipse cx='20' cy='44' rx='3' ry='4' fill='%23ffb6c1'/><ellipse cx='20' cy='43' rx='1' ry='2' fill='%231f1828'/><line x1='12' y1='50' x2='28' y2='50' stroke='%231f1828' stroke-width='1.2'/><path d='M110,40 Q130,30 140,55' stroke='%234ba7ca' stroke-width='4' fill='none' stroke-linecap='round'/></g><!-- 右下 紫植物+星 --><g transform='translate(1020,640)'><path d='M30,90 Q50,40 70,60 Q80,80 70,100 Q50,110 35,100 Z' fill='%23bfe3f2' opacity='.75'/><path d='M40,80 Q60,30 80,50 Q90,70 80,90 Q60,100 45,90 Z' fill='%235fa8c7' opacity='.8'/><path d='M20,110 Q40,80 60,100 Q70,115 55,125 Q35,130 25,120 Z' fill='%23bfe3f2' opacity='.7'/><polygon points='80,30 82,38 90,38 84,42 86,50 80,46 74,50 76,42 70,38 78,38' fill='%23ffd87a'/><polygon points='50,10 52,16 58,16 53,20 55,26 50,22 45,26 47,20 42,16 48,16' fill='%23ffd87a' opacity='.85'/><polygon points='110,20 112,26 118,26 113,30 115,36 110,32 105,36 107,30 102,26 108,26' fill='%23ffd87a' opacity='.7'/><circle cx='35' cy='55' r='4' fill='%23ffd0d9' opacity='.75'/><circle cx='60' cy='25' r='3' fill='%23ffb6c1' opacity='.8'/></g><!-- 散落小星 --><polygon points='250,150 252,156 258,156 253,160 255,166 250,162 245,166 247,160 242,156 248,156' fill='%23ffd87a' opacity='.7'/><polygon points='600,300 602,306 608,306 603,310 605,316 600,312 595,316 597,310 592,306 598,306' fill='%23ffd87a' opacity='.6'/><polygon points='900,500 902,506 908,506 903,510 905,516 900,512 895,516 897,510 892,506 898,506' fill='%23ffd87a' opacity='.7'/><polygon points='450,400 452,406 458,406 453,410 455,416 450,412 445,416 447,410 442,406 448,406' fill='%23ffd87a' opacity='.5'/><polygon points='700,180 702,186 708,186 703,190 705,196 700,192 695,196 697,190 692,186 698,186' fill='%23ffd87a' opacity='.55'/><polygon points='100,500 102,506 108,506 103,510 105,516 100,512 95,516 97,510 92,506 98,506' fill='%23ffd87a' opacity='.5'/><polygon points='1080,400 1082,406 1088,406 1083,410 1085,416 1080,412 1075,416 1077,410 1072,406 1078,406' fill='%23ffd87a' opacity='.45'/><polygon points='180,250 182,256 188,256 183,260 185,266 180,262 175,266 177,260 172,256 178,256' fill='%23ffd87a' opacity='.5'/><polygon points='850,250 852,256 858,256 853,260 855,266 850,262 845,266 847,260 842,256 848,256' fill='%23ffd87a' opacity='.55'/></g></svg>");
     background-size:cover;
     background-position:center top;
     background-repeat:no-repeat;
@@ -115,7 +115,7 @@
     border-radius:18px;
     background:linear-gradient(135deg,var(--purple-pink),var(--bg-2));
     box-shadow:var(--shadow);
-    border:2px solid rgba(217,201,232,.6);
+    border:2px solid rgba(191,227,242,.55);
   }
   .brand .logo{font-size:34px;line-height:1;}
   .brand .name{font-weight:800;font-size:15px;margin-top:6px;color:var(--purple-deep);letter-spacing:.3px;}
@@ -128,8 +128,8 @@
   }
   .nav-btn .ic{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:12px;}
   .nav-btn:hover{background:rgba(255,255,255,.7);transform:translateX(3px);}
-  .nav-btn.active{background:#fff;box-shadow:var(--shadow);color:#4ba7ca;border:1.5px solid rgba(217,201,232,.6);}
-  .nav-btn.active .ic{box-shadow:0 4px 10px rgba(106,91,140,.18);}
+  .nav-btn.active{background:#fff;box-shadow:var(--shadow);color:#4ba7ca;border:1.5px solid rgba(191,227,242,.55);}
+  .nav-btn.active .ic{box-shadow:0 4px 10px rgba(75,167,202,.18);}
   .nav-foot{margin-top:auto;font-size:10px;color:var(--ink-soft);text-align:center;line-height:1.5;}
 
   /* ===== 主区域 ===== */
@@ -143,10 +143,10 @@
     border:none;cursor:pointer;
     background:linear-gradient(135deg,var(--mint-deep),var(--sky-deep));
     color:#fff;font-weight:800;font-size:14px;
-    padding:11px 20px;border-radius:14px;box-shadow:0 6px 16px rgba(106,91,140,.4);
+    padding:11px 20px;border-radius:14px;box-shadow:0 6px 16px rgba(75,167,202,.4);
     display:inline-flex;align-items:center;gap:6px;transition:.18s;
   }
-  .btn-neworder:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(106,91,140,.5);}
+  .btn-neworder:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(75,167,202,.5);}
   .btn-neworder:active{transform:scale(.97);}
 
   /* Dashboard Hero 欢迎条 · 极简：只保留奶黄格纹底 */
@@ -154,8 +154,8 @@
     display:flex;align-items:center;justify-content:space-between;gap:24px;
     padding:32px 36px;border-radius:28px;position:relative;overflow:hidden;
     background:
-      linear-gradient(135deg,#f3e5f5,#ede7f6 50%,#fce4ec);
-    box-shadow:0 8px 24px rgba(106,91,140,.18);
+      linear-gradient(135deg,#eaf6fb,#fceaf0 50%,#fce4ec);
+    box-shadow:0 8px 24px rgba(75,167,202,.18);
     border:1.5px solid var(--line);box-shadow:var(--shadow);
     margin-bottom:24px;position:relative;overflow:hidden;flex-wrap:wrap;
   }
@@ -271,8 +271,8 @@
   .overlay.show{display:block;}
   .drawer{
     position:fixed;top:0;right:0;height:100%;width:min(460px,94vw);
-    background:linear-gradient(180deg,#fefaf3,#f3e5f5 30%,#ede7f6);
-    z-index:60;box-shadow:-12px 0 40px rgba(106,91,140,.25);padding:20px 22px;overflow:auto;
+    background:linear-gradient(180deg,#fefaf3,#eaf6fb 30%,#fceaf0);
+    z-index:60;box-shadow:-12px 0 40px rgba(75,167,202,.25);padding:20px 22px;overflow:auto;
     transform:translateX(100%);transition:.3s;border-left:3px solid var(--purple-pink);
   }
   .drawer.show{transform:translateX(0);}
@@ -306,7 +306,7 @@
     background:linear-gradient(135deg,var(--purple),var(--purple-deep));color:#fff;box-shadow:0 6px 16px rgba(75,167,202,.3);transition:.2s;
   }
   .pay-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(75,167,202,.4);}
-  .pay-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(106,91,140,.4);}
+  .pay-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(75,167,202,.4);}
   .pay-btn:disabled{opacity:.5;cursor:not-allowed;}
   .empty{text-align:center;color:var(--ink-soft);padding:30px 0;font-size:14px;}
 
@@ -321,8 +321,8 @@
   /* 底部上滑抽屉（手机 App 风格） */
   .bottom-sheet{
     position:relative;width:min(520px,100%);max-height:88vh;overflow:auto;
-    background:linear-gradient(180deg,#fefaf3,#f3e5f5 40%,#ede7f6);border-radius:26px 26px 0 0;padding:14px 22px 24px;
-    box-shadow:0 -12px 40px rgba(106,91,140,.25);border-top:3px solid var(--purple-pink);
+    background:linear-gradient(180deg,#fefaf3,#eaf6fb 40%,#fceaf0);border-radius:26px 26px 0 0;padding:14px 22px 24px;
+    box-shadow:0 -12px 40px rgba(75,167,202,.25);border-top:3px solid var(--purple-pink);
     transform:translateY(100%);transition:transform .35s cubic-bezier(.22,1,.36,1);
     align-self:flex-end;margin-top:auto;
   }
@@ -331,13 +331,13 @@
   /* Noodles 必选项（紫色系） */
   .opt.noodle.on{background:linear-gradient(135deg,#c5e2eb,#ffb6c1);border-color:var(--purple);color:#fff;}
   .opt.protein.on{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border-color:var(--pink-deep);color:var(--purple-deep);}
-  .modal-box{background:linear-gradient(180deg,#fefaf3,#f3e5f5);border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(106,91,140,.25);text-align:center;border:2px solid var(--purple-pink);max-height:calc(100vh - 32px);overflow:auto;}
+  .modal-box{background:linear-gradient(180deg,#fefaf3,#eaf6fb);border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(75,167,202,.25);text-align:center;border:2px solid var(--purple-pink);max-height:calc(100vh - 32px);overflow:auto;}
   /* 收据弹窗里允许透明，露出水彩底色 */
   #receiptModal .modal-box,#expReceiptModal .modal-box{background:transparent;box-shadow:none;padding:8px;border:none;max-height:none;overflow:visible;}
   .modal-box h3{margin:0 0 6px;color:var(--purple-deep);}
   .pay-methods{display:flex;gap:12px;margin:18px 0;}
   .pay-method{flex:1;border:2px solid var(--purple-pink);border-radius:18px;padding:18px 8px;cursor:pointer;font-weight:800;color:var(--purple-deep);background:#fff;transition:.15s;}
-  .pay-method:hover{border-color:var(--purple);background:linear-gradient(135deg,#f3e5f5,#ede7f6);transform:translateY(-3px);box-shadow:0 6px 16px rgba(106,91,140,.25);}
+  .pay-method:hover{border-color:var(--purple);background:linear-gradient(135deg,#eaf6fb,#fceaf0);transform:translateY(-3px);box-shadow:0 6px 16px rgba(75,167,202,.25);}
   .pay-method .e{font-size:34px;}
   .pay-method.selected{background:linear-gradient(135deg,var(--purple-pink),var(--pink));border-color:var(--purple);color:#fff;}
 
@@ -345,10 +345,10 @@
   .receipt{
     width:302px;max-width:100%;margin:0 auto;
     background:
-      radial-gradient(circle at 8% 12%, rgba(217,201,232,.55) 0 18px, transparent 22px),
-      radial-gradient(circle at 92% 88%, rgba(232,197,224,.55) 0 22px, transparent 26px),
+      radial-gradient(circle at 8% 12%, rgba(191,227,242,.55) 0 18px, transparent 22px),
+      radial-gradient(circle at 92% 88%, rgba(255,208,217,.55) 0 22px, transparent 26px),
       radial-gradient(circle at 90% 18%, rgba(212,184,84,.35) 0 16px, transparent 20px),
-      linear-gradient(180deg,#fefaf3,#f3e5f5);
+      linear-gradient(180deg,#fefaf3,#eaf6fb);
     border:1.5px solid var(--purple-pink);border-radius:14px;padding:18px 16px 16px;
     font-family:var(--font);color:#4ba7ca;
     position:relative;overflow:auto;
@@ -359,7 +359,7 @@
   }
   .receipt::before{
     content:"";position:absolute;top:-10px;left:-10px;width:54px;height:54px;
-    background:radial-gradient(circle, rgba(217,201,232,.7),transparent 70%);pointer-events:none;
+    background:radial-gradient(circle, rgba(191,227,242,.7),transparent 70%);pointer-events:none;
   }
   .receipt::after{
     content:"";position:absolute;bottom:-12px;right:-10px;width:60px;height:60px;
@@ -493,12 +493,12 @@
       <div class="reg" style="color:#9ed1e3;">003618842-W</div>
     </div>
     <button class="nav-btn active" data-view="dashboard">
-      <span class="ic" style="background:linear-gradient(135deg,#c5e2eb,#f3e5f5);display:flex;align-items:center;justify-content:center;font-size:18px;">🏠</span> Dashboard
+      <span class="ic" style="background:linear-gradient(135deg,#c5e2eb,#eaf6fb);display:flex;align-items:center;justify-content:center;font-size:18px;">🏠</span> Dashboard
     </button>
     <button class="nav-btn" data-view="neworder">
-      <span class="ic" style="background:linear-gradient(135deg,#ffb6c1,#e8c5e0);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#ffd87a;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
+      <span class="ic" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#ffd87a;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
-    <button class="nav-btn" data-view="cart" style="color:#4ba7ca;background:rgba(217,201,232,.35);">
+    <button class="nav-btn" data-view="cart" style="color:#4ba7ca;background:rgba(191,227,242,.35);">
       <span class="ic" style="background:linear-gradient(135deg,#bfe3f2,#c5e2eb);display:flex;align-items:center;justify-content:center;font-size:17px;">🛒</span> View Cart <span id="badgeCart" style="display:none;background:var(--pink-deep);color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
     <button class="nav-btn" data-view="expense">
@@ -513,17 +513,17 @@
     <button class="nav-btn" id="clearDataBtn" style="color:var(--purple-deep);background:rgba(232,155,155,.14);">
       <span class="ic" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);display:flex;align-items:center;justify-content:center;font-size:17px;">🗑️</span> Clear Data
     </button>
-    <button class="nav-btn" onclick="exportData()" style="color:#4ba7ca;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);">
+    <button class="nav-btn" onclick="exportData()" style="color:#4ba7ca;background:rgba(191,227,242,.3);font-weight:900;border:2px solid rgba(75,167,202,.28);">
       <span class="ic" style="background:linear-gradient(135deg,#bfe3f2,#7ec4dd);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📤</span> Export Backup
     </button>
-    <a class="nav-btn" href="./backup.html" style="color:#4ba7ca;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;">
+    <a class="nav-btn" href="./backup.html" style="color:#4ba7ca;background:rgba(191,227,242,.3);font-weight:900;border:2px solid rgba(75,167,202,.28);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;">
       <span class="ic" style="background:linear-gradient(135deg,#9ed1e3,#ffd0d9);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">🛟</span> Backup Page (备用)
     </a>
-    <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#4ba7ca;background:rgba(217,201,232,.18);">
+    <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#4ba7ca;background:rgba(191,227,242,.18);">
       <span class="ic" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📥</span> Import Backup
     </button>
     <input id="importFile" type="file" accept="application/json" style="display:none;" />
-    <div class="nav-foot" style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);padding:10px;border-radius:14px;border:1.5px dashed #c5e2eb;margin-top:auto;">
+    <div class="nav-foot" style="background:linear-gradient(135deg,#eaf6fb,#fceaf0);padding:10px;border-radius:14px;border:1.5px dashed #c5e2eb;margin-top:auto;">
       <span style="font-size:18px;">💾</span> 数据本地永久保存<br/><span style="font-size:9px;color:#7ec4dd;letter-spacing:.5px;">GOH YEAN HUAN POS</span>
     </div>
   </aside>
@@ -578,7 +578,7 @@
           <div class="l">今日卖出面 · Bowls Sold Today</div>
         </div>
         <div class="stat s3">
-          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(201,135,200,.3));"><g transform="translate(20 18)"><ellipse cx="-7" cy="2" rx="6" ry="10" fill="#ffb6c1" transform="rotate(-30)"/><ellipse cx="0" cy="-3" rx="6" ry="10" fill="#ffd0d9" transform="rotate(20)"/><ellipse cx="0" cy="-12" rx="5" ry="9" fill="#ffb6c1" opacity=".9"/><ellipse cx="-8" cy="0" rx="5" ry="9" fill="#b885c4"/><ellipse cx="8" cy="3" rx="5" ry="8" fill="#a96bbe"/><circle cx="0" cy="-2" r="4" fill="#ffd87a"/></g><polygon points="32,6 33,9 36,9 34,11 35,14 32,12 29,14 30,11 28,9 31,9" fill="#ffd87a"/></svg></div>
+          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(201,135,200,.3));"><g transform="translate(20 18)"><ellipse cx="-7" cy="2" rx="6" ry="10" fill="#ffb6c1" transform="rotate(-30)"/><ellipse cx="0" cy="-3" rx="6" ry="10" fill="#ffd0d9" transform="rotate(20)"/><ellipse cx="0" cy="-12" rx="5" ry="9" fill="#ffb6c1" opacity=".9"/><ellipse cx="-8" cy="0" rx="5" ry="9" fill="#ffb6c1"/><ellipse cx="8" cy="3" rx="5" ry="8" fill="#ff9eb0"/><circle cx="0" cy="-2" r="4" fill="#ffd87a"/></g><polygon points="32,6 33,9 36,9 34,11 35,14 32,12 29,14 30,11 28,9 31,9" fill="#ffd87a"/></svg></div>
           <div class="v" id="stExpense">RM 0.00</div>
           <div class="l">今日支出 · Today Expense</div>
         </div>
@@ -602,7 +602,7 @@
     <section id="view-neworder" class="hidden">
       <!-- 已送厨房订单摘要 (sticky 卡片) -->
       <div id="activeOrdersSummary" style="display:none;margin-bottom:14px;">
-        <div style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);border:2px solid var(--purple-pink);border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;" onclick="openDrawer()">
+        <div style="background:linear-gradient(135deg,#eaf6fb,#fceaf0);border:2px solid var(--purple-pink);border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;" onclick="openDrawer()">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
             <div>
               <div style="font-size:13px;font-weight:900;color:var(--purple-deep);">📋 已送厨房 · <span id="aosCount">0</span> 张未结账</div>
@@ -625,7 +625,7 @@
 
     <!-- CART (View Cart page) -->
     <section id="view-cart" class="hidden">
-      <div class="card" style="background:linear-gradient(135deg,#fefaf3,#f3e5f5);">
+      <div class="card" style="background:linear-gradient(135deg,#fefaf3,#eaf6fb);">
         <h2>🛒 My Cart</h2>
         <div style="font-size:12px;color:var(--ink-soft);margin:-4px 0 10px;">查看草稿和未结账订单，所有内容随时同步</div>
         <div style="display:flex;gap:14px;flex-wrap:wrap;">
@@ -691,7 +691,7 @@
             <label>Date · 日期 <span id="expDateHint" style="font-weight:500;color:var(--purple-light);font-size:11px;"></span></label>
             <input id="expDate" type="date" style="width:100%;" />
             <div style="margin-top:6px;display:flex;justify-content:flex-end;">
-              <button type="button" id="expDateToday" onclick="window.__todayExp && window.__todayExp()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:10px 18px;border-radius:14px;cursor:pointer;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.45);min-height:42px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
+              <button type="button" id="expDateToday" onclick="window.__todayExp && window.__todayExp()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:10px 18px;border-radius:14px;cursor:pointer;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(75,167,202,.45);min-height:42px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
             </div>
           </div>
           <div class="field" style="grid-column:1 / -1;">
@@ -708,7 +708,7 @@
           <h2 style="margin:0;" id="expListTitle">📋 Today's Expenses</h2>
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <input type="date" id="expListDate" style="border:1.5px dashed var(--line);border-radius:10px;padding:6px 10px;font-family:var(--font);font-size:12px;background:#fffaf6;" />
-            <button type="button" onclick="if(typeof _todayExpList==='function'){_todayExpList();}else{window.__todayExpList && window.__todayExpList();}" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.35);min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 今日</button>
+            <button type="button" onclick="if(typeof _todayExpList==='function'){_todayExpList();}else{window.__todayExpList && window.__todayExpList();}" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(75,167,202,.35);min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 今日</button>
             <button type="button" id="printTodayExp" style="border:none;background:linear-gradient(135deg,#ffd87a,#fff0c2);color:#4ba7ca;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(212,184,84,.35);min-height:36px;">🖨️ Print Today</button>
           </div>
         </div>
@@ -974,7 +974,7 @@
     <div id="aodItems"></div>
     <div style="display:flex;gap:8px;margin-top:14px;">
       <button id="aodAdd" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">➕ 加菜</button>
-      <button id="aodRename" style="flex:0;background:rgba(217,201,232,.5);color:var(--purple-deep);border:none;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">✏️</button>
+      <button id="aodRename" style="flex:0;background:rgba(191,227,242,.5);color:var(--purple-deep);border:none;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">✏️</button>
       <button id="aodPay" style="flex:1;background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">💰 结账</button>
       <button id="aodCancel" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);border:none;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">🗑️</button>
     </div>
@@ -1020,7 +1020,7 @@
       <input id="optDate" type="date" style="width:100%;border:1.5px dashed var(--line);border-radius:12px;padding:10px;font-family:var(--font);font-size:14px;margin-top:4px;background:#fffaf6;" />
     </div>
     <div style="margin-top:8px;display:flex;justify-content:flex-end;">
-      <button type="button" id="optDateToday" onclick="window.__todayOpt && window.__todayOpt()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:12px 22px;border-radius:14px;cursor:pointer;font-size:14px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.45);min-height:46px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
+      <button type="button" id="optDateToday" onclick="window.__todayOpt && window.__todayOpt()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:12px 22px;border-radius:14px;cursor:pointer;font-size:14px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(75,167,202,.45);min-height:46px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
     </div>
     <textarea class="desc-input" id="optDesc" placeholder="📝 Description (optional)…" style="margin-top:10px;"></textarea>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0;">
@@ -2318,7 +2318,7 @@ window.reprint = id => {
 function renderSuppliers(){
   const g = document.getElementById('supplierGrid');
   // 颜色循环改成紫金主题
-  const cols = ['#f3e5f5','#ede7f6','#f8bbd0','#fce4ec','#e1bee7','#d1c4e9','#b39ddb','#9575cd','#f3e5f5','#ede7f6','#f8bbd0','#fce4ec','#e1bee7','#d1c4e9'];
+  const cols = ['#eaf6fb','#fceaf0','#f8bbd0','#fce4ec','#c5e2eb','#bfe3f2','#9ed1e3','#7ec4dd','#eaf6fb','#fceaf0','#f8bbd0','#fce4ec','#c5e2eb','#bfe3f2'];
   g.innerHTML = SUPPLIERS.map((s,i)=>{
     // 3 种角色循环 + 大小写混合
     const pose = ['full','cat','with-cat','full','full','cat','full','with-cat','cat','full','full','full','cat','with-cat'][i % 14];
@@ -2414,7 +2414,7 @@ function renderExpenses(){
     .sort((a,b)=>b.amt-a.amt);
   const groupedHtml = `
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:14px 0;">
-      ${grouped.map(g=>`<div style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:12px;text-align:center;">
+      ${grouped.map(g=>`<div style="background:linear-gradient(135deg,#eaf6fb,#fceaf0);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:12px;text-align:center;">
         <div style="font-size:11px;color:var(--purple);font-weight:700;letter-spacing:.5px;">${escapeHtml(g.k)}</div>
         <div style="font-size:20px;font-weight:900;color:var(--purple-deep);margin-top:4px;">${RM(g.amt)}</div>
         <div style="font-size:10px;color:var(--purple-light);font-weight:700;">${g.count} 笔</div>
@@ -2539,7 +2539,7 @@ function toast(msg){
   if(!t){
     t = document.createElement('div');
     t.id = 'appToast';
-    t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--purple-deep);color:#fff;font-weight:800;padding:10px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(106,91,140,.45);z-index:9999;opacity:0;transition:.25s;pointer-events:none;font-size:13px;';
+    t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--purple-deep);color:#fff;font-weight:800;padding:10px 18px;border-radius:14px;box-shadow:0 10px 24px rgba(75,167,202,.45);z-index:9999;opacity:0;transition:.25s;pointer-events:none;font-size:13px;';
     document.body.appendChild(t);
   }
   t.textContent = msg;
