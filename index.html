@@ -73,27 +73,6 @@
     background-position:center top;
     background-repeat:no-repeat;
   }
-  /* ===== 星星飘落 ===== */
-  .stars-layer{
-    position:fixed;inset:0;
-    pointer-events:none;
-    z-index:2;
-    overflow:hidden;
-  }
-  .star{
-    position:absolute;
-    top:-30px;
-    animation:starFall linear infinite;
-    opacity:0;
-    user-select:none;
-  }
-  @keyframes starFall{
-    0%   { transform: translateY(0) rotate(0deg); opacity:0; }
-    8%   { opacity:1; }
-    92%  { opacity:1; }
-    100% { transform: translateY(110vh) rotate(360deg); opacity:0; }
-  }
-
   .app{display:flex;min-height:100vh;position:relative;z-index:1;}
 
   /* ===== 侧边导航 ===== */
@@ -257,8 +236,6 @@
   .dish .emoji{font-size:40px;}
   .dish .nm{font-weight:800;margin-top:6px;color:var(--purple-deep);font-size:15px;}
   .dish .pr{font-weight:700;color:var(--pink-deep);margin-top:2px;}
-  @keyframes popIn{0%{transform:scale(.85) translateY(8px);opacity:0;}60%{transform:scale(1.04);}100%{transform:scale(1);opacity:1;}}
-  .dish{animation:popIn .4s ease both;}
   .d1{background:linear-gradient(135deg,#ffe6e6,#ffd8d8);}
   .d2{background:linear-gradient(135deg,#e6f6ee,#d3f0e1);}
   .d3{background:linear-gradient(135deg,#e6f1fb,#d4e8f7);}
@@ -481,8 +458,6 @@
 </style>
 </head>
 <body>
-<!-- 星星飘落层 -->
-<div class="stars-layer" aria-hidden="true"></div>
 <div class="app">
   <!-- 侧边导航 -->
   <aside class="sidebar" id="sidebar">
@@ -3044,32 +3019,11 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
   r.readAsText(file);
 });
 
-/* ============ 星星飘落 ============ */
-function spawnStars(){
-  const layer = document.querySelector('.stars-layer');
-  if(!layer) return;
-  const emojis = ['⭐','🌟','✨','💫','☁️','💕','🌸'];
-  // 32 颗, 分散一些
-  for(let i=0;i<32;i++){
-    const s = document.createElement('div');
-    s.className = 'star';
-    s.textContent = emojis[i % emojis.length];
-    s.style.left = (Math.random()*100) + 'vw';
-    s.style.fontSize = (10 + Math.random()*16) + 'px';
-    s.style.animationDuration = (7 + Math.random()*11) + 's';
-    s.style.animationDelay = (Math.random()*10) + 's';
-    s.style.opacity = (0.5 + Math.random()*0.4).toFixed(2);
-    layer.appendChild(s);
-  }
-}
-
 /* ============ 初始化 ============ */
 document.getElementById('todayDate').textContent = now().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 renderMenu();
 renderSuppliers();
 renderDashboard();
-// 启动星星飘落
-spawnStars();
 
 // 自动恢复 Cart (防误关丢失)
 const _restored = restoreCart();
