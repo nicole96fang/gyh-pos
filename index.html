@@ -586,6 +586,11 @@
           <div class="v" id="stRevenue">RM 0.00</div>
           <div class="l">今日收入 · Today Revenue</div>
         </div>
+        <div class="stat s5" style="background:linear-gradient(135deg,#fff8ee,#fce0a8);">
+          <div class="emoji-circle"><span style="font-size:30px;">🍜</span></div>
+          <div class="v" id="stBowls" style="color:#7a4e2a;">0 <span style="font-size:14px;font-weight:700;color:#a98a4a;">碗</span></div>
+          <div class="l">今日卖出面 · Bowls Sold Today</div>
+        </div>
         <div class="stat s3">
           <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(201,135,200,.3));"><g transform="translate(20 18)"><ellipse cx="-7" cy="2" rx="6" ry="10" fill="#c987c8" transform="rotate(-30)"/><ellipse cx="0" cy="-3" rx="6" ry="10" fill="#d9a8d8" transform="rotate(20)"/><ellipse cx="0" cy="-12" rx="5" ry="9" fill="#c987c8" opacity=".9"/><ellipse cx="-8" cy="0" rx="5" ry="9" fill="#b885c4"/><ellipse cx="8" cy="3" rx="5" ry="8" fill="#a96bbe"/><circle cx="0" cy="-2" r="4" fill="#d4b854"/></g><polygon points="32,6 33,9 36,9 34,11 35,14 32,12 29,14 30,11 28,9 31,9" fill="#d4b854"/></svg></div>
           <div class="v" id="stExpense">RM 0.00</div>
@@ -1230,17 +1235,26 @@ function renderDashboard(){
   const expenses = DB.expenses.filter(e=>e.date===today);
   const revenue = orders.reduce((s,o)=>s+o.total,0);
   const expense = expenses.reduce((s,e)=>s+e.amount,0);
+  // 计算今日卖出几碗面 · 每个 item.qty 算 1 碗
+  const bowls = orders.reduce((s,o)=>{
+    return s + (o.items||[]).reduce((ss,it)=>ss + (+it.qty||0), 0);
+  }, 0);
 
   document.getElementById('stOrders').textContent = orders.length;
   document.getElementById('stRevenue').textContent = RM(revenue);
   document.getElementById('stExpense').textContent = RM(expense);
   document.getElementById('stProfit').textContent = RM(revenue-expense);
   document.getElementById('stToday').textContent = RM(revenue);
+  // 今日几碗面
+  const bowlsEl = document.getElementById('stBowls');
+  if(bowlsEl){
+    bowlsEl.innerHTML = `${bowls} <span style="font-size:14px;font-weight:700;color:#a98a4a;">碗</span>`;
+  }
   // 给 orders 卡片画上巫女图标 (32px)
   const ordIcon = document.getElementById('stOrdersIcon');
   if(ordIcon && !ordIcon.dataset.done){ ordIcon.innerHTML = witchSVG('full',32); ordIcon.dataset.done='1'; }
 
-  // Hero 文案：随时间问候 + 今日订单数
+  // Hero 文案：随时间问候 + 今日订单数 + 几碗
   const h = new Date().getHours();
   const greet = h<11?'Good morning ☀️':h<15?'Good afternoon 🌤️':h<19?'Good evening 🌅':'Good night 🌙';
   const sub = document.getElementById('dashSub');
@@ -1248,7 +1262,7 @@ function renderDashboard(){
   if(greetEl) greetEl.textContent = greet;
   if(sub){
     if(!orders.length) sub.textContent = '今天还没有订单，准备好开始接单了吗？ 🍜';
-    else sub.textContent = `今天已接 ${orders.length} 单 · 收入 ${RM(revenue)} ✨`;
+    else sub.textContent = `今天已接 ${orders.length} 单 · ${bowls} 碗面 · 收入 ${RM(revenue)} ✨`;
   }
 
   renderProfitChart();
@@ -2627,9 +2641,32 @@ function renderHistory(){
   const orders = getFilteredOrders().reverse();
   const box = document.getElementById('historyList');
   if(!orders.length){ box.innerHTML='<div class="empty">暂无历史订单</div>'; return; }
-  box.innerHTML = `<table class="list"><thead><tr><th>Date</th><th>Time</th><th>Items</th><th>Payment</th><th>Total</th><th class="no-print">Action</th></tr></thead><tbody>`+
-    orders.map(o=>`<tr><td>${o.date}</td><td>${o.time}</td>
+  // 顶部汇总条: 多少单 · 几碗
+  const totalOrders = orders.length;
+  const totalBowls = orders.reduce((s,o)=> s + (o.items||[]).reduce((ss,it)=>ss+(+it.qty||0),0), 0);
+  box.innerHTML = `
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+      <div style="background:linear-gradient(135deg,#e8dff0,#d9c9e8);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;">📋</span>
+        <div>
+          <div style="font-size:10px;color:var(--purple);font-weight:900;letter-spacing:.5px;">总订单数</div>
+          <div style="font-size:22px;font-weight:900;color:var(--purple-deep);">${totalOrders} 单</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#fff8ee,#fce0a8);border:1.5px dashed #e8b870;border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;">🍜</span>
+        <div>
+          <div style="font-size:10px;color:#a8825a;font-weight:900;letter-spacing:.5px;">总碗数</div>
+          <div style="font-size:22px;font-weight:900;color:#7a4e2a;">${totalBowls} 碗</div>
+        </div>
+      </div>
+    </div>
+    <table class="list"><thead><tr><th>Date</th><th>Time</th><th>Items</th><th>🍜</th><th>Payment</th><th>Total</th><th class="no-print">Action</th></tr></thead><tbody>`+
+    orders.map(o=>{
+      const bowls = (o.items||[]).reduce((s,it)=>s+(+it.qty||0),0);
+      return `<tr><td>${o.date}</td><td>${o.time}</td>
       <td>${o.items.map(i=>i.name+'×'+i.qty).join(', ')}</td>
+      <td style="font-weight:900;color:#7a4e2a;text-align:center;background:rgba(255,235,200,.4);">${bowls} 碗</td>
       <td><span class="pill ${o.method==='Cash'?'cash':'tng'}">${o.method}</span></td>
       <td>${RM(o.total)}</td>
       <td class="no-print">
@@ -2637,7 +2674,8 @@ function renderHistory(){
         <button class="mini-btn" onclick="reprint('${o.id}')" title="打印小票">🖨️</button>
         <button class="mini-btn" onclick="editOrder('${o.id}')" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;">✏️ Edit</button>
         <button class="mini-btn" onclick="deleteOrder('${o.id}')" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);">🗑️</button>
-      </td></tr>`).join('')+
+      </td></tr>`;
+    }).join('')+
     `</tbody></table>`;
 }
 window.editOrder = id => {
@@ -2778,14 +2816,17 @@ document.getElementById('printAllHist').onclick=()=>{
   // 按日期分组聚合
   const byDate = {};
   orders.forEach(o=>{
-    if(!byDate[o.date]) byDate[o.date] = {orders:[], total:0, count:0};
+    const bowls = (o.items||[]).reduce((s,it)=>s+(+it.qty||0),0);
+    if(!byDate[o.date]) byDate[o.date] = {orders:[], total:0, count:0, bowls:0};
     byDate[o.date].orders.push(o);
     byDate[o.date].total += o.total;
     byDate[o.date].count++;
+    byDate[o.date].bowls += bowls;
   });
   const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
   const grandTotal = orders.reduce((s,o)=>s+o.total,0);
   const grandCount = orders.length;
+  const grandBowls = orders.reduce((s,o)=> s + (o.items||[]).reduce((ss,it)=>ss+(+it.qty||0),0), 0);
   // 支付方式汇总
   const payStat = {};
   orders.forEach(o=>{ payStat[o.method] = (payStat[o.method]||0) + o.total; });
@@ -2801,14 +2842,18 @@ document.getElementById('printAllHist').onclick=()=>{
     <div class="r-brand">
       <div class="r-shop" style="font-size:21px;margin-top:6px;">📜 ORDER HISTORY</div>
       <div style="font-size:12px;font-weight:800;color:var(--purple-deep);margin-top:2px;">GOH YEAN HUAN · 销售记录</div>
-      <div class="r-reg" style="margin-top:4px;">${dateRange} · ${grandCount} 单</div>
+      <div class="r-reg" style="margin-top:4px;">${dateRange} · ${grandCount} 单 · ${grandBowls} 碗</div>
     </div>
     <div class="r-deco"><span>🌹</span><span>✨</span><span>🌙</span></div>
     <!-- 总览区 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0;">
       <div style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);padding:10px;border-radius:10px;border:1px dashed var(--purple-pink);text-align:center;">
         <div style="font-size:9.5px;font-weight:800;color:var(--purple);letter-spacing:.5px;">总订单数</div>
         <div style="font-size:22px;font-weight:900;color:var(--purple-deep);margin-top:2px;">${grandCount}</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#fff8ee,#fce0a8);padding:10px;border-radius:10px;border:1px dashed #e8b870;text-align:center;">
+        <div style="font-size:9.5px;font-weight:800;color:#a8825a;letter-spacing:.5px;">总碗数</div>
+        <div style="font-size:22px;font-weight:900;color:#7a4e2a;margin-top:2px;">${grandBowls}</div>
       </div>
       <div style="background:linear-gradient(135deg,#e8dff0,#d9c9e8);padding:10px;border-radius:10px;border:1px dashed var(--pink-deep);text-align:center;">
         <div style="font-size:9.5px;font-weight:800;color:var(--purple);letter-spacing:.5px;">总营业额</div>
@@ -2825,12 +2870,13 @@ document.getElementById('printAllHist').onclick=()=>{
           <!-- 日期组标题 -->
           <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#886ba8,#3a2d52);color:#fff;padding:8px 14px;border-radius:12px 12px 0 0;">
             <span style="font-weight:900;font-size:13px;">📅 ${date}</span>
-            <span style="font-size:11px;opacity:.85;">${g.count} 单 · ${RM(g.total)}</span>
+            <span style="font-size:11px;opacity:.85;">${g.count} 单 · ${g.bowls} 碗 · ${RM(g.total)}</span>
           </div>
           <!-- 订单列表 -->
           <div style="border:1px dashed var(--purple-pink);border-top:none;border-radius:0 0 12px 12px;padding:8px 10px;background:rgba(255,255,255,.55);">
             ${dayOrders.map((o,i)=>{
               const t = (o.time||'').split(' ')[1] || o.time || '';
+              const bowls = (o.items||[]).reduce((s,it)=>s+(+it.qty||0),0);
               const itemsTxt = o.items.map(it=>`${escapeHtml(it.name)}×${it.qty}`).join(', ');
               return `
                 <div style="padding:8px 0;${i<dayOrders.length-1?'border-bottom:1px dotted var(--purple-pink);':''}">
@@ -2841,6 +2887,7 @@ document.getElementById('printAllHist').onclick=()=>{
                   <div style="font-size:10.5px;color:var(--purple);font-weight:600;margin-top:2px;">
                     <span style="display:inline-block;margin-right:6px;">🕒 ${escapeHtml(t)}</span>
                     <span style="display:inline-block;padding:1px 6px;background:rgba(217,201,232,.55);border-radius:6px;">${escapeHtml(o.method)}</span>
+                    <span style="display:inline-block;margin-left:6px;padding:1px 7px;background:rgba(255,235,200,.65);border:1px dashed #e8b870;border-radius:6px;color:#7a4e2a;font-weight:900;">🍜 ${bowls} 碗</span>
                   </div>
                   <div style="font-size:11.5px;color:var(--purple-deep);margin-top:3px;line-height:1.4;">${itemsTxt}</div>
                 </div>
@@ -2897,16 +2944,27 @@ function weekRangeLabel(key){
 function getFilteredReport(){
   const from=document.getElementById('repFrom').value, to=document.getElementById('repTo').value;
   const buckets={};
-  function put(k,amt,isExp){
-    (buckets[k]=buckets[k]||{rev:0,exp:0,count:0})[isExp?'exp':'rev'] += amt;
-    if(!isExp) buckets[k].count++;
+  function put(k,amt,isExp,bowls){
+    (buckets[k]=buckets[k]||{rev:0,exp:0,count:0,bowls:0});
+    if(isExp){
+      buckets[k].exp += amt;
+    }else{
+      buckets[k].rev += amt;
+      buckets[k].count++;
+      buckets[k].bowls += bowls||0;
+    }
   }
   const keyOf = d => repMode==='daily'?d : repMode==='weekly'?weekKey(d) : monthKey(d);
-  DB.orders.forEach(o=>{ if((!from||o.date>=from)&&(!to||o.date<=to)) put(keyOf(o.date),o.total,false); });
+  DB.orders.forEach(o=>{
+    if((!from||o.date>=from)&&(!to||o.date<=to)){
+      const bowls = (o.items||[]).reduce((s,it)=>s+(+it.qty||0),0);
+      put(keyOf(o.date), o.total, false, bowls);
+    }
+  });
   DB.expenses.forEach(e=>{ if((!from||e.date>=from)&&(!to||e.date<=to)) put(keyOf(e.date),e.amount,true); });
   return Object.keys(buckets).sort().map(k=>{
     const b = buckets[k];
-    return {label:k, rev:b.rev, exp:b.exp, count:b.count, profit:b.rev-b.exp};
+    return {label:k, rev:b.rev, exp:b.exp, count:b.count, bowls:b.bowls, profit:b.rev-b.exp};
   });
 }
 const NOODLE_LB = {kt:'Keow Teow',bh:'Bihun',mee:'Mee',mag:'Maggie',mtmk:'Meetaimuk'};
@@ -2930,13 +2988,15 @@ function renderReport(){
   const rows=getFilteredReport();
   const box=document.getElementById('reportTable');
   if(!rows.length){ box.innerHTML='<div class="empty">暂无数据</div>'; return; }
-  const tRev=rows.reduce((s,r)=>s+r.rev,0), tExp=rows.reduce((s,r)=>s+r.exp,0), tPro=tRev-tExp;
+  const tRev=rows.reduce((s,r)=>s+r.rev,0), tExp=rows.reduce((s,r)=>s+r.exp,0), tPro=tRev-tExp, tBowls=rows.reduce((s,r)=>s+(r.bowls||0),0);
   const labelHeader = repMode==='daily'?'Date':repMode==='weekly'?'Week':'Month';
-  box.innerHTML=`<table class="list"><thead><tr><th>${labelHeader}</th><th>Orders</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr></thead><tbody>`+
-    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td>
+  box.innerHTML=`<table class="list"><thead><tr><th>${labelHeader}</th><th>Orders</th><th>🍜 碗</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td style="font-weight:900;color:#7a4e2a;">${r.bowls||0}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td>
       <td class="${r.profit>=0?'profit-good':'profit-bad'}">${RM(r.profit)}</td></tr>`).join('')+
     `</tbody></table>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;font-weight:800;color:var(--purple-deep);">
+      <span>Total Orders: ${rows.reduce((s,r)=>s+r.count,0)}</span>
+      <span style="color:#7a4e2a;">Total 🍜 碗数: ${tBowls}</span>
       <span>Total Revenue: ${RM(tRev)}</span><span>Total Expense: ${RM(tExp)}</span>
       <span class="${tPro>=0?'profit-good':'profit-bad'}">Total Profit: ${RM(tPro)}</span></div>`;
 }
@@ -2950,14 +3010,14 @@ document.getElementById('repClear').onclick=()=>{document.getElementById('repFro
 document.getElementById('printReport').onclick=()=>{
   const rows=getFilteredReport();
   const w=window.open('','_blank');
-  const tRev=rows.reduce((s,r)=>s+r.rev,0), tExp=rows.reduce((s,r)=>s+r.exp,0), tPro=tRev-tExp;
+  const tRev=rows.reduce((s,r)=>s+r.rev,0), tExp=rows.reduce((s,r)=>s+r.exp,0), tPro=tRev-tExp, tBowls=rows.reduce((s,r)=>s+(r.bowls||0),0);
   const labelHeader = repMode==='daily'?'Date':repMode==='weekly'?'Week':'Month';
   const titleMap = {daily:'Daily Report', weekly:'Weekly Report', monthly:'Monthly Report'};
   w.document.write(`<html><head><title>Report</title><style>body{font-family:sans-serif;padding:20px;color:var(--purple)}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px dashed #ccc;padding:8px;text-align:left;font-size:13px}h1{color:var(--purple-deep)}</style></head><body>
     <h1>GOH YEAN HUAN · ${titleMap[repMode]}</h1>
-    <table><thead><tr><th>${labelHeader}</th><th>Orders</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr></thead><tbody>`+
-    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td><td>${RM(r.profit)}</td></tr>`).join('')+
-    `</tbody></table><p style="margin-top:16px;font-weight:800">Total Revenue: ${RM(tRev)} | Total Expense: ${RM(tExp)} | Total Profit: ${RM(tPro)}</p></body></html>`);
+    <table><thead><tr><th>${labelHeader}</th><th>Orders</th><th>🍜 Bowls</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td>${r.bowls||0}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td><td>${RM(r.profit)}</td></tr>`).join('')+
+    `</tbody></table><p style="margin-top:16px;font-weight:800">Total Orders: ${rows.reduce((s,r)=>s+r.count,0)} | Total 🍜 Bowls: ${tBowls} | Total Revenue: ${RM(tRev)} | Total Expense: ${RM(tExp)} | Total Profit: ${RM(tPro)}</p></body></html>`);
   w.document.close(); setTimeout(()=>w.print(),300);
 };
 
