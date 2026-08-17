@@ -17,33 +17,34 @@
     font-weight:400; font-style:normal; font-display:swap;
   }
   :root{
-    /* ✨ 紫金主题 (水彩巫女画配色) */
-    --bg-1:#f8f0e0;
-    --bg-2:#ede4f0;
-    --bg-3:#e8dff0;
-    --paper:#fefaf3;
-    --ink:#3a2d52;
-    --ink-soft:#6b5b8c;
-    --line:#d9c9e8;
-    --purple-deep:#3a2d52;
-    --purple:#6b5b8c;
-    --purple-light:#a89bc9;
-    --purple-pink:#d9c9e8;
-    --pink:#e8c5e0;
-    --pink-deep:#c987c8;
-    --mint:#d9c9e8;
-    --mint-deep:var(--purple-light);
-    --sky:#c9d9f0;
-    --sky-deep:#8fb9da;
-    --butter:#e8d58a;
-    --butter-deep:#d4b854;
-    --gold:#d4b854;
-    --gold-deep:#a98a3c;
-    --lav:#d9cdef;
-    --lav-deep:#a98fd6;
-    --peach:#e8c5b8;
-    --shadow:0 8px 24px rgba(106,91,140,.18);
+    /* 🌸 浅蓝 + 粉色 主题 (圆润可爱风) */
+    --bg-1:#fff5f8;
+    --bg-2:#eaf6fb;
+    --bg-3:#fceaf0;
+    --paper:#fffafd;
+    --ink:#3d4a5c;
+    --ink-soft:#7c8a9c;
+    --line:#d4e6f0;
+    --purple-deep:#4ba7ca;          /* 主浅蓝 (替代旧 --purple-deep) */
+    --purple:#7ec4dd;               /* 中浅蓝 (替代旧 --purple) */
+    --purple-light:#bfe3f2;         /* 浅蓝 (替代旧 --purple-light) */
+    --purple-pink:#c5e2eb;          /* 蓝粉过渡 */
+    --pink:#ffd0d9;                 /* 浅粉 (替代旧 --pink) */
+    --pink-deep:#ffb6c1;            /* 主粉 ★ (替代旧 --pink-deep) */
+    --mint:#d4e6f0;                 /* 浅蓝绿 */
+    --mint-deep:#7ec4dd;
+    --sky:#bfe3f2;                  /* 浅蓝 */
+    --sky-deep:#4ba7ca;             /* 主浅蓝 ★ */
+    --butter:#fff0c2;               /* 浅暖黄 */
+    --butter-deep:#ffd87a;          /* 暖黄 (替代旧 --butter-deep) */
+    --gold:#ffd87a;
+    --gold-deep:#e8b845;
+    --lav:#d9e8f5;
+    --lav-deep:#7ec4dd;
+    --peach:#ffd0d9;
+    --shadow:0 6px 18px rgba(75,167,202,.18);
     --radius:22px;
+    --radius-big:32px;
     /* TC Antiquated Sans · 全站主字体（Personal Use Only） */
     --font:"TC Antiquated Sans","Quicksand","PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
     --font-body:"TC Antiquated Sans","Quicksand","PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
@@ -52,9 +53,9 @@
   html,body{height:100%;margin:0;font-family:var(--font-body);color:var(--ink);font-feature-settings:"tnum";font-weight:500;letter-spacing:.3px;}
   body{
     background:
-      /* 散落的金色星星 + 紫花点缀 */
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><g opacity='.7'><polygon points='40,40 42,46 48,46 43,49 45,55 40,52 35,55 37,49 32,46 38,46' fill='%23d4b854'/><polygon points='180,80 182,86 188,86 183,89 185,95 180,92 175,95 177,89 172,86 178,86' fill='%23d4b854' opacity='.6'/><polygon points='320,160 322,166 328,166 323,169 325,175 320,172 315,175 317,169 312,166 318,166' fill='%23d4b854' opacity='.5'/><polygon points='60,200 62,206 68,206 63,209 65,215 60,212 55,215 57,209 52,206 58,206' fill='%23d4b854' opacity='.5'/><polygon points='350,300 352,306 358,306 353,309 355,315 350,312 345,315 347,309 342,306 348,306' fill='%23d4b854'/><polygon points='120,320 122,326 128,326 123,329 125,335 120,332 115,335 117,329 112,326 118,326' fill='%23d4b854' opacity='.6'/><polygon points='250,360 252,366 258,366 253,369 255,375 250,372 245,375 247,369 242,366 248,366' fill='%23d4b854' opacity='.5'/><circle cx='200' cy='40' r='2' fill='%23c987c8'/><circle cx='90' cy='120' r='2' fill='%23c987c8' opacity='.6'/><circle cx='270' cy='220' r='2' fill='%23c987c8' opacity='.5'/><circle cx='30' cy='280' r='1.5' fill='%23c987c8' opacity='.7'/><circle cx='380' cy='60' r='1.5' fill='%23c987c8'/><circle cx='140' cy='380' r='1.5' fill='%23c987c8' opacity='.6'/></g></svg>"),
-      /* 紫雾水彩底纹 (横向渐变 + 多层叠加) */
+      /* 漂浮的星点 (浅蓝+粉) */
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><g opacity='.55'><polygon points='40,40 42,46 48,46 43,49 45,55 40,52 35,55 37,49 32,46 38,46' fill='%23ffd87a'/><polygon points='180,80 182,86 188,86 183,89 185,95 180,92 175,95 177,89 172,86 178,86' fill='%237ec4dd' opacity='.5'/><polygon points='320,160 322,166 328,166 323,169 325,175 320,172 315,175 317,169 312,166 318,166' fill='%23ffb6c1' opacity='.6'/><polygon points='60,200 62,206 68,206 63,209 65,215 60,212 55,215 57,209 52,206 58,206' fill='%237ec4dd' opacity='.5'/><polygon points='350,300 352,306 358,306 353,309 355,315 350,312 345,315 347,309 342,306 348,306' fill='%23ffd87a'/><polygon points='120,320 122,326 128,326 123,329 125,335 120,332 115,335 117,329 112,326 118,326' fill='%23ffb6c1' opacity='.55'/><polygon points='250,360 252,366 258,366 253,369 255,375 250,372 245,375 247,369 242,366 248,366' fill='%237ec4dd' opacity='.55'/><circle cx='200' cy='40' r='2' fill='%234ba7ca'/><circle cx='90' cy='120' r='2' fill='%23ffb6c1' opacity='.6'/><circle cx='270' cy='220' r='2' fill='%234ba7ca' opacity='.5'/><circle cx='30' cy='280' r='1.5' fill='%23ffb6c1' opacity='.7'/><circle cx='380' cy='60' r='1.5' fill='%234ba7ca'/><circle cx='140' cy='380' r='1.5' fill='%23ffb6c1' opacity='.6'/></g></svg>"),
+      /* 浅蓝 + 粉 水彩底纹 (横向渐变 + 多层叠加) */
       radial-gradient(ellipse at 20% 10%, rgba(217,201,232,.6) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 20%, rgba(184,168,212,.5) 0%, transparent 50%),
       radial-gradient(ellipse at 50% 80%, rgba(232,197,224,.4) 0%, transparent 60%),
@@ -67,11 +68,32 @@
   /* 角落花叶 + 鸭子 · 顶部 */
   body::before{
     content:"";position:fixed;inset:0;pointer-events:none;opacity:.95;z-index:0;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1200 800' preserveAspectRatio='xMidYMid slice'><g opacity='.85'><!-- 左上 紫玫瑰 --><g transform='translate(30,20)'><ellipse cx='25' cy='40' rx='10' ry='16' fill='%23c987c8' opacity='.75' transform='rotate(-30 25 40)'/><ellipse cx='42' cy='28' rx='10' ry='16' fill='%23d9a8d8' opacity='.85' transform='rotate(20 42 28)'/><ellipse cx='30' cy='18' rx='9' ry='14' fill='%23c987c8' opacity='.8' transform='rotate(-10 30 18)'/><ellipse cx='12' cy='38' rx='9' ry='14' fill='%23b885c4' opacity='.75' transform='rotate(-50 12 38)'/><ellipse cx='48' cy='48' rx='8' ry='12' fill='%23a96bbe' opacity='.75' transform='rotate(40 48 48)'/><circle cx='28' cy='30' r='6' fill='%23d4b854'/><path d='M-5,75 Q5,68 15,72 Q20,80 8,82' stroke='%236b5b8c' stroke-width='1.5' fill='none' opacity='.7'/></g><!-- 右上 星书+药水瓶 --><g transform='translate(1020,30)'><rect x='0' y='20' width='44' height='35' rx='2' fill='%23a98fd6'/><rect x='0' y='20' width='44' height='6' fill='%23c987c8'/><line x1='6' y1='32' x2='38' y2='32' stroke='%23d4b854' stroke-width='1.2'/><line x1='6' y1='38' x2='38' y2='38' stroke='%23d4b854' stroke-width='1.2'/><line x1='6' y1='44' x2='30' y2='44' stroke='%23d4b854' stroke-width='1.2'/><polygon points='42,8 44,14 50,14 45,18 47,24 42,21 37,24 39,18 34,14 40,14' fill='%23d4b854'/><g transform='translate(60,15)'><path d='M15,5 L25,5 L25,40 Q20,48 15,40 Z' fill='%23a89bc9'/><path d='M15,5 L20,5 L20,40 Q17,48 15,40 Z' fill='%23d9c9e8'/><ellipse cx='20' cy='6' rx='5' ry='3' fill='%236b5b8c'/><circle cx='18' cy='20' r='1.5' fill='%23fff'/><circle cx='22' cy='28' r='1' fill='%23fff'/><circle cx='17' cy='33' r='1' fill='%23fff'/><circle cx='20' cy='48' r='2.5' fill='%23d4b854' opacity='.8'/></g></g><!-- 左下 睡姿黑猫 --><g transform='translate(20,650)'><ellipse cx='60' cy='50' rx='55' ry='28' fill='%232a1f38'/><ellipse cx='20' cy='40' rx='22' ry='18' fill='%232a1f38'/><polygon points='4,22 10,10 18,22' fill='%232a1f38'/><polygon points='22,22 30,10 38,22' fill='%232a1f38'/><polygon points='6,20 10,14 14,20' fill='%23a98fd6' opacity='.4'/><polygon points='24,20 30,14 34,20' fill='%23a98fd6' opacity='.4'/><ellipse cx='20' cy='44' rx='3' ry='4' fill='%23c987c8'/><ellipse cx='20' cy='43' rx='1' ry='2' fill='%231f1828'/><line x1='12' y1='50' x2='28' y2='50' stroke='%231f1828' stroke-width='1.2'/><path d='M110,40 Q130,30 140,55' stroke='%232a1f38' stroke-width='4' fill='none' stroke-linecap='round'/></g><!-- 右下 紫植物+星 --><g transform='translate(1020,640)'><path d='M30,90 Q50,40 70,60 Q80,80 70,100 Q50,110 35,100 Z' fill='%23a89bc9' opacity='.75'/><path d='M40,80 Q60,30 80,50 Q90,70 80,90 Q60,100 45,90 Z' fill='%23886ba8' opacity='.8'/><path d='M20,110 Q40,80 60,100 Q70,115 55,125 Q35,130 25,120 Z' fill='%23a89bc9' opacity='.7'/><polygon points='80,30 82,38 90,38 84,42 86,50 80,46 74,50 76,42 70,38 78,38' fill='%23d4b854'/><polygon points='50,10 52,16 58,16 53,20 55,26 50,22 45,26 47,20 42,16 48,16' fill='%23d4b854' opacity='.85'/><polygon points='110,20 112,26 118,26 113,30 115,36 110,32 105,36 107,30 102,26 108,26' fill='%23d4b854' opacity='.7'/><circle cx='35' cy='55' r='4' fill='%23d9a8d8' opacity='.75'/><circle cx='60' cy='25' r='3' fill='%23c987c8' opacity='.8'/></g><!-- 散落小星 --><polygon points='250,150 252,156 258,156 253,160 255,166 250,162 245,166 247,160 242,156 248,156' fill='%23d4b854' opacity='.7'/><polygon points='600,300 602,306 608,306 603,310 605,316 600,312 595,316 597,310 592,306 598,306' fill='%23d4b854' opacity='.6'/><polygon points='900,500 902,506 908,506 903,510 905,516 900,512 895,516 897,510 892,506 898,506' fill='%23d4b854' opacity='.7'/><polygon points='450,400 452,406 458,406 453,410 455,416 450,412 445,416 447,410 442,406 448,406' fill='%23d4b854' opacity='.5'/><polygon points='700,180 702,186 708,186 703,190 705,196 700,192 695,196 697,190 692,186 698,186' fill='%23d4b854' opacity='.55'/><polygon points='100,500 102,506 108,506 103,510 105,516 100,512 95,516 97,510 92,506 98,506' fill='%23d4b854' opacity='.5'/><polygon points='1080,400 1082,406 1088,406 1083,410 1085,416 1080,412 1075,416 1077,410 1072,406 1078,406' fill='%23d4b854' opacity='.45'/><polygon points='180,250 182,256 188,256 183,260 185,266 180,262 175,266 177,260 172,256 178,256' fill='%23d4b854' opacity='.5'/><polygon points='850,250 852,256 858,256 853,260 855,266 850,262 845,266 847,260 842,256 848,256' fill='%23d4b854' opacity='.55'/></g></svg>");
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 1200 800' preserveAspectRatio='xMidYMid slice'><g opacity='.85'><!-- 左上 紫玫瑰 --><g transform='translate(30,20)'><ellipse cx='25' cy='40' rx='10' ry='16' fill='%23ffb6c1' opacity='.75' transform='rotate(-30 25 40)'/><ellipse cx='42' cy='28' rx='10' ry='16' fill='%23ffd0d9' opacity='.85' transform='rotate(20 42 28)'/><ellipse cx='30' cy='18' rx='9' ry='14' fill='%23ffb6c1' opacity='.8' transform='rotate(-10 30 18)'/><ellipse cx='12' cy='38' rx='9' ry='14' fill='%23b885c4' opacity='.75' transform='rotate(-50 12 38)'/><ellipse cx='48' cy='48' rx='8' ry='12' fill='%23a96bbe' opacity='.75' transform='rotate(40 48 48)'/><circle cx='28' cy='30' r='6' fill='%23ffd87a'/><path d='M-5,75 Q5,68 15,72 Q20,80 8,82' stroke='%237ec4dd' stroke-width='1.5' fill='none' opacity='.7'/></g><!-- 右上 星书+药水瓶 --><g transform='translate(1020,30)'><rect x='0' y='20' width='44' height='35' rx='2' fill='%239ed1e3'/><rect x='0' y='20' width='44' height='6' fill='%23ffb6c1'/><line x1='6' y1='32' x2='38' y2='32' stroke='%23ffd87a' stroke-width='1.2'/><line x1='6' y1='38' x2='38' y2='38' stroke='%23ffd87a' stroke-width='1.2'/><line x1='6' y1='44' x2='30' y2='44' stroke='%23ffd87a' stroke-width='1.2'/><polygon points='42,8 44,14 50,14 45,18 47,24 42,21 37,24 39,18 34,14 40,14' fill='%23ffd87a'/><g transform='translate(60,15)'><path d='M15,5 L25,5 L25,40 Q20,48 15,40 Z' fill='%23bfe3f2'/><path d='M15,5 L20,5 L20,40 Q17,48 15,40 Z' fill='%23c5e2eb'/><ellipse cx='20' cy='6' rx='5' ry='3' fill='%237ec4dd'/><circle cx='18' cy='20' r='1.5' fill='%23fff'/><circle cx='22' cy='28' r='1' fill='%23fff'/><circle cx='17' cy='33' r='1' fill='%23fff'/><circle cx='20' cy='48' r='2.5' fill='%23ffd87a' opacity='.8'/></g></g><!-- 左下 睡姿黑猫 --><g transform='translate(20,650)'><ellipse cx='60' cy='50' rx='55' ry='28' fill='%234ba7ca'/><ellipse cx='20' cy='40' rx='22' ry='18' fill='%234ba7ca'/><polygon points='4,22 10,10 18,22' fill='%234ba7ca'/><polygon points='22,22 30,10 38,22' fill='%234ba7ca'/><polygon points='6,20 10,14 14,20' fill='%239ed1e3' opacity='.4'/><polygon points='24,20 30,14 34,20' fill='%239ed1e3' opacity='.4'/><ellipse cx='20' cy='44' rx='3' ry='4' fill='%23ffb6c1'/><ellipse cx='20' cy='43' rx='1' ry='2' fill='%231f1828'/><line x1='12' y1='50' x2='28' y2='50' stroke='%231f1828' stroke-width='1.2'/><path d='M110,40 Q130,30 140,55' stroke='%234ba7ca' stroke-width='4' fill='none' stroke-linecap='round'/></g><!-- 右下 紫植物+星 --><g transform='translate(1020,640)'><path d='M30,90 Q50,40 70,60 Q80,80 70,100 Q50,110 35,100 Z' fill='%23bfe3f2' opacity='.75'/><path d='M40,80 Q60,30 80,50 Q90,70 80,90 Q60,100 45,90 Z' fill='%235fa8c7' opacity='.8'/><path d='M20,110 Q40,80 60,100 Q70,115 55,125 Q35,130 25,120 Z' fill='%23bfe3f2' opacity='.7'/><polygon points='80,30 82,38 90,38 84,42 86,50 80,46 74,50 76,42 70,38 78,38' fill='%23ffd87a'/><polygon points='50,10 52,16 58,16 53,20 55,26 50,22 45,26 47,20 42,16 48,16' fill='%23ffd87a' opacity='.85'/><polygon points='110,20 112,26 118,26 113,30 115,36 110,32 105,36 107,30 102,26 108,26' fill='%23ffd87a' opacity='.7'/><circle cx='35' cy='55' r='4' fill='%23ffd0d9' opacity='.75'/><circle cx='60' cy='25' r='3' fill='%23ffb6c1' opacity='.8'/></g><!-- 散落小星 --><polygon points='250,150 252,156 258,156 253,160 255,166 250,162 245,166 247,160 242,156 248,156' fill='%23ffd87a' opacity='.7'/><polygon points='600,300 602,306 608,306 603,310 605,316 600,312 595,316 597,310 592,306 598,306' fill='%23ffd87a' opacity='.6'/><polygon points='900,500 902,506 908,506 903,510 905,516 900,512 895,516 897,510 892,506 898,506' fill='%23ffd87a' opacity='.7'/><polygon points='450,400 452,406 458,406 453,410 455,416 450,412 445,416 447,410 442,406 448,406' fill='%23ffd87a' opacity='.5'/><polygon points='700,180 702,186 708,186 703,190 705,196 700,192 695,196 697,190 692,186 698,186' fill='%23ffd87a' opacity='.55'/><polygon points='100,500 102,506 108,506 103,510 105,516 100,512 95,516 97,510 92,506 98,506' fill='%23ffd87a' opacity='.5'/><polygon points='1080,400 1082,406 1088,406 1083,410 1085,416 1080,412 1075,416 1077,410 1072,406 1078,406' fill='%23ffd87a' opacity='.45'/><polygon points='180,250 182,256 188,256 183,260 185,266 180,262 175,266 177,260 172,256 178,256' fill='%23ffd87a' opacity='.5'/><polygon points='850,250 852,256 858,256 853,260 855,266 850,262 845,266 847,260 842,256 848,256' fill='%23ffd87a' opacity='.55'/></g></svg>");
     background-size:cover;
     background-position:center top;
     background-repeat:no-repeat;
   }
+  /* ===== 星星飘落 ===== */
+  .stars-layer{
+    position:fixed;inset:0;
+    pointer-events:none;
+    z-index:2;
+    overflow:hidden;
+  }
+  .star{
+    position:absolute;
+    top:-30px;
+    animation:starFall linear infinite;
+    opacity:0;
+    user-select:none;
+  }
+  @keyframes starFall{
+    0%   { transform: translateY(0) rotate(0deg); opacity:0; }
+    8%   { opacity:1; }
+    92%  { opacity:1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity:0; }
+  }
+
   .app{display:flex;min-height:100vh;position:relative;z-index:1;}
 
   /* ===== 侧边导航 ===== */
@@ -106,7 +128,7 @@
   }
   .nav-btn .ic{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:12px;}
   .nav-btn:hover{background:rgba(255,255,255,.7);transform:translateX(3px);}
-  .nav-btn.active{background:#fff;box-shadow:var(--shadow);color:#3a2d52;border:1.5px solid rgba(217,201,232,.6);}
+  .nav-btn.active{background:#fff;box-shadow:var(--shadow);color:#4ba7ca;border:1.5px solid rgba(217,201,232,.6);}
   .nav-btn.active .ic{box-shadow:0 4px 10px rgba(106,91,140,.18);}
   .nav-foot{margin-top:auto;font-size:10px;color:var(--ink-soft);text-align:center;line-height:1.5;}
 
@@ -162,10 +184,11 @@
   /* ===== Dashboard ===== */
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:42px 32px;margin-top:18px;}
   .stat{
-    border-radius:22px;padding:34px 28px;color:var(--purple);position:relative;overflow:hidden;
+    border-radius:28px;padding:34px 28px;color:var(--purple);position:relative;overflow:hidden;
     box-shadow:var(--shadow);border:1.5px solid rgba(255,255,255,.7);
     transition:.2s;
   }
+  .stat:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 14px 30px rgba(75,167,202,.25);}
   .stat:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(180,150,140,.22);}
   .stat .emoji-circle{
     width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
@@ -179,12 +202,12 @@
   /* Hero 单独大卡 */
   .stats-hero .stat-big{
     padding:28px 32px;
-    background:linear-gradient(135deg,#fff0d6,#ffe6c0,#ffd9a8);
+    background:linear-gradient(135deg,#fff0cf,#fff0cf,#fff0cf);
   }
   .stats-hero .stat-big .emoji{font-size:46px;}
   .stats-hero .stat-big .v{font-size:42px;color:#8a5e3a;}
   .stats-hero .stat-big .l{font-size:14px;color:#a8825a;}
-  .s1{background:linear-gradient(135deg,#e8dff0,#d9c9e8);}
+  .s1{background:linear-gradient(135deg,#e8dff0,#c5e2eb);}
   .s2{background:linear-gradient(135deg,#d9f2e6,#c2ead4);}
   .s3{background:linear-gradient(135deg,#e3eefb,#cfe3f6);}
   .s4{background:linear-gradient(135deg,#fff0cf,#ffe2a8);}
@@ -256,15 +279,15 @@
   .drawer h3{margin:0 0 4px;color:var(--purple-deep);font-size:20px;}
   .drawer .close{position:absolute;top:16px;right:18px;border:none;background:var(--purple-pink);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--purple-deep);transition:.2s;}
   .drawer .close:hover{background:var(--pink-deep);color:#fff;transform:rotate(90deg);}
-  .order-item{border:1.5px dashed var(--line);border-radius:16px;padding:13px;margin-bottom:12px;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);}
+  .order-item{border:1.5px dashed var(--line);border-radius:22px;padding:15px;margin-bottom:12px;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);}
   .order-item .ttl{display:flex;justify-content:space-between;font-weight:700;color:var(--purple-deep);}
   .opts{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0;}
   .opt{
-    border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:12px;
-    cursor:pointer;user-select:none;transition:.15s;font-weight:600;color:#6b5b8c;
+    border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:12.5px;
+    cursor:pointer;user-select:none;transition:.15s;font-weight:700;color:#7ec4dd;
   }
-  .opt.on{background:linear-gradient(135deg,var(--purple-pink),var(--pink));border-color:var(--pink-deep);color:var(--purple-deep);font-weight:800;}
-  .opt:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(106,91,140,.18);}
+  .opt.on{background:linear-gradient(135deg,var(--purple-pink),var(--pink));border-color:var(--pink-deep);color:#fff;font-weight:800;}
+  .opt:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(75,167,202,.2);}
   .opt .add{color:var(--purple-deep);font-weight:800;}
   .desc-input{width:100%;border:1.5px dashed var(--line);border-radius:12px;padding:8px 10px;font-family:var(--font);font-size:13px;margin-top:4px;resize:none;background:#fff;}
   .desc-input:focus{outline:none;border-color:var(--purple);}
@@ -279,9 +302,10 @@
   .order-foot{position:sticky;bottom:0;background:linear-gradient(180deg,transparent,var(--purple-pink) 30%);padding:14px 0 6px;border-top:2px dashed var(--purple-pink);margin-top:6px;}
   .total-row{display:flex;justify-content:space-between;font-size:17px;font-weight:800;color:var(--purple-deep);margin-bottom:12px;}
   .pay-btn{
-    width:100%;border:none;border-radius:16px;padding:15px;font-size:17px;font-weight:800;cursor:pointer;
-    background:linear-gradient(135deg,var(--purple),var(--purple-deep));color:#fff;box-shadow:0 6px 16px rgba(106,91,140,.3);transition:.2s;
+    width:100%;border:none;border-radius:24px;padding:20px;font-size:18px;font-weight:800;cursor:pointer;letter-spacing:.5px;
+    background:linear-gradient(135deg,var(--purple),var(--purple-deep));color:#fff;box-shadow:0 6px 16px rgba(75,167,202,.3);transition:.2s;
   }
+  .pay-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(75,167,202,.4);}
   .pay-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(106,91,140,.4);}
   .pay-btn:disabled{opacity:.5;cursor:not-allowed;}
   .empty{text-align:center;color:var(--ink-soft);padding:30px 0;font-size:14px;}
@@ -305,7 +329,7 @@
   .modal.show .bottom-sheet{transform:translateY(0);}
   .sheet-grip{width:46px;height:5px;border-radius:999px;background:var(--purple-pink);margin:2px auto 12px;}
   /* Noodles 必选项（紫色系） */
-  .opt.noodle.on{background:linear-gradient(135deg,#d9c9e8,#c987c8);border-color:var(--purple);color:#fff;}
+  .opt.noodle.on{background:linear-gradient(135deg,#c5e2eb,#ffb6c1);border-color:var(--purple);color:#fff;}
   .opt.protein.on{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border-color:var(--pink-deep);color:var(--purple-deep);}
   .modal-box{background:linear-gradient(180deg,#fefaf3,#f3e5f5);border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(106,91,140,.25);text-align:center;border:2px solid var(--purple-pink);max-height:calc(100vh - 32px);overflow:auto;}
   /* 收据弹窗里允许透明，露出水彩底色 */
@@ -326,7 +350,7 @@
       radial-gradient(circle at 90% 18%, rgba(212,184,84,.35) 0 16px, transparent 20px),
       linear-gradient(180deg,#fefaf3,#f3e5f5);
     border:1.5px solid var(--purple-pink);border-radius:14px;padding:18px 16px 16px;
-    font-family:var(--font);color:#3a2d52;
+    font-family:var(--font);color:#4ba7ca;
     position:relative;overflow:auto;
     max-height:calc(100vh - 140px);
   }
@@ -365,7 +389,7 @@
   .rtotal{
     display:flex;justify-content:space-between;align-items:center;
     margin:10px 0 4px;padding:8px 12px;
-    background:linear-gradient(135deg,#e8dff0,#d9c9e8);
+    background:linear-gradient(135deg,#e8dff0,#c5e2eb);
     border-radius:10px;font-weight:900;color:var(--purple-deep);font-size:15px;
   }
   .rpay{display:flex;justify-content:space-between;font-size:12px;margin-top:8px;color:var(--purple);}
@@ -389,12 +413,13 @@
   .sup-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;align-items:end;}
   .field label{font-size:12px;color:var(--ink-soft);display:block;margin-bottom:4px;font-weight:600;}
   .field input,.field select{
-    width:100%;border:2px solid var(--line);border-radius:12px;padding:10px;font-family:var(--font);font-size:14px;background:#fffaf6;
+    width:100%;border:2px solid var(--line);border-radius:18px;padding:12px 14px;font-family:var(--font);font-size:14px;background:#fffafd;transition:.15s;
   }
-  .field input:focus,.field select:focus{outline:none;border-color:var(--purple);}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(75,167,202,.15);}
   .btn{
-    border:none;border-radius:14px;padding:11px 18px;font-weight:800;cursor:pointer;color:#fff;font-size:14px;
+    border:none;border-radius:var(--radius-big);padding:14px 22px;font-weight:800;cursor:pointer;color:#fff;font-size:15px;
     background:linear-gradient(135deg,var(--pink-deep),var(--peach));box-shadow:var(--shadow);
+    transition:transform .15s;
   }
   .btn.mint{background:linear-gradient(135deg,var(--purple),var(--purple-light));}
   .btn:active{transform:scale(.97);}
@@ -406,7 +431,7 @@
     border-radius:14px;padding:8px 16px;font-weight:700;cursor:pointer;font-size:13px;transition:.15s;
   }
   .rep-tab:hover{border-color:var(--pink-deep);}
-  .rep-tab.active{background:linear-gradient(135deg,#e8dff0,#d9c9e8);border-color:var(--pink-deep);color:var(--purple-deep);box-shadow:var(--shadow);}
+  .rep-tab.active{background:linear-gradient(135deg,#e8dff0,#c5e2eb);border-color:var(--pink-deep);color:var(--purple-deep);box-shadow:var(--shadow);}
 
   /* ===== History / Report tables ===== */
   .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
@@ -415,8 +440,10 @@
   table.list th,table.list td{padding:10px 12px;border-bottom:1px dashed var(--line);text-align:left;}
   table.list th{color:var(--ink-soft);font-weight:700;position:sticky;top:0;background:var(--paper);}
   table.list tr:hover{background:#fff5ef;}
-  .mini-btn{border:1.5px solid var(--purple);background:#fff;color:var(--purple-deep);border-radius:10px;padding:5px 11px;cursor:pointer;font-weight:700;font-size:12px;}
-  .mini-btn.pink{border-color:var(--pink-deep);color:#c06a64;}
+  .mini-btn{border:1.5px solid var(--purple);background:#fff;color:var(--purple-deep);border-radius:18px;padding:8px 14px;cursor:pointer;font-weight:700;font-size:12px;transition:.15s;}
+  .mini-btn:hover{background:var(--purple);color:#fff;transform:translateY(-1px);}
+  .mini-btn.pink{border-color:var(--pink-deep);color:var(--pink-deep);}
+  .mini-btn.pink:hover{background:var(--pink-deep);color:#fff;}
   .profit-good{color:var(--purple);font-weight:800;}
   .profit-bad{color:#d06a64;font-weight:800;}
 
@@ -454,6 +481,8 @@
 </style>
 </head>
 <body>
+<!-- 星星飘落层 -->
+<div class="stars-layer" aria-hidden="true"></div>
 <div class="app">
   <!-- 侧边导航 -->
   <aside class="sidebar" id="sidebar">
@@ -465,10 +494,10 @@
         <ellipse cx="42" cy="40" rx="18" ry="22" fill="#a96bbe" opacity=".85" transform="rotate(-25 42 40)"/>
         <ellipse cx="78" cy="40" rx="18" ry="22" fill="#a96bbe" opacity=".85" transform="rotate(25 78 40)"/>
         <!-- 中层花瓣 (中紫) -->
-        <ellipse cx="60" cy="42" rx="24" ry="20" fill="#c987c8"/>
-        <ellipse cx="48" cy="50" rx="16" ry="18" fill="#d9a8d8" opacity=".95" transform="rotate(-15 48 50)"/>
-        <ellipse cx="72" cy="50" rx="16" ry="18" fill="#d9a8d8" opacity=".95" transform="rotate(15 72 50)"/>
-        <ellipse cx="60" cy="58" rx="20" ry="14" fill="#d9a8d8"/>
+        <ellipse cx="60" cy="42" rx="24" ry="20" fill="#ffb6c1"/>
+        <ellipse cx="48" cy="50" rx="16" ry="18" fill="#ffd0d9" opacity=".95" transform="rotate(-15 48 50)"/>
+        <ellipse cx="72" cy="50" rx="16" ry="18" fill="#ffd0d9" opacity=".95" transform="rotate(15 72 50)"/>
+        <ellipse cx="60" cy="58" rx="20" ry="14" fill="#ffd0d9"/>
         <!-- 前层小花瓣 (浅紫) -->
         <ellipse cx="56" cy="48" rx="10" ry="9" fill="#e8c5e0" opacity=".95"/>
         <ellipse cx="64" cy="48" rx="10" ry="9" fill="#e8c5e0" opacity=".95"/>
@@ -477,63 +506,63 @@
         <path d="M40,55 Q45,62 52,60" stroke="#a96bbe" stroke-width="1.2" fill="none" opacity=".7"/>
         <path d="M80,55 Q75,62 68,60" stroke="#a96bbe" stroke-width="1.2" fill="none" opacity=".7"/>
         <!-- 金色花心 -->
-        <circle cx="60" cy="48" r="4" fill="#d4b854"/>
-        <circle cx="60" cy="48" r="2" fill="#a98a3c"/>
+        <circle cx="60" cy="48" r="4" fill="#ffd87a"/>
+        <circle cx="60" cy="48" r="2" fill="#e8b845"/>
         <circle cx="58.5" cy="47" r=".8" fill="#fff5cc"/>
         <!-- 浪漫叶子 (深紫+绿) -->
-        <path d="M30,68 Q22,72 18,80 Q28,82 38,76 Q36,70 30,68 Z" fill="#886ba8" opacity=".9"/>
-        <path d="M32,70 L36,78" stroke="#6b5b8c" stroke-width=".8" opacity=".7"/>
-        <path d="M92,68 Q100,72 104,80 Q94,82 84,76 Q86,70 92,68 Z" fill="#886ba8" opacity=".9"/>
-        <path d="M90,70 L86,78" stroke="#6b5b8c" stroke-width=".8" opacity=".7"/>
+        <path d="M30,68 Q22,72 18,80 Q28,82 38,76 Q36,70 30,68 Z" fill="#5fa8c7" opacity=".9"/>
+        <path d="M32,70 L36,78" stroke="#7ec4dd" stroke-width=".8" opacity=".7"/>
+        <path d="M92,68 Q100,72 104,80 Q94,82 84,76 Q86,70 92,68 Z" fill="#5fa8c7" opacity=".9"/>
+        <path d="M90,70 L86,78" stroke="#7ec4dd" stroke-width=".8" opacity=".7"/>
         <!-- 茎 -->
-        <path d="M58,72 Q58,82 56,90" stroke="#6b5b8c" stroke-width="1.5" fill="none" opacity=".7"/>
-        <path d="M64,72 Q66,82 68,90" stroke="#6b5b8c" stroke-width="1.5" fill="none" opacity=".7"/>
+        <path d="M58,72 Q58,82 56,90" stroke="#7ec4dd" stroke-width="1.5" fill="none" opacity=".7"/>
+        <path d="M64,72 Q66,82 68,90" stroke="#7ec4dd" stroke-width="1.5" fill="none" opacity=".7"/>
         <!-- 水彩高光小圆点 -->
         <circle cx="48" cy="38" r="1.8" fill="#fff" opacity=".7"/>
         <circle cx="74" cy="42" r="1.4" fill="#fff" opacity=".6"/>
         <circle cx="65" cy="60" r="1.2" fill="#fff" opacity=".5"/>
         <!-- 散落金粉 -->
-        <polygon points="22,30 23,33 26,33 24,35 25,38 22,36 19,38 20,35 18,33 21,33" fill="#d4b854" opacity=".75"/>
-        <polygon points="98,30 99,33 102,33 100,35 101,38 98,36 95,38 96,35 94,33 97,33" fill="#d4b854" opacity=".7"/>
-        <polygon points="60,8 61,11 64,11 62,13 63,16 60,14 57,16 58,13 56,11 59,11" fill="#d4b854"/>
+        <polygon points="22,30 23,33 26,33 24,35 25,38 22,36 19,38 20,35 18,33 21,33" fill="#ffd87a" opacity=".75"/>
+        <polygon points="98,30 99,33 102,33 100,35 101,38 98,36 95,38 96,35 94,33 97,33" fill="#ffd87a" opacity=".7"/>
+        <polygon points="60,8 61,11 64,11 62,13 63,16 60,14 57,16 58,13 56,11 59,11" fill="#ffd87a"/>
       </svg></div>
-      <div class="name" style="color:#3a2d52;">GOH YEAN HUAN</div>
-      <div class="sub" style="color:#6b5b8c;">202403172359</div>
-      <div class="reg" style="color:#a98fd6;">003618842-W</div>
+      <div class="name" style="color:#4ba7ca;">GOH YEAN HUAN</div>
+      <div class="sub" style="color:#7ec4dd;">202403172359</div>
+      <div class="reg" style="color:#9ed1e3;">003618842-W</div>
     </div>
     <button class="nav-btn active" data-view="dashboard">
-      <span class="ic" style="background:linear-gradient(135deg,#d9c9e8,#f3e5f5);display:flex;align-items:center;justify-content:center;font-size:18px;">🏠</span> Dashboard
+      <span class="ic" style="background:linear-gradient(135deg,#c5e2eb,#f3e5f5);display:flex;align-items:center;justify-content:center;font-size:18px;">🏠</span> Dashboard
     </button>
     <button class="nav-btn" data-view="neworder">
-      <span class="ic" style="background:linear-gradient(135deg,#c987c8,#e8c5e0);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#d4b854;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
+      <span class="ic" style="background:linear-gradient(135deg,#ffb6c1,#e8c5e0);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#ffd87a;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
-    <button class="nav-btn" data-view="cart" style="color:#3a2d52;background:rgba(217,201,232,.35);">
-      <span class="ic" style="background:linear-gradient(135deg,#a89bc9,#d9c9e8);display:flex;align-items:center;justify-content:center;font-size:17px;">🛒</span> View Cart <span id="badgeCart" style="display:none;background:var(--pink-deep);color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
+    <button class="nav-btn" data-view="cart" style="color:#4ba7ca;background:rgba(217,201,232,.35);">
+      <span class="ic" style="background:linear-gradient(135deg,#bfe3f2,#c5e2eb);display:flex;align-items:center;justify-content:center;font-size:17px;">🛒</span> View Cart <span id="badgeCart" style="display:none;background:var(--pink-deep);color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
     <button class="nav-btn" data-view="expense">
-      <span class="ic" style="background:linear-gradient(135deg,#d9a8d8,#c987c8);display:flex;align-items:center;justify-content:center;font-size:17px;">🌹</span> Expense
+      <span class="ic" style="background:linear-gradient(135deg,#ffd0d9,#ffb6c1);display:flex;align-items:center;justify-content:center;font-size:17px;">🌹</span> Expense
     </button>
     <button class="nav-btn" data-view="history">
-      <span class="ic" style="background:linear-gradient(135deg,#a98fd6,#886ba8);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📜</span> History
+      <span class="ic" style="background:linear-gradient(135deg,#9ed1e3,#5fa8c7);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📜</span> History
     </button>
     <button class="nav-btn" data-view="report">
-      <span class="ic" style="background:linear-gradient(135deg,#d4b854,#e8d58a);display:flex;align-items:center;justify-content:center;font-size:18px;">📊</span> Report
+      <span class="ic" style="background:linear-gradient(135deg,#ffd87a,#fff0c2);display:flex;align-items:center;justify-content:center;font-size:18px;">📊</span> Report
     </button>
     <button class="nav-btn" id="clearDataBtn" style="color:var(--purple-deep);background:rgba(232,155,155,.14);">
       <span class="ic" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);display:flex;align-items:center;justify-content:center;font-size:17px;">🗑️</span> Clear Data
     </button>
-    <button class="nav-btn" onclick="exportData()" style="color:#3a2d52;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);">
-      <span class="ic" style="background:linear-gradient(135deg,#a89bc9,#6b5b8c);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📤</span> Export Backup
+    <button class="nav-btn" onclick="exportData()" style="color:#4ba7ca;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);">
+      <span class="ic" style="background:linear-gradient(135deg,#bfe3f2,#7ec4dd);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📤</span> Export Backup
     </button>
-    <a class="nav-btn" href="./backup.html" style="color:#3a2d52;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;">
-      <span class="ic" style="background:linear-gradient(135deg,#a98fd6,#d9a8d8);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">🛟</span> Backup Page (备用)
+    <a class="nav-btn" href="./backup.html" style="color:#4ba7ca;background:rgba(217,201,232,.3);font-weight:900;border:2px solid rgba(106,91,140,.3);text-decoration:none;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;">
+      <span class="ic" style="background:linear-gradient(135deg,#9ed1e3,#ffd0d9);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">🛟</span> Backup Page (备用)
     </a>
-    <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#3a2d52;background:rgba(217,201,232,.18);">
-      <span class="ic" style="background:linear-gradient(135deg,#c987c8,#d9a8d8);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📥</span> Import Backup
+    <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#4ba7ca;background:rgba(217,201,232,.18);">
+      <span class="ic" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📥</span> Import Backup
     </button>
     <input id="importFile" type="file" accept="application/json" style="display:none;" />
-    <div class="nav-foot" style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);padding:10px;border-radius:14px;border:1.5px dashed #d9c9e8;margin-top:auto;">
-      <span style="font-size:18px;">💾</span> 数据本地永久保存<br/><span style="font-size:9px;color:#6b5b8c;letter-spacing:.5px;">GOH YEAN HUAN POS</span>
+    <div class="nav-foot" style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);padding:10px;border-radius:14px;border:1.5px dashed #c5e2eb;margin-top:auto;">
+      <span style="font-size:18px;">💾</span> 数据本地永久保存<br/><span style="font-size:9px;color:#7ec4dd;letter-spacing:.5px;">GOH YEAN HUAN POS</span>
     </div>
   </aside>
 
@@ -555,14 +584,14 @@
       <div class="dash-hero">
         <div class="dash-hero-text">
           <div class="dash-hero-greet" id="dashGreet">Welcome back ☀️</div>
-          <div class="dash-hero-title" style="color:#3a2d52;">GOH YEAN HUAN · POS</div>
-          <div class="dash-hero-sub" id="dashSub" style="color:#6b5b8c;">今天还没有订单，准备好开始接单了吗？</div>
+          <div class="dash-hero-title" style="color:#4ba7ca;">GOH YEAN HUAN · POS</div>
+          <div class="dash-hero-sub" id="dashSub" style="color:#7ec4dd;">今天还没有订单，准备好开始接单了吗？</div>
         </div>
         <div class="dash-hero-action">
           <button class="btn-neworder-lg no-print" id="dashNewOrder2">🧾 Start New Order</button>
-          <div class="dash-hero-deco" style="color:#d4b854;letter-spacing:8px;">✦ ✦ ✦ ✦</div>
+          <div class="dash-hero-deco" style="color:#ffd87a;letter-spacing:8px;">✦ ✦ ✦ ✦</div>
         </div>
-        <div style="position:absolute;right:-30px;top:8px;opacity:.18;pointer-events:none;"><svg viewBox="0 0 120 100" width="150" height="125" xmlns="http://www.w3.org/2000/svg"><path d="M30,18 Q15,32 14,55 Q14,75 28,82 Q22,68 30,55 Q38,42 52,28 Q42,15 30,18 Z" fill="#2a1f38"/><path d="M76,20 Q92,32 95,55 Q96,75 82,82 Q87,68 80,55 Q72,42 60,30 Q72,16 76,20 Z" fill="#2a1f38" opacity=".9"/><ellipse cx="60" cy="32" rx="18" ry="15" fill="#fce4d0"/><path d="M28,22 Q40,8 60,7 Q80,8 92,22 Q90,24 60,26 Q30,24 28,22 Z" fill="#3a2d52"/><polygon points="64,-2 66,3 71,3 67,6 69,11 64,8 59,11 61,6 57,3 62,3" fill="#d4b854"/><path d="M30,48 Q30,68 25,90 L98,90 Q92,68 90,48 Q78,55 60,55 Q42,55 30,48 Z" fill="#3a2d52"/><ellipse cx="53" cy="32" rx="2" ry="2.8" fill="#6b5b8c"/><ellipse cx="67" cy="32" rx="2" ry="2.8" fill="#6b5b8c"/><g transform="translate(18 65)"><ellipse cx="10" cy="15" rx="10" ry="9" fill="#2a1f38"/><polygon points="0,4 4,-4 9,5" fill="#2a1f38"/><polygon points="11,5 16,-4 20,4" fill="#2a1f38"/></g></svg></div>
+        <div style="position:absolute;right:-20px;top:8px;opacity:.85;pointer-events:none;">${cuteLogoSVG(140)}</div>
       </div>
 
       <!-- 今日亮点卡（大字） -->
@@ -581,18 +610,18 @@
           <div class="v" id="stOrders">0</div>
           <div class="l">今日订单 · Today Orders</div>
         </div>
-        <div class="stat s5" style="background:linear-gradient(135deg,#fff8ee,#fce0a8);">
+        <div class="stat s5" style="background:linear-gradient(135deg,#fff8ee,#ffd0d9);">
           <div class="emoji-circle"><span style="font-size:30px;">🍜</span></div>
           <div class="v" id="stBowls" style="color:#7a4e2a;">0 <span style="font-size:14px;font-weight:700;color:#a98a4a;">碗</span></div>
           <div class="l">今日卖出面 · Bowls Sold Today</div>
         </div>
         <div class="stat s3">
-          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(201,135,200,.3));"><g transform="translate(20 18)"><ellipse cx="-7" cy="2" rx="6" ry="10" fill="#c987c8" transform="rotate(-30)"/><ellipse cx="0" cy="-3" rx="6" ry="10" fill="#d9a8d8" transform="rotate(20)"/><ellipse cx="0" cy="-12" rx="5" ry="9" fill="#c987c8" opacity=".9"/><ellipse cx="-8" cy="0" rx="5" ry="9" fill="#b885c4"/><ellipse cx="8" cy="3" rx="5" ry="8" fill="#a96bbe"/><circle cx="0" cy="-2" r="4" fill="#d4b854"/></g><polygon points="32,6 33,9 36,9 34,11 35,14 32,12 29,14 30,11 28,9 31,9" fill="#d4b854"/></svg></div>
+          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(201,135,200,.3));"><g transform="translate(20 18)"><ellipse cx="-7" cy="2" rx="6" ry="10" fill="#ffb6c1" transform="rotate(-30)"/><ellipse cx="0" cy="-3" rx="6" ry="10" fill="#ffd0d9" transform="rotate(20)"/><ellipse cx="0" cy="-12" rx="5" ry="9" fill="#ffb6c1" opacity=".9"/><ellipse cx="-8" cy="0" rx="5" ry="9" fill="#b885c4"/><ellipse cx="8" cy="3" rx="5" ry="8" fill="#a96bbe"/><circle cx="0" cy="-2" r="4" fill="#ffd87a"/></g><polygon points="32,6 33,9 36,9 34,11 35,14 32,12 29,14 30,11 28,9 31,9" fill="#ffd87a"/></svg></div>
           <div class="v" id="stExpense">RM 0.00</div>
           <div class="l">今日支出 · Today Expense</div>
         </div>
         <div class="stat s4">
-          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(212,184,84,.35));"><path d="M8,30 Q15,28 18,22 Q21,28 28,30 Q24,15 18,15 Q12,15 8,30 Z" fill="#d4b854"/><circle cx="18" cy="20" r="6" fill="#fce4d0"/><polygon points="18,12 19,16 23,16 20,18 21,22 18,20 15,22 16,18 13,16 17,16" fill="#d4b854"/></svg></div>
+          <div class="emoji-circle"><svg viewBox="0 0 40 40" width="28" height="28" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 2px 3px rgba(212,184,84,.35));"><path d="M8,30 Q15,28 18,22 Q21,28 28,30 Q24,15 18,15 Q12,15 8,30 Z" fill="#ffd87a"/><circle cx="18" cy="20" r="6" fill="#fce4d0"/><polygon points="18,12 19,16 23,16 20,18 21,22 18,20 15,22 16,18 13,16 17,16" fill="#ffd87a"/></svg></div>
           <div class="v" id="stProfit">RM 0.00</div>
           <div class="l">今日利润 · Today Profit</div>
         </div>
@@ -656,8 +685,8 @@
           </div>
         </div>
         <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="pay-btn" onclick="gotoNewOrder()" style="background:linear-gradient(135deg,#a89bc9,#6b5b8c);flex:1;min-width:180px;">➕ 继续点菜 (加菜)</button>
-          <button class="pay-btn" onclick="confirmClearCart()" style="background:linear-gradient(135deg,#e8dff0,#d9c9e8);color:var(--purple-deep);min-width:140px;">🗑️ 清空草稿</button>
+          <button class="pay-btn" onclick="gotoNewOrder()" style="background:linear-gradient(135deg,#bfe3f2,#7ec4dd);flex:1;min-width:180px;">➕ 继续点菜 (加菜)</button>
+          <button class="pay-btn" onclick="confirmClearCart()" style="background:linear-gradient(135deg,#e8dff0,#c5e2eb);color:var(--purple-deep);min-width:140px;">🗑️ 清空草稿</button>
         </div>
       </div>
 
@@ -676,7 +705,7 @@
         <h3>💳 草稿结账</h3>
         <p style="color:var(--ink-soft);font-size:12px;margin:0 0 10px;">草稿准备好就 <b>送厨房</b> 然后 <b>结账</b></p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="pay-btn" id="cartSendToKitchen" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;flex:1;min-width:200px;">🍳 送厨房 (Send to Kitchen)</button>
+          <button class="pay-btn" id="cartSendToKitchen" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;flex:1;min-width:200px;">🍳 送厨房 (Send to Kitchen)</button>
           <button class="pay-btn" id="cartToPayment" disabled style="flex:1;min-width:200px;">💳 结账草稿 (Proceed to Payment)</button>
         </div>
       </div>
@@ -700,7 +729,7 @@
             <label>Date · 日期 <span id="expDateHint" style="font-weight:500;color:var(--purple-light);font-size:11px;"></span></label>
             <input id="expDate" type="date" style="width:100%;" />
             <div style="margin-top:6px;display:flex;justify-content:flex-end;">
-              <button type="button" id="expDateToday" onclick="window.__todayExp && window.__todayExp()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;padding:10px 18px;border-radius:14px;cursor:pointer;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.45);min-height:42px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
+              <button type="button" id="expDateToday" onclick="window.__todayExp && window.__todayExp()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:10px 18px;border-radius:14px;cursor:pointer;font-size:13px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.45);min-height:42px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
             </div>
           </div>
           <div class="field" style="grid-column:1 / -1;">
@@ -717,8 +746,8 @@
           <h2 style="margin:0;" id="expListTitle">📋 Today's Expenses</h2>
           <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
             <input type="date" id="expListDate" style="border:1.5px dashed var(--line);border-radius:10px;padding:6px 10px;font-family:var(--font);font-size:12px;background:#fffaf6;" />
-            <button type="button" onclick="if(typeof _todayExpList==='function'){_todayExpList();}else{window.__todayExpList && window.__todayExpList();}" style="border:none;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.35);min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 今日</button>
-            <button type="button" id="printTodayExp" style="border:none;background:linear-gradient(135deg,#d4b854,#e8d58a);color:#3a2d52;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(212,184,84,.35);min-height:36px;">🖨️ Print Today</button>
+            <button type="button" onclick="if(typeof _todayExpList==='function'){_todayExpList();}else{window.__todayExpList && window.__todayExpList();}" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.35);min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 今日</button>
+            <button type="button" id="printTodayExp" style="border:none;background:linear-gradient(135deg,#ffd87a,#fff0c2);color:#4ba7ca;padding:7px 12px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(212,184,84,.35);min-height:36px;">🖨️ Print Today</button>
           </div>
         </div>
         <div id="expenseList"><div class="empty">今天还没有支出记录</div></div>
@@ -784,7 +813,7 @@
   <div class="order-foot">
     <div class="total-row"><span>Draft Total</span><span id="orderTotal">RM 0.00</span></div>
     <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-      <button class="pay-btn" id="sendToKitchen" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;flex:1;">🍳 Send to Kitchen · 送厨房</button>
+      <button class="pay-btn" id="sendToKitchen" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;flex:1;">🍳 Send to Kitchen · 送厨房</button>
       <button onclick="confirmClearCart()" title="清空 cart" style="background:#e8dff0;color:var(--purple-deep);border:none;width:54px;height:auto;padding:0;border-radius:14px;font-size:18px;cursor:pointer;">🗑️</button>
     </div>
     <button class="pay-btn" id="toPayment" disabled style="margin-top:8px;">💳 结账草稿 (Proceed to Payment)</button>
@@ -833,13 +862,13 @@
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin:6px 0 6px;">
       <h4 style="margin:0;font-size:14px;color:var(--purple-deep);">🍽️ Items</h4>
-      <button id="editAddItem" style="background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;">➕ Add Item</button>
+      <button id="editAddItem" style="background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:900;cursor:pointer;">➕ Add Item</button>
     </div>
     <div id="editItemsList" style="flex:1;overflow-y:auto;min-height:120px;max-height:42vh;padding-right:4px;"></div>
 
     <div style="display:flex;gap:8px;margin-top:10px;">
       <button id="editCancel" style="flex:1;background:#fff;color:var(--purple-light);border:1.5px dashed var(--line);padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">Cancel</button>
-      <button id="editSave" style="flex:2;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">💾 Save · 保存修改</button>
+      <button id="editSave" style="flex:2;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">💾 Save · 保存修改</button>
     </div>
   </div>
 </div>
@@ -952,7 +981,7 @@
     </div>
     <div style="display:flex;gap:10px;margin-top:18px;">
       <button id="editExpCancel" style="flex:1;background:#fff;color:var(--purple);border:1.5px dashed var(--line);padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">Cancel</button>
-      <button id="editExpSave" style="flex:2;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">💾 Save · 保存修改</button>
+      <button id="editExpSave" style="flex:2;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:11px;border-radius:12px;font-weight:900;cursor:pointer;">💾 Save · 保存修改</button>
     </div>
   </div>
 </div>
@@ -972,7 +1001,7 @@
 <div class="modal" id="activeOrderDetailModal">
   <div class="modal-box" style="max-width:480px;text-align:left;">
     <button class="close" id="aodClose" style="position:absolute;top:14px;right:16px;border:none;background:var(--purple-pink);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--purple-deep);">✕</button>
-    <div style="background:linear-gradient(135deg,#886ba8,#3a2d52);color:#fff;padding:14px 18px;border-radius:16px 16px 0 0;margin:-26px -0px 16px;">
+    <div style="background:linear-gradient(135deg,#5fa8c7,#4ba7ca);color:#fff;padding:14px 18px;border-radius:16px 16px 0 0;margin:-26px -0px 16px;">
       <div style="font-size:11px;opacity:.85;font-weight:700;letter-spacing:.5px;">📋 已送厨房订单 · Active Order</div>
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px;">
         <span style="font-weight:900;font-size:18px;" id="aodCode">K01</span>
@@ -982,9 +1011,9 @@
     </div>
     <div id="aodItems"></div>
     <div style="display:flex;gap:8px;margin-top:14px;">
-      <button id="aodAdd" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">➕ 加菜</button>
+      <button id="aodAdd" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">➕ 加菜</button>
       <button id="aodRename" style="flex:0;background:rgba(217,201,232,.5);color:var(--purple-deep);border:none;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">✏️</button>
-      <button id="aodPay" style="flex:1;background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">💰 结账</button>
+      <button id="aodPay" style="flex:1;background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;border:none;padding:10px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">💰 结账</button>
       <button id="aodCancel" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);border:none;padding:10px 14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:13px;">🗑️</button>
     </div>
   </div>
@@ -997,7 +1026,7 @@
     <h3 style="text-align:center;color:#c06a64;">清空数据确认</h3>
     <div style="font-size:13px;color:var(--ink-soft);text-align:center;margin:8px 0 16px;">此操作不可恢复，请选择要清空的内容：</div>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <button class="btn" id="clearOrders" style="background:linear-gradient(135deg,var(--pink-deep),#d9c9e8);">🧾 清空所有订单 (Orders)</button>
+      <button class="btn" id="clearOrders" style="background:linear-gradient(135deg,var(--pink-deep),#c5e2eb);">🧾 清空所有订单 (Orders)</button>
       <button class="btn" id="clearExpenses" style="background:linear-gradient(135deg,#e8b89b,#f7dcc8);">🛒 清空所有支出 (Expenses)</button>
       <button class="btn" id="clearAll" style="background:linear-gradient(135deg,#d06a64,var(--pink-deep));">🔥 全部清空 (Orders + Expenses)</button>
       <button class="btn mint" id="clearCancel">✖ 取消</button>
@@ -1029,7 +1058,7 @@
       <input id="optDate" type="date" style="width:100%;border:1.5px dashed var(--line);border-radius:12px;padding:10px;font-family:var(--font);font-size:14px;margin-top:4px;background:#fffaf6;" />
     </div>
     <div style="margin-top:8px;display:flex;justify-content:flex-end;">
-      <button type="button" id="optDateToday" onclick="window.__todayOpt && window.__todayOpt()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;padding:12px 22px;border-radius:14px;cursor:pointer;font-size:14px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.45);min-height:46px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
+      <button type="button" id="optDateToday" onclick="window.__todayOpt && window.__todayOpt()" style="border:none;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;padding:12px 22px;border-radius:14px;cursor:pointer;font-size:14px;font-weight:900;white-space:nowrap;box-shadow:0 4px 12px rgba(106,91,140,.45);min-height:46px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">📅 跳到今日</button>
     </div>
     <textarea class="desc-input" id="optDesc" placeholder="📝 Description (optional)…" style="margin-top:10px;"></textarea>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0;">
@@ -1317,8 +1346,8 @@ function renderProfitChart(){
     <svg class="pc-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="pcGrad" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#c987c8" stop-opacity=".7"/>
-          <stop offset="100%" stop-color="#c987c8" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#ffb6c1" stop-opacity=".7"/>
+          <stop offset="100%" stop-color="#ffb6c1" stop-opacity="0"/>
         </linearGradient>
       </defs>
       ${grid}
@@ -1338,13 +1367,12 @@ function renderProfitChart(){
 /* ============ Menu 渲染 ============ */
 function renderMenu(){
   const g = document.getElementById('menuGrid');
-  // 给菜轮换 3 种角色姿势
-  const poses = ['full', 'full', 'with-cat', 'cat', 'full'];
+  // 4 种可爱 emoji 轮换
+  const emojis = ['🍜','🥣','🌶️','🥚','🐟','🍝','🍥','☁️'];
   g.innerHTML = MENU.map((m,i)=>{
-    const pose = poses[i % poses.length];
-    const logo = witchSVG(pose, 44);
+    const em = emojis[i % emojis.length];
     return `<div class="dish ${m.cls}" data-id="${m.id}">
-      <div class="emoji" style="display:flex;align-items:center;justify-content:center;height:54px;">${logo}</div>
+      <div class="emoji" style="display:flex;align-items:center;justify-content:center;height:54px;font-size:42px;filter:drop-shadow(0 3px 6px rgba(75,167,202,.25));">${em}</div>
       <div class="nm">${m.name}</div>
       <div class="pr">${RM(m.price)}</div>
     </div>`;
@@ -1353,60 +1381,25 @@ function renderMenu(){
 }
 function findDish(id){return MENU.find(m=>m.id===id);}
 
-// ==== 统一角色: 小女巫 + 黑猫 (3 个姿势) ====
-// 全部采用同一个人物设计 (深紫巫女帽 + 紫披风 + 黑猫伙伴)
-// 不同 pose 让 logo 不呆板但人物完全一致
-const WITCH_BG = 'transparent';
-function witchSVG(pose='full', size=44){
-  // pose: 'full' / 'cat' / 'cat-only' / 'with-cat'
-  const id = `w_${pose}_${Math.random().toString(36).slice(2,7)}`;
+// ==== 可爱 Logo: 浅蓝粉渐变圆 + 中心字母 G + 装饰星 ====
+function cuteLogoSVG(size=44){
+  const id = `cute_${Math.random().toString(36).slice(2,7)}`;
   const s = size;
-  let inner = '';
-  if(pose==='full' || pose==='with-cat'){
-    inner = `
-      <!-- 头发 --><path d='M30,18 Q15,32 14,55 Q14,75 28,82 Q22,68 30,55 Q38,42 52,28 Q42,15 30,18 Z' fill='#2a1f38'/>
-      <path d='M76,20 Q92,32 95,55 Q96,75 82,82 Q87,68 80,55 Q72,42 60,30 Q72,16 76,20 Z' fill='#2a1f38' opacity='.9'/>
-      <path d='M30,18 Q42,8 60,10 Q78,8 90,18 Q80,28 75,32 Q60,30 45,32 Q40,28 30,18 Z' fill='#2a1f38'/>
-      <!-- 脸 --><ellipse cx='60' cy='32' rx='18' ry='15' fill='#fce4d0'/>
-      <!-- 巫女帽 --><path d='M28,22 Q40,8 60,7 Q80,8 92,22 Q90,24 60,26 Q30,24 28,22 Z' fill='#3a2d52'/>
-      <path d='M58,7 Q72,1 82,3 Q78,11 70,11 Q60,10 58,7 Z' fill='#3a2d52'/>
-      <polygon points='64,-2 66,3 71,3 67,6 69,11 64,8 59,11 61,6 57,3 62,3' fill='#d4b854'/>
-      <!-- 帽顶小玫瑰 --><g transform='translate(46 16)'><ellipse cx='3' cy='2' rx='3' ry='2.5' fill='#c987c8'/><ellipse cx='8' cy='3' rx='3' ry='2.5' fill='#d9a8d8'/><circle cx='6' cy='3' r='1.2' fill='#d4b854'/></g>
-      <!-- 眼睛 --><ellipse cx='53' cy='32' rx='2' ry='2.8' fill='#6b5b8c'/><ellipse cx='67' cy='32' rx='2' ry='2.8' fill='#6b5b8c'/>
-      <circle cx='53.5' cy='31' r='.7' fill='#fff'/><circle cx='67.5' cy='31' r='.7' fill='#fff'/>
-      <!-- 鼻嘴 --><ellipse cx='60' cy='37' rx='.8' ry='.6' fill='#d9a8d8'/>
-      <path d='M58,40 Q60,42 62,40' stroke='#a98a8a' stroke-width='.6' fill='none'/>
-      <!-- 披风 --><path d='M30,48 Q30,68 25,90 L98,90 Q92,68 90,48 Q78,55 60,55 Q42,55 30,48 Z' fill='#3a2d52'/>
-      <path d='M40,52 Q40,62 38,72 L42,76 Q44,62 44,54 Z' fill='#504a6b'/>
-      <path d='M80,52 Q80,62 82,72 L78,76 Q76,62 76,54 Z' fill='#504a6b'/>
-      <!-- 领口星星 --><polygon points='60,55 61,58 64,58 62,60 63,63 60,61 57,63 58,60 56,58 59,58' fill='#d4b854'/>
-      <!-- 黑猫 (从披风左肩探出) -->
-      <g transform='translate(18 65)'>
-        <ellipse cx='10' cy='15' rx='10' ry='9' fill='#2a1f38'/>
-        <polygon points='0,4 4,-4 9,5' fill='#2a1f38'/>
-        <polygon points='11,5 16,-4 20,4' fill='#2a1f38'/>
-        <polygon points='2,3 5,-1 8,3' fill='#a98fd6' opacity='.55'/>
-        <polygon points='12,3 15,-1 18,3' fill='#a98fd6' opacity='.55'/>
-        <ellipse cx='7' cy='16' rx='1.2' ry='1.8' fill='#c987c8'/>
-        <ellipse cx='13' cy='16' rx='1.2' ry='1.8' fill='#c987c8'/>
-      </g>`;
-  } else if(pose==='cat'){
-    // 大黑猫 alone
-    inner = `
-      <ellipse cx='60' cy='55' rx='28' ry='20' fill='#2a1f38'/>
-      <circle cx='60' cy='38' r='20' fill='#2a1f38'/>
-      <polygon points='38,18 44,4 52,18' fill='#2a1f38'/>
-      <polygon points='68,18 76,4 82,18' fill='#2a1f38'/>
-      <polygon points='40,16 44,8 50,16' fill='#a98fd6' opacity='.5'/>
-      <polygon points='70,16 76,8 82,16' fill='#a98fd6' opacity='.5'/>
-      <ellipse cx='52' cy='42' rx='2' ry='3' fill='#c987c8'/>
-      <ellipse cx='68' cy='42' rx='2' ry='3' fill='#c987c8'/>
-      <ellipse cx='60' cy='44' rx='1.2' ry='1' fill='#a96bbe'/>
-      <path d='M85,52 Q100,40 105,55' stroke='#2a1f38' stroke-width='3' fill='none' stroke-linecap='round'/>
-      <path d='M35,52 Q20,40 15,55' stroke='#2a1f38' stroke-width='3' fill='none' stroke-linecap='round'/>`;
-  }
-  return `<svg viewBox="0 0 120 100" width="${s}" height="${s}" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;filter:drop-shadow(0 2px 4px rgba(106,91,140,.3));vertical-align:middle;">${inner}</svg>`;
+  return `<svg viewBox="0 0 80 80" width="${s}" height="${s}" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;filter:drop-shadow(0 3px 6px rgba(75,167,202,.3));vertical-align:middle;">
+    <defs>
+      <linearGradient id="${id}_g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#7ec4dd"/>
+        <stop offset="100%" stop-color="#ffb6c1"/>
+      </linearGradient>
+    </defs>
+    <circle cx="40" cy="40" r="36" fill="url(#${id}_g)" stroke="#fff" stroke-width="2.5"/>
+    <text x="40" y="54" text-anchor="middle" font-size="36" font-weight="900" fill="#fff" font-family="serif">G</text>
+    <text x="64" y="22" font-size="13" fill="#ffd87a" stroke="#fff" stroke-width=".4">★</text>
+    <text x="14" y="62" font-size="10" fill="#ffd87a" stroke="#fff" stroke-width=".4">✦</text>
+  </svg>`;
 }
+// 兼容旧名: 某些地方可能还在调用 witchSVG
+function witchSVG(pose='full', size=44){ return cuteLogoSVG(size); }
 // 计算 add-on 加价：接受 [{id, qty}] 或旧格式 [id, id, ...]
 function optsAddTotal(opts){
   if(!opts || !opts.length) return 0;
@@ -1655,9 +1648,9 @@ function renderActiveOrders(){
         <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;line-height:1.4;">${itemStr}</div>
         <div style="display:flex;gap:6px;margin-top:8px;">
           <button data-act="view" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,var(--purple),var(--purple-deep));color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">📋 查看</button>
-          <button data-act="addMore" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">➕ Add 菜</button>
+          <button data-act="addMore" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">➕ Add 菜</button>
           <button data-act="rename" data-id="${o.id}" style="background:#f0e3d2;color:var(--purple-deep);border:none;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">✏️</button>
-          <button data-act="payOne" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">💰 结账</button>
+          <button data-act="payOne" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">💰 结账</button>
         </div>
       </div>`;
   }).join('');
@@ -1811,7 +1804,7 @@ function renderActiveOrderItemsHtml(o){
   const total = orderTotalOf(o.items);
   html += `
     </div>
-    <div style="margin-top:12px;padding:10px 14px;background:linear-gradient(135deg,#e8dff0,#d9c9e8);border-radius:12px;display:flex;justify-content:space-between;align-items:center;">
+    <div style="margin-top:12px;padding:10px 14px;background:linear-gradient(135deg,#e8dff0,#c5e2eb);border-radius:12px;display:flex;justify-content:space-between;align-items:center;">
       <span style="font-weight:900;color:var(--purple-deep);font-size:14px;">💰 Order Total</span>
       <span style="font-weight:900;color:var(--purple-deep);font-size:18px;">${RM(total)}</span>
     </div>`;
@@ -2001,7 +1994,7 @@ function renderCartPage(){
           <div style="display:flex;gap:6px;margin-top:8px;">
             <button data-act="view" data-id="${o.id}" style="flex:1;background:var(--purple-deep);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">📋 查看</button>
             <button data-act="addMore" data-id="${o.id}" style="flex:1;background:var(--purple-light);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">➕ 加菜</button>
-            <button data-act="payOne" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">💰 结账</button>
+            <button data-act="payOne" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">💰 结账</button>
           </div>
         </div>`;
     }).join('');
@@ -2502,14 +2495,14 @@ function renderExpenses(){
           <td>${escapeHtml(e.note||'-')}</td>
           <td style="text-align:right;font-weight:800;color:var(--purple-deep);">${RM(e.amount)}</td>
           <td class="no-print" style="white-space:nowrap;">
-            <button class="mini-btn" onclick="editExpense('${e.id}')" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;" title="编辑">✏️</button>
+            <button class="mini-btn" onclick="editExpense('${e.id}')" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;" title="编辑">✏️</button>
             <button class="mini-btn" onclick="deleteExpense('${e.id}')" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);" title="删除">🗑️</button>
           </td>
         </tr>`).join('')}
       </tbody>
     </table>
     ${list.length>1 ? groupedHtml : ''}
-    <div style="text-align:right;font-weight:900;margin-top:14px;padding:10px 16px;background:linear-gradient(135deg,#e8dff0,#d9c9e8);border-radius:12px;color:var(--purple-deep);font-size:17px;">Total: ${RM(total)} <span style="font-size:12px;font-weight:700;opacity:.7;margin-left:6px;">(${list.length} 笔)</span></div>`;
+    <div style="text-align:right;font-weight:900;margin-top:14px;padding:10px 16px;background:linear-gradient(135deg,#e8dff0,#c5e2eb);border-radius:12px;color:var(--purple-deep);font-size:17px;">Total: ${RM(total)} <span style="font-size:12px;font-weight:700;opacity:.7;margin-left:6px;">(${list.length} 笔)</span></div>`;
 }
 // 跳回今日 + 重渲染
 function _todayExpList(){
@@ -2631,14 +2624,14 @@ function renderHistory(){
   const totalBowls = orders.reduce((s,o)=> s + (o.items||[]).reduce((ss,it)=>ss+(+it.qty||0),0), 0);
   box.innerHTML = `
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-      <div style="background:linear-gradient(135deg,#e8dff0,#d9c9e8);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+      <div style="background:linear-gradient(135deg,#e8dff0,#c5e2eb);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:22px;">📋</span>
         <div>
           <div style="font-size:10px;color:var(--purple);font-weight:900;letter-spacing:.5px;">总订单数</div>
           <div style="font-size:22px;font-weight:900;color:var(--purple-deep);">${totalOrders} 单</div>
         </div>
       </div>
-      <div style="background:linear-gradient(135deg,#fff8ee,#fce0a8);border:1.5px dashed #e8b870;border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+      <div style="background:linear-gradient(135deg,#fff8ee,#ffd0d9);border:1.5px dashed #e8b870;border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:22px;">🍜</span>
         <div>
           <div style="font-size:10px;color:#a8825a;font-weight:900;letter-spacing:.5px;">总碗数</div>
@@ -2657,7 +2650,7 @@ function renderHistory(){
       <td class="no-print">
         <button class="mini-btn" onclick="showReceipt(DB.orders.find(x=>x.id==='${o.id}'))" title="查看小票">🧾</button>
         <button class="mini-btn" onclick="reprint('${o.id}')" title="打印小票">🖨️</button>
-        <button class="mini-btn" onclick="editOrder('${o.id}')" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;">✏️ Edit</button>
+        <button class="mini-btn" onclick="editOrder('${o.id}')" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;">✏️ Edit</button>
         <button class="mini-btn" onclick="deleteOrder('${o.id}')" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);">🗑️</button>
       </td></tr>`;
     }).join('')+
@@ -3040,7 +3033,7 @@ function showBackupModal(filename, text){
       </div>
       <textarea id="backupText" readonly style="flex:1;min-height:200px;max-height:50vh;border:1.5px dashed #d8b38d;border-radius:10px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#fff;color:#3a2e25;resize:vertical;">${text.replace(/</g,'&lt;')}</textarea>
       <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-        <button id="backupCopy" style="flex:1;min-width:100px;background:linear-gradient(135deg,var(--purple-light),#d9c9e8);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px;">📋 Copy to Clipboard</button>
+        <button id="backupCopy" style="flex:1;min-width:100px;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px;">📋 Copy to Clipboard</button>
         <button id="backupSelect" style="flex:1;min-width:100px;background:linear-gradient(135deg,#d8b38d,#f0e3d2);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px;">🔘 Select All</button>
       </div>
       <div style="margin-top:8px;font-size:11px;color:var(--purple-light);text-align:center;line-height:1.5;">
@@ -3064,7 +3057,7 @@ function showBackupModal(filename, text){
         const orig = btn.textContent;
         btn.textContent = '✅ Copied!';
         btn.style.background = 'linear-gradient(135deg,var(--purple),var(--purple-light))';
-        setTimeout(()=>{ btn.textContent = orig; btn.style.background = 'linear-gradient(135deg,var(--purple-light),#d9c9e8)'; },1500);
+        setTimeout(()=>{ btn.textContent = orig; btn.style.background = 'linear-gradient(135deg,var(--purple-light),#c5e2eb)'; },1500);
       }else{
         document.execCommand('copy');
         alert('✅ 已复制');
@@ -3108,11 +3101,32 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
   r.readAsText(file);
 });
 
+/* ============ 星星飘落 ============ */
+function spawnStars(){
+  const layer = document.querySelector('.stars-layer');
+  if(!layer) return;
+  const emojis = ['⭐','🌟','✨','💫','☁️','💕','🌸'];
+  // 32 颗, 分散一些
+  for(let i=0;i<32;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.textContent = emojis[i % emojis.length];
+    s.style.left = (Math.random()*100) + 'vw';
+    s.style.fontSize = (10 + Math.random()*16) + 'px';
+    s.style.animationDuration = (7 + Math.random()*11) + 's';
+    s.style.animationDelay = (Math.random()*10) + 's';
+    s.style.opacity = (0.5 + Math.random()*0.4).toFixed(2);
+    layer.appendChild(s);
+  }
+}
+
 /* ============ 初始化 ============ */
 document.getElementById('todayDate').textContent = now().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 renderMenu();
 renderSuppliers();
 renderDashboard();
+// 启动星星飘落
+spawnStars();
 
 // 自动恢复 Cart (防误关丢失)
 const _restored = restoreCart();
