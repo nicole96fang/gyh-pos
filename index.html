@@ -309,7 +309,7 @@
   .opt.protein.on{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border-color:var(--pink-deep);color:var(--purple-deep);}
   .modal-box{background:linear-gradient(180deg,#fefaf3,#f3e5f5);border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(106,91,140,.25);text-align:center;border:2px solid var(--purple-pink);max-height:calc(100vh - 32px);overflow:auto;}
   /* 收据弹窗里允许透明，露出水彩底色 */
-  #receiptModal .modal-box,#expReceiptModal .modal-box,#histReceiptModal .modal-box{background:transparent;box-shadow:none;padding:8px;border:none;max-height:none;overflow:visible;}
+  #receiptModal .modal-box,#expReceiptModal .modal-box{background:transparent;box-shadow:none;padding:8px;border:none;max-height:none;overflow:visible;}
   .modal-box h3{margin:0 0 6px;color:var(--purple-deep);}
   .pay-methods{display:flex;gap:12px;margin:18px 0;}
   .pay-method{flex:1;border:2px solid var(--purple-pink);border-radius:18px;padding:18px 8px;cursor:pointer;font-weight:800;color:var(--purple-deep);background:#fff;transition:.15s;}
@@ -739,7 +739,6 @@
           </select>
           <button class="mini-btn" id="histFilter">🔍 Filter</button>
           <button class="mini-btn pink" id="histClear">✖ Clear Filter</button>
-          <button class="mini-btn" id="printAllHist">🖨️ Print All</button>
         </div>
         <div id="historyList"><div class="empty">暂无历史订单</div></div>
       </div>
@@ -965,17 +964,6 @@
     <div style="margin-top:16px;display:flex;gap:10px;" class="no-print">
       <button class="btn mint" id="expReceiptPrint" style="flex:1;">🖨️ Print</button>
       <button class="btn" id="expReceiptClose" style="flex:1;">Done</button>
-    </div>
-  </div>
-</div>
-
-<!-- History Print Preview Modal · 多单小票合集 -->
-<div class="modal" id="histReceiptModal">
-  <div class="modal-box" style="max-width:480px;">
-    <div class="receipt print-area" id="histReceiptContent"></div>
-    <div style="margin-top:16px;display:flex;gap:10px;" class="no-print">
-      <button class="btn mint" id="histReceiptPrint" style="flex:1;">🖨️ Print</button>
-      <button class="btn" id="histReceiptClose" style="flex:1;">Done</button>
     </div>
   </div>
 </div>
@@ -2806,158 +2794,8 @@ document.getElementById('editCancel').onclick=()=>document.getElementById('editO
 document.getElementById('editClose').onclick=()=>document.getElementById('editOrderModal').classList.remove('show');
 document.getElementById('histFilter').onclick=renderHistory;
 document.getElementById('histClear').onclick=()=>{document.getElementById('histFrom').value='';document.getElementById('histTo').value='';document.getElementById('histMethod').value='';renderHistory();};
-document.getElementById('printAllHist').onclick=()=>{
-  const orders=getFilteredOrders().reverse();
-  if(!orders.length){alert('没有可打印的订单');return;}  // === 设计: 与 receipt 风格一致的水彩紫主题 ===
-  // 按日期分组聚合
-  const byDate = {};
-  orders.forEach(o=>{
-    const bowls = (o.items||[]).reduce((s,it)=>s+(+it.qty||0),0);
-    if(!byDate[o.date]) byDate[o.date] = {orders:[], total:0, count:0, bowls:0};
-    byDate[o.date].orders.push(o);
-    byDate[o.date].total += o.total;
-    byDate[o.date].count++;
-    byDate[o.date].bowls += bowls;
-  });
-  const dates = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
-  const grandTotal = orders.reduce((s,o)=>s+o.total,0);
-  const grandCount = orders.length;
-  const grandBowls = orders.reduce((s,o)=> s + (o.items||[]).reduce((ss,it)=>ss+(+it.qty||0),0), 0);
-  // 支付方式汇总
-  const payStat = {};
-  orders.forEach(o=>{ payStat[o.method] = (payStat[o.method]||0) + o.total; });
-  const payRows = Object.keys(payStat).map(k=>`<span style="display:inline-block;margin:2px 4px;padding:3px 10px;background:rgba(217,201,232,.45);border:1px dashed var(--purple-pink);border-radius:10px;font-weight:800;color:var(--purple-deep);">${escapeHtml(k)} · ${RM(payStat[k])}</span>`).join('');
-  // 起止日期 (用于 header)
-  const dateRange = dates.length === 1
-    ? dates[0]
-    : `${dates[dates.length-1]} → ${dates[0]}`;
 
-  const content = document.getElementById('histReceiptContent');
-  content.innerHTML = `
-    <!-- 顶部品牌区 (与 receipt 同款) -->
-    <div class="r-brand">
-      <div class="r-shop" style="font-size:21px;margin-top:6px;">📜 ORDER HISTORY</div>
-      <div style="font-size:12px;font-weight:800;color:var(--purple-deep);margin-top:2px;">GOH YEAN HUAN · 销售记录</div>
-      <div class="r-reg" style="margin-top:4px;">${dateRange} · ${grandCount} 单 · ${grandBowls} 碗</div>
-    </div>
-    <div class="r-deco"><span>🌹</span><span>✨</span><span>🌙</span></div>
-    <!-- 总览区 -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0;">
-      <div style="background:linear-gradient(135deg,#f3e5f5,#ede7f6);padding:10px;border-radius:10px;border:1px dashed var(--purple-pink);text-align:center;">
-        <div style="font-size:9.5px;font-weight:800;color:var(--purple);letter-spacing:.5px;">总订单数</div>
-        <div style="font-size:22px;font-weight:900;color:var(--purple-deep);margin-top:2px;">${grandCount}</div>
-      </div>
-      <div style="background:linear-gradient(135deg,#fff8ee,#fce0a8);padding:10px;border-radius:10px;border:1px dashed #e8b870;text-align:center;">
-        <div style="font-size:9.5px;font-weight:800;color:#a8825a;letter-spacing:.5px;">总碗数</div>
-        <div style="font-size:22px;font-weight:900;color:#7a4e2a;margin-top:2px;">${grandBowls}</div>
-      </div>
-      <div style="background:linear-gradient(135deg,#e8dff0,#d9c9e8);padding:10px;border-radius:10px;border:1px dashed var(--pink-deep);text-align:center;">
-        <div style="font-size:9.5px;font-weight:800;color:var(--purple);letter-spacing:.5px;">总营业额</div>
-        <div style="font-size:22px;font-weight:900;color:var(--purple-deep);margin-top:2px;">${RM(grandTotal)}</div>
-      </div>
-    </div>
-    ${payRows ? `<div style="text-align:center;margin:8px 0 4px;">${payRows}</div>` : ''}
-    <!-- 按日期分组合计 -->
-    ${dates.map(date=>{
-      const g = byDate[date];
-      const dayOrders = g.orders.slice().sort((a,b)=>(a.time>b.time?1:-1));
-      return `
-        <div style="margin-top:14px;">
-          <!-- 日期组标题 -->
-          <div style="display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#886ba8,#3a2d52);color:#fff;padding:8px 14px;border-radius:12px 12px 0 0;">
-            <span style="font-weight:900;font-size:13px;">📅 ${date}</span>
-            <span style="font-size:11px;opacity:.85;">${g.count} 单 · ${g.bowls} 碗 · ${RM(g.total)}</span>
-          </div>
-          <!-- 订单列表 -->
-          <div style="border:1px dashed var(--purple-pink);border-top:none;border-radius:0 0 12px 12px;padding:8px 10px;background:rgba(255,255,255,.55);">
-            ${dayOrders.map((o,i)=>{
-              const t = (o.time||'').split(' ')[1] || o.time || '';
-              const bowls = (o.items||[]).reduce((s,it)=>s+(+it.qty||0),0);
-              const itemsTxt = o.items.map(it=>`${escapeHtml(it.name)}×${it.qty}`).join(', ');
-              return `
-                <div style="padding:8px 0;${i<dayOrders.length-1?'border-bottom:1px dotted var(--purple-pink);':''}">
-                  <div style="display:flex;justify-content:space-between;align-items:baseline;">
-                    <span style="font-weight:800;color:var(--purple-deep);font-size:12.5px;">🧾 ${escapeHtml(o.code||'—')}</span>
-                    <span style="font-weight:900;color:var(--purple-deep);font-size:13.5px;">${RM(o.total)}</span>
-                  </div>
-                  <div style="font-size:10.5px;color:var(--purple);font-weight:600;margin-top:2px;">
-                    <span style="display:inline-block;margin-right:6px;">🕒 ${escapeHtml(t)}</span>
-                    <span style="display:inline-block;padding:1px 6px;background:rgba(217,201,232,.55);border-radius:6px;">${escapeHtml(o.method)}</span>
-                    <span style="display:inline-block;margin-left:6px;padding:1px 7px;background:rgba(255,235,200,.65);border:1px dashed #e8b870;border-radius:6px;color:#7a4e2a;font-weight:900;">🍜 ${bowls} 碗</span>
-                  </div>
-                  <div style="font-size:11.5px;color:var(--purple-deep);margin-top:3px;line-height:1.4;">${itemsTxt}</div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
-    }).join('')}
-    <!-- Grand Total -->
-    <div class="rtotal" style="margin-top:18px;font-size:18px;">
-      <span>💰 GRAND TOTAL</span>
-      <span>${RM(grandTotal)}</span>
-    </div>
-    <!-- 页脚 -->
-    <div class="rfoot" style="border-top:1.5px dashed var(--gold);margin-top:14px;">
-      📜 Order History · 销售记录汇总<br/>
-      <span style="font-size:9.5px;opacity:.8;">${dateRange} · generated by GOH YEAN HUAN POS</span>
-    </div>
-  `;
-  const modal = document.getElementById('histReceiptModal');
-  modal.classList.add('show');
-  document.getElementById('histReceiptClose').onclick = ()=> modal.classList.remove('show');
-  document.getElementById('histReceiptPrint').onclick = ()=>{
-    // 把同一份收据内容塞到一个独立的打印窗口, 强制定制 80mm 纸张
-    // 解决 iOS Safari 弹出的 print dialog 把内容切成 N 张的问题
-    const src = document.getElementById('histReceiptContent').innerHTML;
-    const w = window.open('','_blank','width=400,height=900');
-    if(!w){ alert('请允许 popup 后再试一次 ⚙️'); return; }
-    w.document.open();
-    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Print History</title>
-<style>
-  @page{size:80mm auto;margin:0;}
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:#fff;font-family:'Segoe UI','Microsoft YaHei',system-ui,sans-serif;color:#3a2d52;}
-  body{width:80mm;padding:6mm 4mm;font-size:9.5px;line-height:1.3;}
-  body *{visibility:visible !important;}
-  .r-brand{text-align:center;padding-bottom:6px;border-bottom:1.5px dashed #6b5b8c;}
-  .r-shop{font-size:14px !important;font-weight:900;color:#3a2d52;}
-  .r-reg{font-size:9px !important;margin-top:2px;color:#6b5b8c;}
-  .r-deco{text-align:center;margin:3px 0;color:#d4b854;letter-spacing:6px;font-size:11px;}
-  /* 总览 3 格:紧凑 */
-  div[style*="grid-template-columns"]{gap:4px !important;margin:6px 0 !important;}
-  div[style*="grid-template-columns"] > div{padding:5px !important;border-radius:6px !important;}
-  div[style*="grid-template-columns"] [style*="font-size:9.5px"]{font-size:7.5px !important;letter-spacing:.4px;}
-  div[style*="grid-template-columns"] [style*="font-size:22px"]{font-size:14px !important;margin-top:1px;}
-  /* 支付方式 pill */
-  .pays,.pays span{font-size:8.5px !important;}
-  /* 日期组头 */
-  div[style*="linear-gradient(135deg,#886ba8"]{padding:5px 8px !important;border-radius:6px 6px 0 0 !important;font-size:10px !important;}
-  div[style*="linear-gradient(135deg,#886ba8"] [style*="font-size:13px"]{font-size:10px !important;}
-  div[style*="linear-gradient(135deg,#886ba8"] [style*="font-size:11px"]{font-size:8px !important;}
-  /* 日期组体 */
-  div[style*="border:1px dashed var(--purple-pink);border-top:none"]{padding:5px 6px !important;border-radius:0 0 6px 6px !important;}
-  /* 订单行 */
-  div[style*="border-bottom:1px dotted var(--purple-pink);padding:8px 0"],
-  div[style*="border-bottom:1px dotted var(--purple-pink);"]{padding:3px 0 !important;}
-  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:12.5px"]{font-size:9.5px !important;}
-  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:13.5px"]{font-size:10px !important;}
-  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:10.5px"]{font-size:8.5px !important;}
-  div[style*="border-bottom:1px dotted var(--purple-pink)"] [style*="font-size:11.5px"]{font-size:9px !important;line-height:1.25;}
-  /* 日期组之间间距 */
-  div[style*="margin-top:14px"]{margin-top:8px !important;}
-  /* Grand total */
-  .rtotal{margin-top:10px !important;padding-top:5px !important;font-size:14px !important;}
-  .rfoot{border-top:1px dashed #d4b854 !important;margin-top:8px !important;padding-top:5px !important;font-size:8.5px !important;}
-  .rfoot [style*="font-size:9.5px"]{font-size:7.5px !important;}
-  /* 强制一条连续内容, 不强行分页 */
-  body, body div{page-break-inside:avoid;}
-</style>
-</head><body>${src}<script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script></body></html>`);
-    w.document.close();
-  };
-};
+/* ============ Report ============ */
 
 /* ============ Report ============ */
 let repMode = 'daily'; // daily | weekly | monthly
