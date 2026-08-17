@@ -507,7 +507,7 @@
     <button class="nav-btn" data-view="neworder">
       <span class="ic" style="background:linear-gradient(135deg,#c987c8,#e8c5e0);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;">🧾</span> New Order <span id="badgeNeworder" style="display:none;background:#d4b854;color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
-    <button class="nav-btn" onclick="openCartDirect()" style="color:#3a2d52;background:rgba(217,201,232,.35);">
+    <button class="nav-btn" data-view="cart" style="color:#3a2d52;background:rgba(217,201,232,.35);">
       <span class="ic" style="background:linear-gradient(135deg,#a89bc9,#d9c9e8);display:flex;align-items:center;justify-content:center;font-size:17px;">🛒</span> View Cart <span id="badgeCart" style="display:none;background:var(--pink-deep);color:#fff;font-size:11px;font-weight:900;padding:2px 7px;border-radius:10px;margin-left:auto;">0</span>
     </button>
     <button class="nav-btn" data-view="expense">
@@ -629,6 +629,56 @@
       <div class="card">
         <h2>🍽️ Menu · 点击任意菜品即可跳岀选项选择 ✨</h2>
         <div class="menu-grid" id="menuGrid"></div>
+      </div>
+    </section>
+
+    <!-- CART (View Cart page) -->
+    <section id="view-cart" class="hidden">
+      <div class="card" style="background:linear-gradient(135deg,#fefaf3,#f3e5f5);">
+        <h2>🛒 My Cart</h2>
+        <div style="font-size:12px;color:var(--ink-soft);margin:-4px 0 10px;">查看草稿和未结账订单，所有内容随时同步</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <div style="background:rgba(255,255,255,.65);border:1.5px dashed var(--purple-pink);border-radius:12px;padding:8px 14px;flex:1;min-width:140px;">
+            <div style="font-size:10px;color:var(--purple);font-weight:900;letter-spacing:.5px;">草稿菜品</div>
+            <div id="cartDraftCount" style="font-size:22px;font-weight:900;color:var(--purple-deep);">0</div>
+          </div>
+          <div style="background:rgba(255,255,255,.65);border:1.5px dashed var(--purple-pink);border-radius:12px;padding:8px 14px;flex:1;min-width:140px;">
+            <div style="font-size:10px;color:var(--purple);font-weight:900;letter-spacing:.5px;">未结账订单</div>
+            <div id="cartActiveCount" style="font-size:22px;font-weight:900;color:var(--purple-deep);">0</div>
+          </div>
+          <div style="background:rgba(255,255,255,.65);border:1.5px dashed var(--purple-pink);border-radius:12px;padding:8px 14px;flex:1;min-width:140px;">
+            <div style="font-size:10px;color:var(--purple);font-weight:900;letter-spacing:.5px;">Draft Total</div>
+            <div id="cartDraftTotal" style="font-size:22px;font-weight:900;color:var(--purple-deep);">RM 0.00</div>
+          </div>
+          <div style="background:rgba(255,255,255,.65);border:1.5px dashed var(--purple-pink);border-radius:12px;padding:8px 14px;flex:1;min-width:140px;">
+            <div style="font-size:10px;color:var(--purple);font-weight:900;letter-spacing:.5px;">All Unpaid</div>
+            <div id="cartUnpaidTotal" style="font-size:22px;font-weight:900;color:var(--purple-deep);">RM 0.00</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="pay-btn" onclick="gotoNewOrder()" style="background:linear-gradient(135deg,#a89bc9,#6b5b8c);flex:1;min-width:180px;">➕ 继续点菜 (加菜)</button>
+          <button class="pay-btn" onclick="confirmClearCart()" style="background:linear-gradient(135deg,#e8dff0,#d9c9e8);color:var(--purple-deep);min-width:140px;">🗑️ 清空草稿</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+        <div class="card">
+          <h3>📋 已送厨房 · 未结账 <span id="cartActiveBadge" style="display:inline-block;background:var(--pink-deep);color:#fff;font-size:11px;font-weight:900;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:4px;">0</span></h3>
+          <div id="cartActiveList"></div>
+        </div>
+        <div class="card">
+          <h3>🛒 New Order 草稿 <span id="cartDraftBadge" style="display:inline-block;background:var(--purple);color:#fff;font-size:11px;font-weight:900;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:4px;">0</span></h3>
+          <div id="cartDraftItems"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>💳 草稿结账</h3>
+        <p style="color:var(--ink-soft);font-size:12px;margin:0 0 10px;">草稿准备好就 <b>送厨房</b> 然后 <b>结账</b></p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="pay-btn" id="cartSendToKitchen" style="background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;flex:1;min-width:200px;">🍳 送厨房 (Send to Kitchen)</button>
+          <button class="pay-btn" id="cartToPayment" disabled style="flex:1;min-width:200px;">💳 结账草稿 (Proceed to Payment)</button>
+        </div>
       </div>
     </section>
 
@@ -1127,14 +1177,17 @@ function clearCart(){
 }
 
 /* ============ 导航 ============ */
-const titles = {dashboard:'Dashboard',neworder:'New Order',expense:'Expense',history:'History',report:'Report'};
+const titles = {dashboard:'Dashboard',neworder:'New Order',cart:'My Cart',expense:'Expense',history:'History',report:'Report'};
 function switchView(v){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
   document.querySelectorAll('section[id^="view-"]').forEach(s=>s.classList.add('hidden'));
   document.getElementById('view-'+v).classList.remove('hidden');
   document.getElementById('viewTitle').textContent = titles[v];
   document.getElementById('sidebar').classList.remove('open');
+  // 同步刷新 cart 页面 (若之前用过 _addToOrderId, 现在已在 menu 里了, 不会冲突)
+  if(v==='cart'){ closeDrawerIfAny(); renderCartPage(); }
   if(v==='dashboard') renderDashboard();
+  if(v==='neworder'){ renderMenu(); highlightMenu(); } // safety: 重渲染菜单避免空
   if(v==='expense') renderExpenses();
   if(v==='history') renderHistory();
   if(v==='report') renderReport();
@@ -1640,6 +1693,11 @@ function renderActiveOrders(){
   },0);
   // 同步更新顶部摘要卡
   updateActiveSummary();
+  // 同步 view-cart 页面 (若 user 当前正看着 cart view)
+  const cartV = document.getElementById('view-cart');
+  if(cartV && !cartV.classList.contains('hidden')){
+    renderCartPage();
+  }
 }
 
 // 顶部 Summary 卡 (New Order 视图)
@@ -1892,6 +1950,11 @@ function renderOrder(){
     dc.textContent = cnt;
     dc.style.display = cnt>0 ? 'inline-block' : 'none';
   }
+  // 同步 Cart Page (若 user 当前正看着 view-cart)
+  const cv = document.getElementById('view-cart');
+  if(cv && !cv.classList.contains('hidden')){
+    renderCartPage();
+  }
 }
 function updateCartBadge(){
   const badge = document.getElementById('badgeCart');
@@ -1904,13 +1967,169 @@ function updateCartBadge(){
   }
 }
 function openCartDirect(){
-  // 跳到 New Order view + 立刻打开右侧抽屉
-  switchView('neworder');
-  // 等视图切换完成,立刻重新渲染并开抽屉
+  // 跳到专用 Cart 页面 (view-cart)
+  switchView('cart');
+  // 等视图切换完成,渲染草稿/活跃订单
+  setTimeout(()=>{ renderCartPage(); }, 60);
+}
+
+/* ============ Cart 页面渲染 ============
+   view-cart 是 sidebar "View Cart" 进入的专属页面
+   与 drawer 共享 currentOrder / activeOrders 数据,
+   任何修改通过 renderOrder() / renderActiveOrders() 反向同步到这里
+*/
+function renderCartPage(){
+  if(!document.getElementById('cartActiveList')) return;  // 防御: 页面未生成
+
+  // 1) 活跃订单区 -------------------------------------------------
+  const aBox = document.getElementById('cartActiveList');
+  if(!activeOrders.length){
+    aBox.innerHTML = '<div class="empty" style="padding:18px;font-size:12px;text-align:center;color:var(--ink-soft);">✨ 没有未结账订单<br/>送厨房的订单会出现在这里</div>';
+  } else {
+    aBox.innerHTML = activeOrders.map(o=>{
+      const total = orderTotalOf(o.items);
+      const itemStr = o.items.map(it=>{
+        const d = findDish(it.dishId);
+        return d ? `${d.emoji}×${it.qty}` : `×${it.qty}`;
+      }).join(' ');
+      return `
+        <div class="active-order-card" style="border:1.5px dashed var(--purple-pink);background:#fff8ee;border-radius:12px;padding:10px 12px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;">
+            <div style="font-weight:900;color:var(--purple-deep);font-size:13px;">🍳 ${o.code}${o.name?' · '+o.name:''}</div>
+            <div style="font-weight:900;color:var(--purple-deep);font-size:14px;">${RM(total)}</div>
+          </div>
+          <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;line-height:1.4;">${itemStr}</div>
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <button data-act="view" data-id="${o.id}" style="flex:1;background:var(--purple-deep);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">📋 查看</button>
+            <button data-act="addMore" data-id="${o.id}" style="flex:1;background:var(--purple-light);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">➕ 加菜</button>
+            <button data-act="payOne" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,#f5b75c,#fce0a8);color:#7a4e2a;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">💰 结账</button>
+          </div>
+        </div>`;
+    }).join('');
+    aBox.innerHTML += `
+      <div style="background:linear-gradient(135deg,#fff5e6,#ffe8d2);padding:10px 12px;border-radius:10px;margin-top:6px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:900;color:var(--purple-deep);font-size:13px;">🧾 All Unpaid</span>
+        <span style="font-weight:900;color:var(--purple-deep);font-size:15px;">${RM(activeOrders.reduce((s,o)=>s+orderTotalOf(o.items),0))}</span>
+      </div>
+      <button id="cartBatchPayBtn" style="width:100%;background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;padding:10px;border-radius:10px;margin-top:8px;font-weight:900;cursor:pointer;font-size:13px;">💰 一键结账所有 (Batch All)</button>`;
+  }
+
+  // 2) 草稿区 -------------------------------------------------------
+  const dBox = document.getElementById('cartDraftItems');
+  if(!currentOrder.length){
+    dBox.innerHTML = '<div class="empty" style="padding:18px;font-size:12px;text-align:center;color:var(--ink-soft);">🍜 草稿是空的<br/>去 <b>New Order</b> 加菜 →</div>';
+  } else {
+    dBox.innerHTML = currentOrder.map((it,idx)=>{
+      const dish = findDish(it.dishId);
+      const line = itemLineTotal(it);
+      const noodleStr = (it.noodles||[]).map(nid=>{
+        const n = NOODLES.find(x=>x.id===nid);
+        return n ? `${n.emoji}${n.name}` : '';
+      }).filter(Boolean).join(' · ');
+      const prot = SINGLE_PROTEIN.find(p=>p.id===it.protein);
+      const protStr = prot ? prot.name : '';
+      let optsStr = '';
+      if(it.opts && it.opts.length){
+        optsStr = it.opts.map(oo=>{
+          const op = OPTIONS.find(x=>x.id===oo.id);
+          return op ? (oo.qty>1 ? `${op.name}×${oo.qty}` : op.name) : '';
+        }).filter(Boolean).join(', ');
+      }
+      return `
+        <div style="background:rgba(255,255,255,.85);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:12px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+            <span style="font-weight:900;color:var(--purple-deep);">${dish.emoji} ${dish.name} <span style="background:var(--purple-light);color:#fff;padding:2px 8px;border-radius:8px;font-size:11px;margin-left:4px;">×${it.qty}</span></span>
+            <span style="font-weight:900;color:var(--purple-deep);white-space:nowrap;">${RM(line)}</span>
+          </div>
+          ${noodleStr?`<div style="font-size:11px;color:var(--purple);margin-top:4px;font-weight:700;">🍜 ${noodleStr}</div>`:''}
+          ${protStr?`<div style="font-size:11px;color:var(--purple);margin-top:2px;font-weight:700;">🥩 ${protStr}</div>`:''}
+          ${optsStr?`<div style="font-size:11px;color:var(--purple);margin-top:2px;font-weight:700;">➕ ${optsStr}</div>`:''}
+          ${it.desc?`<div style="font-size:11px;color:var(--pink-deep);margin-top:4px;font-style:italic;">📝 ${it.desc}</div>`:''}
+          <div style="display:flex;gap:6px;justify-content:space-between;align-items:center;margin-top:10px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button data-act-pg="dec" data-idx-pg="${idx}" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--purple-pink);background:#fff;color:var(--purple-deep);font-weight:900;cursor:pointer;font-size:16px;">−</button>
+              <span style="font-weight:900;color:var(--purple-deep);font-size:15px;min-width:20px;text-align:center;">${it.qty}</span>
+              <button data-act-pg="inc" data-idx-pg="${idx}" style="width:30px;height:30px;border-radius:50%;border:1.5px solid var(--purple-pink);background:#fff;color:var(--purple-deep);font-weight:900;cursor:pointer;font-size:16px;">+</button>
+            </div>
+            <button data-act-pg="rm" data-idx-pg="${idx}" style="background:#f0e3d2;color:var(--purple-deep);border:none;padding:6px 12px;border-radius:10px;font-size:11px;font-weight:900;cursor:pointer;">🗑 Remove</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    // 绑定 +/-/rm 按钮
+    dBox.querySelectorAll('[data-act-pg]').forEach(b=>{
+      b.onclick=()=>{
+        const i=+b.dataset.idxPg, act=b.dataset.actPg;
+        if(act==='inc') currentOrder[i].qty++;
+        if(act==='dec'){ currentOrder[i].qty--; if(currentOrder[i].qty<=0) currentOrder.splice(i,1); }
+        if(act==='rm') currentOrder.splice(i,1);
+        renderCartPage();
+        renderOrder(); // 同步 drawer + badge
+      };
+    });
+  }
+
+  // 3) 底部按钮状态 + 顶部统计 ---------------------------------------
+  const empty = currentOrder.length===0;
+  const btnK = document.getElementById('cartSendToKitchen');
+  const btnP = document.getElementById('cartToPayment');
+  if(btnK) btnK.disabled = empty;
+  if(btnP) btnP.disabled = empty;
+
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('cartDraftCount', currentOrder.length);
+  set('cartActiveCount', activeOrders.length);
+  set('cartDraftBadge', currentOrder.length);
+  set('cartActiveBadge', activeOrders.length);
+  set('cartDraftTotal', RM(orderTotalOf(currentOrder)));
+  set('cartUnpaidTotal', RM(activeOrders.reduce((s,o)=>s+orderTotalOf(o.items),0)));
+
+  // 4) 绑定 actions (setTimeout 让 innerHTML 先生效) -----------------
   setTimeout(()=>{
-    renderOrder();   // 确保 currentOrder 重新绘制到 #orderItems
-    openDrawer();
-  }, 60);
+    const bb = document.getElementById('cartBatchPayBtn');
+    if(bb && !bb._bound){ bb._bound = true; bb.onclick = openBatchPay; }
+
+    aBox.querySelectorAll('[data-act]').forEach(b=>{
+      if(b._bound) return;
+      b._bound = true;
+      b.onclick=()=>{
+        const id = b.dataset.id, act = b.dataset.act;
+        const o = activeOrders.find(x=>x.id===id);
+        if(!o) return;
+        if(act==='view'){ viewActiveOrder(id); return; }
+        if(act==='addMore'){
+          _addToOrderId = id;
+          switchView('neworder');
+          setTimeout(()=>{
+            const el = document.querySelector(`[data-dish="${o.items[0].dishId}"]`);
+            if(el) el.click();
+          },120);
+        }else if(act==='payOne'){
+          openBatchPay([id]);
+        }
+      };
+    });
+
+    // 送厨房 / 结账 -- delegate 到 drawer 的原按钮 (那两按钮带 confirm + 完整逻辑)
+    const btnSK = document.getElementById('cartSendToKitchen');
+    const btnTP = document.getElementById('cartToPayment');
+    if(btnSK && !btnSK._bound){
+      btnSK._bound = true;
+      btnSK.onclick = ()=>{
+        if(!currentOrder.length){ showToast('🛒 草稿是空的'); return; }
+        // 触发 drawer 上同一按钮 (里面的 click handler 包含 confirm + 推送)
+        document.getElementById('sendToKitchen').click();
+        setTimeout(()=>renderCartPage(), 80);
+      };
+    }
+    if(btnTP && !btnTP._bound){
+      btnTP._bound = true;
+      btnTP.onclick = ()=>{
+        if(!currentOrder.length) return;
+        document.getElementById('toPayment').click();
+      };
+    }
+  },0);
 }
 function confirmClearCart(){
   if(!currentOrder.length){ showToast('🛒 Cart 已经空了'); return; }
