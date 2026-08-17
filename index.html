@@ -92,9 +92,9 @@
   .brand{
     text-align:center;margin-bottom:14px;padding:12px 6px 10px;
     border-radius:18px;
-    background:linear-gradient(135deg,var(--purple-pink),var(--bg-2));
+    background:#fff;
     box-shadow:var(--shadow);
-    border:2px solid rgba(191,227,242,.55);
+    border:1.5px solid var(--sky-deep);
   }
   .brand .logo{font-size:34px;line-height:1;}
   .brand .name{font-weight:800;font-size:15px;margin-top:6px;color:var(--purple-deep);letter-spacing:.3px;}
@@ -132,10 +132,9 @@
   .dash-hero{
     display:flex;align-items:center;justify-content:space-between;gap:24px;
     padding:32px 36px;border-radius:28px;position:relative;overflow:hidden;
-    background:
-      linear-gradient(135deg,#eaf6fb,#fceaf0 50%,#fce4ec);
-    box-shadow:0 8px 24px rgba(75,167,202,.18);
-    border:1.5px solid var(--line);box-shadow:var(--shadow);
+    background:#fff;
+    box-shadow:var(--shadow);
+    border:1.5px solid var(--sky-deep);
     margin-bottom:24px;position:relative;overflow:hidden;flex-wrap:wrap;
   }
   .dash-hero-text{flex:1;min-width:220px;position:relative;z-index:1;}
@@ -154,8 +153,8 @@
   .btn-neworder-lg:active{transform:scale(.97);}
   .dash-hero-deco{font-size:18px;letter-spacing:6px;color:var(--pink-deep);opacity:.7;}
   .card{
-    background:var(--paper);border-radius:var(--radius);padding:24px;
-    box-shadow:var(--shadow);border:1px solid var(--line);margin-bottom:24px;
+    background:#fff;border-radius:var(--radius);padding:24px;
+    box-shadow:var(--shadow);border:1.5px solid var(--sky-deep);margin-bottom:24px;
   }
   .card h2{margin:0 0 16px;font-size:18px;color:var(--purple-deep);display:flex;align-items:center;gap:8px;}
   .hidden{display:none !important;}
@@ -164,16 +163,16 @@
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:42px 32px;margin-top:18px;}
   .stat{
     border-radius:28px;padding:34px 28px;color:var(--purple);position:relative;overflow:hidden;
-    box-shadow:var(--shadow);border:1.5px solid rgba(255,255,255,.7);
+    box-shadow:var(--shadow);background:#fff;border:1.5px solid var(--sky-deep);
     transition:.2s;
   }
   .stat:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 14px 30px rgba(75,167,202,.25);}
   .stat:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(180,150,140,.22);}
   .stat .emoji-circle{
     width:56px;height:56px;border-radius:50%;display:grid;place-items:center;
-    background:rgba(255,255,255,.65);font-size:28px;backdrop-filter:blur(2px);
-    border:1.5px solid rgba(255,255,255,.85);
-    box-shadow:0 4px 10px rgba(180,150,140,.1);
+    background:#fff;font-size:28px;backdrop-filter:blur(2px);
+    border:1.5px solid var(--sky-deep);
+    box-shadow:0 4px 10px rgba(75,167,202,.12);
   }
   .stat .emoji{font-size:36px;}
   .stat .v{font-size:30px;font-weight:900;margin-top:12px;color:var(--purple-deep);letter-spacing:.3px;}
@@ -181,23 +180,23 @@
   /* Hero 单独大卡 */
   .stats-hero .stat-big{
     padding:28px 32px;
-    background:linear-gradient(135deg,#fff0cf,#fff0cf,#fff0cf);
+    background:#fff;
   }
   .stats-hero .stat-big .emoji{font-size:46px;}
   .stats-hero .stat-big .v{font-size:42px;color:#8a5e3a;}
   .stats-hero .stat-big .l{font-size:14px;color:#a8825a;}
-  .s1{background:linear-gradient(135deg,#e8dff0,#c5e2eb);}
-  .s2{background:linear-gradient(135deg,#d9f2e6,#c2ead4);}
-  .s3{background:linear-gradient(135deg,#e3eefb,#cfe3f6);}
-  .s4{background:linear-gradient(135deg,#fff0cf,#ffe2a8);}
-  .s5{background:linear-gradient(135deg,#ece0fb,#ddccf5);}
+  .s1{background:#fff;}
+  .s2{background:#fff;}
+  .s3{background:#fff;}
+  .s4{background:#fff;}
+  .s5{background:#fff;}
   .recent{margin-top:8px;display:flex;flex-direction:column;gap:12px;}
   .recent-empty{text-align:center;padding:34px 0;color:var(--ink-soft);font-size:14px;}
   .recent-card{
     display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:14px;
     padding:14px 18px;border-radius:16px;
-    background:linear-gradient(135deg,#fffaf3,#fff5ec);
-    border:1.5px solid var(--line);box-shadow:0 4px 12px rgba(180,150,140,.1);
+    background:#fff;
+    border:1.5px solid var(--sky-deep);box-shadow:0 4px 12px rgba(75,167,202,.1);
     transition:.18s;
   }
   .recent-card:hover{transform:translateX(4px);box-shadow:0 8px 18px rgba(180,150,140,.18);}
@@ -230,33 +229,33 @@
   .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
   .dish{
     border-radius:20px;padding:16px;cursor:pointer;transition:.18s;position:relative;
-    border:2px solid transparent;box-shadow:var(--shadow);text-align:center;
+    border:1.5px solid var(--sky-deep);box-shadow:var(--shadow);text-align:center;
   }
-  .dish:hover{transform:translateY(-4px) rotate(-1deg);border-color:var(--pink-deep);}
+  .dish:hover{transform:translateY(-4px) rotate(-1deg);border-color:var(--sky-deep);background:#f5f9fc;}
   .dish .emoji{font-size:40px;}
   .dish .nm{font-weight:800;margin-top:6px;color:var(--purple-deep);font-size:15px;}
   .dish .pr{font-weight:700;color:var(--pink-deep);margin-top:2px;}
-  .d1{background:linear-gradient(135deg,#ffe6e6,#ffd8d8);}
-  .d2{background:linear-gradient(135deg,#e6f6ee,#d3f0e1);}
-  .d3{background:linear-gradient(135deg,#e6f1fb,#d4e8f7);}
-  .d4{background:linear-gradient(135deg,#fff3d6,#ffe6b0);}
-  .d5{background:linear-gradient(135deg,#efe6fb,#ddccf5);}
-  .d6{background:linear-gradient(135deg,#fce8d8,#f5d4b3);}
+  .d1{background:#fff;}
+  .d2{background:#fff;}
+  .d3{background:#fff;}
+  .d4{background:#fff;}
+  .d5{background:#fff;}
+  .d6{background:#fff;}
 
   /* 订单抽屉 */
   .overlay{position:fixed;inset:0;background:rgba(90,70,65,.32);backdrop-filter:blur(2px);z-index:50;display:none;}
   .overlay.show{display:block;}
   .drawer{
     position:fixed;top:0;right:0;height:100%;width:min(460px,94vw);
-    background:linear-gradient(180deg,#fefaf3,#eaf6fb 30%,#fceaf0);
+    background:#fff;
     z-index:60;box-shadow:-12px 0 40px rgba(75,167,202,.25);padding:20px 22px;overflow:auto;
-    transform:translateX(100%);transition:.3s;border-left:3px solid var(--purple-pink);
+    transform:translateX(100%);transition:.3s;border-left:3px solid var(--sky-deep);
   }
   .drawer.show{transform:translateX(0);}
   .drawer h3{margin:0 0 4px;color:var(--purple-deep);font-size:20px;}
   .drawer .close{position:absolute;top:16px;right:18px;border:none;background:var(--purple-pink);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--purple-deep);transition:.2s;}
   .drawer .close:hover{background:var(--pink-deep);color:#fff;transform:rotate(90deg);}
-  .order-item{border:1.5px dashed var(--line);border-radius:22px;padding:15px;margin-bottom:12px;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);}
+  .order-item{border:1.5px solid var(--sky-deep);border-radius:22px;padding:15px;margin-bottom:12px;background:#fff;}
   .order-item .ttl{display:flex;justify-content:space-between;font-weight:700;color:var(--purple-deep);}
   .opts{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0;}
   .opt{
@@ -298,8 +297,8 @@
   /* 底部上滑抽屉（手机 App 风格） */
   .bottom-sheet{
     position:relative;width:min(520px,100%);max-height:88vh;overflow:auto;
-    background:linear-gradient(180deg,#fefaf3,#eaf6fb 40%,#fceaf0);border-radius:26px 26px 0 0;padding:14px 22px 24px;
-    box-shadow:0 -12px 40px rgba(75,167,202,.25);border-top:3px solid var(--purple-pink);
+    background:#fff;border-radius:26px 26px 0 0;padding:14px 22px 24px;
+    box-shadow:0 -12px 40px rgba(75,167,202,.25);border-top:3px solid var(--sky-deep);
     transform:translateY(100%);transition:transform .35s cubic-bezier(.22,1,.36,1);
     align-self:flex-end;margin-top:auto;
   }
@@ -308,25 +307,21 @@
   /* Noodles 必选项（紫色系） */
   .opt.noodle.on{background:linear-gradient(135deg,#c5e2eb,#ffb6c1);border-color:var(--purple);color:#fff;}
   .opt.protein.on{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border-color:var(--pink-deep);color:var(--purple-deep);}
-  .modal-box{background:linear-gradient(180deg,#fefaf3,#eaf6fb);border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(75,167,202,.25);text-align:center;border:2px solid var(--purple-pink);max-height:calc(100vh - 32px);overflow:auto;}
+  .modal-box{background:#fff;border-radius:24px;padding:26px;max-width:380px;width:100%;box-shadow:0 12px 36px rgba(75,167,202,.25);text-align:center;border:1.5px solid var(--sky-deep);max-height:calc(100vh - 32px);overflow:auto;}
   /* 收据弹窗里允许透明，露出水彩底色 */
   #receiptModal .modal-box,#expReceiptModal .modal-box{background:transparent;box-shadow:none;padding:8px;border:none;max-height:none;overflow:visible;}
   .modal-box h3{margin:0 0 6px;color:var(--purple-deep);}
   .pay-methods{display:flex;gap:12px;margin:18px 0;}
-  .pay-method{flex:1;border:2px solid var(--purple-pink);border-radius:18px;padding:18px 8px;cursor:pointer;font-weight:800;color:var(--purple-deep);background:#fff;transition:.15s;}
-  .pay-method:hover{border-color:var(--purple);background:linear-gradient(135deg,#eaf6fb,#fceaf0);transform:translateY(-3px);box-shadow:0 6px 16px rgba(75,167,202,.25);}
+  .pay-method{flex:1;border:1.5px solid var(--sky-deep);border-radius:18px;padding:18px 8px;cursor:pointer;font-weight:800;color:var(--purple-deep);background:#fff;transition:.15s;}
+  .pay-method:hover{border-color:var(--sky-deep);background:#f5f9fc;transform:translateY(-3px);box-shadow:0 6px 16px rgba(75,167,202,.25);}
   .pay-method .e{font-size:34px;}
-  .pay-method.selected{background:linear-gradient(135deg,var(--purple-pink),var(--pink));border-color:var(--purple);color:#fff;}
+  .pay-method.selected{background:var(--sky-deep);border-color:var(--sky-deep);color:#fff;}
 
   /* 收据（80mm 热敏纸 + 水彩风格） */
   .receipt{
     width:302px;max-width:100%;margin:0 auto;
-    background:
-      radial-gradient(circle at 8% 12%, rgba(191,227,242,.55) 0 18px, transparent 22px),
-      radial-gradient(circle at 92% 88%, rgba(255,208,217,.55) 0 22px, transparent 26px),
-      radial-gradient(circle at 90% 18%, rgba(212,184,84,.35) 0 16px, transparent 20px),
-      linear-gradient(180deg,#fefaf3,#eaf6fb);
-    border:1.5px solid var(--purple-pink);border-radius:14px;padding:18px 16px 16px;
+    background:#fff;
+    border:1.5px solid var(--sky-deep);border-radius:14px;padding:18px 16px 16px;
     font-family:var(--font);color:#4ba7ca;
     position:relative;overflow:auto;
     max-height:calc(100vh - 140px);
@@ -382,8 +377,8 @@
   /* ===== Expense ===== */
   .exp-suppliers{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
   .sup{
-    border:none;cursor:pointer;border-radius:18px;padding:16px 10px;text-align:center;font-weight:700;color:var(--purple);
-    box-shadow:var(--shadow);transition:.15s;font-size:14px;
+    border:1.5px solid var(--sky-deep);cursor:pointer;border-radius:18px;padding:16px 10px;text-align:center;font-weight:700;color:var(--purple);
+    box-shadow:var(--shadow);transition:.15s;font-size:14px;background:#fff;
   }
   .sup:hover{transform:translateY(-3px);}
   .sup .e{font-size:28px;display:block;margin-bottom:4px;}
@@ -498,7 +493,7 @@
       <span class="ic" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📥</span> Import Backup
     </button>
     <input id="importFile" type="file" accept="application/json" style="display:none;" />
-    <div class="nav-foot" style="background:linear-gradient(135deg,#eaf6fb,#fceaf0);padding:10px;border-radius:14px;border:1.5px dashed #c5e2eb;margin-top:auto;">
+    <div class="nav-foot" style="background:#fff;padding:10px;border-radius:14px;border:1.5px solid #4ba7ca;margin-top:auto;">
       <span style="font-size:18px;">💾</span> 数据本地永久保存<br/><span style="font-size:9px;color:#7ec4dd;letter-spacing:.5px;">GOH YEAN HUAN POS</span>
     </div>
   </aside>
@@ -547,9 +542,9 @@
           <div class="v" id="stOrders">0</div>
           <div class="l">今日订单 · Today Orders</div>
         </div>
-        <div class="stat s5" style="background:linear-gradient(135deg,#fff8ee,#ffd0d9);">
+        <div class="stat s5">
           <div class="emoji-circle"><span style="font-size:30px;">🍜</span></div>
-          <div class="v" id="stBowls" style="color:#7a4e2a;">0 <span style="font-size:14px;font-weight:700;color:#a98a4a;">碗</span></div>
+          <div class="v" id="stBowls" style="color:var(--purple-deep);">0 <span style="font-size:14px;font-weight:700;color:var(--purple);">碗</span></div>
           <div class="l">今日卖出面 · Bowls Sold Today</div>
         </div>
         <div class="stat s3">
@@ -577,7 +572,7 @@
     <section id="view-neworder" class="hidden">
       <!-- 已送厨房订单摘要 (sticky 卡片) -->
       <div id="activeOrdersSummary" style="display:none;margin-bottom:14px;">
-        <div style="background:linear-gradient(135deg,#eaf6fb,#fceaf0);border:2px solid var(--purple-pink);border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;" onclick="openDrawer()">
+        <div style="background:#fff;border:1.5px solid #4ba7ca;border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);cursor:pointer;" onclick="openDrawer()">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
             <div>
               <div style="font-size:13px;font-weight:900;color:var(--purple-deep);">📋 已送厨房 · <span id="aosCount">0</span> 张未结账</div>
@@ -600,7 +595,7 @@
 
     <!-- CART (View Cart page) -->
     <section id="view-cart" class="hidden">
-      <div class="card" style="background:linear-gradient(135deg,#fefaf3,#eaf6fb);">
+      <div class="card" style="background:#fff;">
         <h2>🛒 My Cart</h2>
         <div style="font-size:12px;color:var(--ink-soft);margin:-4px 0 10px;">查看草稿和未结账订单，所有内容随时同步</div>
         <div style="display:flex;gap:14px;flex-wrap:wrap;">
@@ -2293,7 +2288,7 @@ window.reprint = id => {
 function renderSuppliers(){
   const g = document.getElementById('supplierGrid');
   // 颜色循环改成紫金主题
-  const cols = ['#eaf6fb','#fceaf0','#f8bbd0','#fce4ec','#c5e2eb','#bfe3f2','#9ed1e3','#7ec4dd','#eaf6fb','#fceaf0','#f8bbd0','#fce4ec','#c5e2eb','#bfe3f2'];
+  const cols = ['#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff','#fff'];
   g.innerHTML = SUPPLIERS.map((s,i)=>{
     // 3 种角色循环 + 大小写混合
     const pose = ['full','cat','with-cat','full','full','cat','full','with-cat','cat','full','full','full','cat','with-cat'][i % 14];
@@ -2389,7 +2384,7 @@ function renderExpenses(){
     .sort((a,b)=>b.amt-a.amt);
   const groupedHtml = `
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:14px 0;">
-      ${grouped.map(g=>`<div style="background:linear-gradient(135deg,#eaf6fb,#fceaf0);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:12px;text-align:center;">
+      ${grouped.map(g=>`<div style="background:#fff;border:1.5px solid #4ba7ca;border-radius:14px;padding:12px;text-align:center;">
         <div style="font-size:11px;color:var(--purple);font-weight:700;letter-spacing:.5px;">${escapeHtml(g.k)}</div>
         <div style="font-size:20px;font-weight:900;color:var(--purple-deep);margin-top:4px;">${RM(g.amt)}</div>
         <div style="font-size:10px;color:var(--purple-light);font-weight:700;">${g.count} 笔</div>
@@ -2542,7 +2537,7 @@ function renderHistory(){
   const totalBowls = orders.reduce((s,o)=> s + (o.items||[]).reduce((ss,it)=>ss+(+it.qty||0),0), 0);
   box.innerHTML = `
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-      <div style="background:linear-gradient(135deg,#e8dff0,#c5e2eb);border:1.5px dashed var(--purple-pink);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
+      <div style="background:#fff;border:1.5px solid #4ba7ca;border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;">
         <span style="font-size:22px;">📋</span>
         <div>
           <div style="font-size:10px;color:var(--purple);font-weight:900;letter-spacing:.5px;">总订单数</div>
