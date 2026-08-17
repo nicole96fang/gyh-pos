@@ -432,6 +432,22 @@
     .receipt::before,.receipt::after{display:none;}
     .no-print{display:none !important;}
   }
+  /* === History 打印模式: 多单内容多, 改成 A4 + 自适应缩放, 1 页印出 === */
+  @media print{
+    body.printing-history .print-area,
+    body.printing-history .print-area *{visibility:visible !important;}
+    body.printing-history .print-area{
+      position:absolute !important;left:0 !important;top:0 !important;
+      width:100% !important;max-width:194mm !important;
+      box-shadow:none !important;border:none !important;
+      border-radius:0 !important;background:#fff !important;
+      transform:scale(0.78);transform-origin:top left;
+    }
+    body.printing-history .modal{display:none !important;}
+    body.printing-history aside,
+    body.printing-history .topbar,
+    body.printing-history .no-print{display:none !important;}
+  }
 
   /* ===== 手机端 ===== */
   .menu-toggle{display:none;}
@@ -2808,8 +2824,7 @@ document.getElementById('histFilter').onclick=renderHistory;
 document.getElementById('histClear').onclick=()=>{document.getElementById('histFrom').value='';document.getElementById('histTo').value='';document.getElementById('histMethod').value='';renderHistory();};
 document.getElementById('printAllHist').onclick=()=>{
   const orders=getFilteredOrders().reverse();
-  if(!orders.length){alert('没有可打印的订单');return;}
-  // === 设计: 与 receipt 风格一致的水彩紫主题 ===
+  if(!orders.length){alert('没有可打印的订单');return;}  // === 设计: 与 receipt 风格一致的水彩紫主题 ===
   // 按日期分组聚合
   const byDate = {};
   orders.forEach(o=>{
@@ -2908,7 +2923,15 @@ document.getElementById('printAllHist').onclick=()=>{
   const modal = document.getElementById('histReceiptModal');
   modal.classList.add('show');
   document.getElementById('histReceiptClose').onclick = ()=> modal.classList.remove('show');
-  document.getElementById('histReceiptPrint').onclick = ()=> window.print();
+  document.getElementById('histReceiptPrint').onclick = ()=>{
+    // 进入 history 打印模式: A4 + 缩放, 让 1 页印出
+    const cleanup = ()=> document.body.classList.remove('printing-history');
+    window.addEventListener('afterprint', cleanup, {once:true});
+    document.body.classList.add('printing-history');
+    window.print();
+    // 兜底:某些浏览器 afterprint 不触发,2 秒后强制清理
+    setTimeout(cleanup, 2000);
+  };
 };
 
 /* ============ Report ============ */
