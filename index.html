@@ -2886,15 +2886,125 @@ document.getElementById('repClear').onclick=()=>{document.getElementById('repFro
 document.getElementById('printReport').onclick=()=>{
   const rows=getFilteredReport();
   const w=window.open('','_blank');
+  if(!w){ alert('请允许 popup 后再试一次 ⚙️'); return; }
   const tRev=rows.reduce((s,r)=>s+r.rev,0), tExp=rows.reduce((s,r)=>s+r.exp,0), tPro=tRev-tExp, tBowls=rows.reduce((s,r)=>s+(r.bowls||0),0);
+  const tCount = rows.reduce((s,r)=>s+r.count,0);
   const labelHeader = repMode==='daily'?'Date':repMode==='weekly'?'Week':'Month';
   const titleMap = {daily:'Daily Report', weekly:'Weekly Report', monthly:'Monthly Report'};
-  w.document.write(`<html><head><title>Report</title><style>body{font-family:sans-serif;padding:20px;color:var(--purple)}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px dashed #ccc;padding:8px;text-align:left;font-size:13px}h1{color:var(--purple-deep)}</style></head><body>
-    <h1>GOH YEAN HUAN · ${titleMap[repMode]}</h1>
-    <table><thead><tr><th>${labelHeader}</th><th>Orders</th><th>🍜 Bowls</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr></thead><tbody>`+
-    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td>${r.bowls||0}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td><td>${RM(r.profit)}</td></tr>`).join('')+
-    `</tbody></table><p style="margin-top:16px;font-weight:800">Total Orders: ${rows.reduce((s,r)=>s+r.count,0)} | Total 🍜 Bowls: ${tBowls} | Total Revenue: ${RM(tRev)} | Total Expense: ${RM(tExp)} | Total Profit: ${RM(tPro)}</p></body></html>`);
-  w.document.close(); setTimeout(()=>w.print(),300);
+  const dateRange = rows.length===0 ? '' :
+    (repMode==='daily'
+      ? (rows.length===1 ? rows[0].label : `${rows[rows.length-1].label} → ${rows[0].label}`)
+      : (rows.length===1 ? labelOf(rows[0].label) : `${labelOf(rows[rows.length-1].label)} → ${labelOf(rows[0].label)}`));
+  // 行 HTML
+  const rowsHtml = rows.map(r=>{
+    const profitColor = r.profit>=0 ? 'color:#52c4a8;' : 'color:#ff7a85;';
+    return `<tr>
+      <td><b>${labelOf(r.label)}</b></td>
+      <td style="text-align:center;">${r.count}</td>
+      <td style="text-align:center;font-weight:900;color:#7a4e2a;">${r.bowls||0}</td>
+      <td style="text-align:right;font-weight:700;">${RM(r.rev)}</td>
+      <td style="text-align:right;font-weight:700;">${RM(r.exp)}</td>
+      <td style="text-align:right;font-weight:900;${profitColor}">${RM(r.profit)}</td>
+    </tr>`;
+  }).join('');
+
+  w.document.open();
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${titleMap[repMode]}</title>
+<style>
+  @page { size: A4 portrait; margin: 12mm 10mm; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#fffafd;color:#3d4a5c;font-family:"Quicksand","PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;letter-spacing:.3px;}
+  body{padding:14mm 12mm;}
+  /* === 品牌区 === */
+  .r-brand{text-align:center;padding-bottom:10px;border-bottom:1.5px dashed #7ec4dd;position:relative;}
+  .r-shop{font-weight:900;font-size:26px;letter-spacing:1.5px;color:#4ba7ca;margin-top:8px;text-shadow:0 1px 0 rgba(255,255,255,.6);}
+  .r-shop-sub{font-size:12px;font-weight:800;color:#3d4a5c;margin-top:2px;}
+  .r-reg{font-size:11px;color:#7ec4dd;margin-top:4px;font-weight:600;}
+  .r-deco{text-align:center;font-size:14px;color:#ffd87a;margin:8px 0 6px;letter-spacing:6px;}
+  .r-deco span{margin:0 4px;color:#7ec4dd;}
+  /* === 总览 4 格 === */
+  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0;}
+  .sum-cell{padding:12px 8px;border-radius:12px;border:1.5px dashed #c5e2eb;text-align:center;}
+  .sum-cell.s1{background:linear-gradient(135deg,#eaf6fb,#fff5f8);}
+  .sum-cell.s2{background:linear-gradient(135deg,#fff0cf,#ffe0a8);}
+  .sum-cell.s3{background:linear-gradient(135deg,#fff5f8,#ffd0d9);}
+  .sum-cell.s4{background:linear-gradient(135deg,#eaf6fb,#c5e2eb);}
+  .sum-cell .l{font-size:9.5px;font-weight:900;color:#7c8a9c;letter-spacing:.5px;}
+  .sum-cell .v{font-size:20px;font-weight:900;color:#3d4a5c;margin-top:4px;}
+  /* === 报表 === */
+  .r-table{margin:14px 0;border:1.5px dashed #c5e2eb;border-radius:14px;overflow:hidden;background:rgba(255,255,255,.7);}
+  table.r-t{width:100%;border-collapse:collapse;}
+  table.r-t thead{background:linear-gradient(135deg,#7ec4dd,#4ba7ca);color:#fff;}
+  table.r-t thead th{padding:10px 12px;text-align:left;font-weight:900;font-size:12.5px;letter-spacing:.5px;}
+  table.r-t tbody td{padding:10px 12px;border-bottom:1px dotted #c5e2eb;font-size:12.5px;color:#3d4a5c;}
+  table.r-t tbody tr:nth-child(even){background:rgba(191,227,242,.15);}
+  table.r-t tbody tr:last-child td{border-bottom:none;}
+  /* === Grand Total === */
+  .rtotal{display:flex;justify-content:space-between;align-items:center;margin:14px 0 6px;padding:12px 18px;background:linear-gradient(135deg,#ffb6c1,#ffd87a);border-radius:14px;font-weight:900;color:#fff;font-size:18px;box-shadow:0 4px 12px rgba(255,182,193,.4);}
+  .rtotal .l{display:flex;align-items:center;gap:8px;}
+  /* === Footer === */
+  .rfoot{text-align:center;margin-top:14px;padding-top:10px;border-top:1.5px dashed #ffd87a;font-size:11px;color:#7c8a9c;}
+  .rfoot .heart{color:#ffb6c1;}
+  /* 打印: 隐藏不需要的元素 */
+  @media print{ body{background:#fff;} }
+</style>
+</head><body>
+  <!-- 品牌区 -->
+  <div class="r-brand">
+    <div class="r-shop">📊 ${titleMap[repMode]}</div>
+    <div class="r-shop-sub">GOH YEAN HUAN · 销售报表</div>
+    <div class="r-reg">${dateRange} · ${tCount} 单 · ${tBowls} 碗</div>
+  </div>
+  <div class="r-deco"><span>🌹</span><span>✨</span><span>🌙</span></div>
+  <!-- 总览 -->
+  <div class="summary">
+    <div class="sum-cell s1">
+      <div class="l">总订单数</div>
+      <div class="v">${tCount}</div>
+    </div>
+    <div class="sum-cell s2">
+      <div class="l">总碗数 🍜</div>
+      <div class="v">${tBowls}</div>
+    </div>
+    <div class="sum-cell s3">
+      <div class="l">总营业额</div>
+      <div class="v">${RM(tRev)}</div>
+    </div>
+    <div class="sum-cell s4">
+      <div class="l">总利润</div>
+      <div class="v" style="color:${tPro>=0?'#52c4a8':'#ff7a85'};">${RM(tPro)}</div>
+    </div>
+  </div>
+  <!-- 报表 -->
+  <div class="r-table">
+    <table class="r-t">
+      <thead>
+        <tr>
+          <th>${labelHeader}</th>
+          <th style="text-align:center;">Orders</th>
+          <th style="text-align:center;">🍜 碗</th>
+          <th style="text-align:right;">Revenue</th>
+          <th style="text-align:right;">Expense</th>
+          <th style="text-align:right;">Profit</th>
+        </tr>
+      </thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+  </div>
+  <!-- Grand Total -->
+  <div class="rtotal">
+    <span class="l">💰 GRAND TOTAL</span>
+    <span>${RM(tPro)}</span>
+  </div>
+  <!-- Footer -->
+  <div class="rfoot">
+    📊 ${titleMap[repMode]} · 销售报表<br/>
+    <span class="heart">❤</span> GOH YEAN HUAN POS <span class="heart">❤</span>
+    <div style="font-size:9.5px;opacity:.7;margin-top:4px;">${dateRange} · generated by GOH YEAN HUAN POS</div>
+  </div>
+<script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script>
+</body></html>`);
+  w.document.close();
 };
 
 /* ============ 清空数据（带二次确认） ============ */
