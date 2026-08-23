@@ -2832,15 +2832,322 @@ document.getElementById('repClear').onclick=()=>{document.getElementById('repFro
 document.getElementById('printReport').onclick=()=>{
   const rows=getFilteredReport();
   const w=window.open('','_blank');
-  const tRev=rows.reduce((s,r)=>s+r.rev,0), tExp=rows.reduce((s,r)=>s+r.exp,0), tPro=tRev-tExp, tBowls=rows.reduce((s,r)=>s+(r.bowls||0),0);
-  const labelHeader = repMode==='daily'?'Date':repMode==='weekly'?'Week':'Month';
-  const titleMap = {daily:'Daily Report', weekly:'Weekly Report', monthly:'Monthly Report'};
-  w.document.write(`<html><head><title>Report</title><style>body{font-family:sans-serif;padding:20px;color:var(--purple)}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px dashed #ccc;padding:8px;text-align:left;font-size:13px}h1{color:var(--purple-deep)}</style></head><body>
-    <h1>GOH YEAN HUAN · ${titleMap[repMode]}</h1>
-    <table><thead><tr><th>${labelHeader}</th><th>Orders</th><th>🍜 Bowls</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr></thead><tbody>`+
-    rows.map(r=>`<tr><td>${labelOf(r.label)}</td><td>${r.count}</td><td>${r.bowls||0}</td><td>${RM(r.rev)}</td><td>${RM(r.exp)}</td><td>${RM(r.profit)}</td></tr>`).join('')+
-    `</tbody></table><p style="margin-top:16px;font-weight:800">Total Orders: ${rows.reduce((s,r)=>s+r.count,0)} | Total 🍜 Bowls: ${tBowls} | Total Revenue: ${RM(tRev)} | Total Expense: ${RM(tExp)} | Total Profit: ${RM(tPro)}</p></body></html>`);
-  w.document.close(); setTimeout(()=>w.print(),300);
+
+  const tRev=rows.reduce((s,r)=>s+r.rev,0);
+  const tExp=rows.reduce((s,r)=>s+r.exp,0);
+  const tPro=tRev-tExp;
+  const tBowls=rows.reduce((s,r)=>s+(r.bowls||0),0);
+
+  const labelHeader =
+    repMode==='daily' ? 'Date' :
+    repMode==='weekly' ? 'Week' : 'Month';
+
+  const titleMap={
+    daily:'Daily Report',
+    weekly:'Weekly Report',
+    monthly:'Monthly Report'
+  };
+
+  w.document.write(`
+    <html>
+    <head>
+      <title>GOH YEAN HUAN · ${titleMap[repMode]}</title>
+
+      <style>
+        *{
+          box-sizing:border-box;
+        }
+
+        body{
+          margin:0;
+          padding:24px;
+          font-family:"TC Antiquated Sans","Quicksand",sans-serif;
+          color:#3d4a5a;
+          background:
+            radial-gradient(circle at 10% 10%,rgba(191,231,244,.35),transparent 25%),
+            radial-gradient(circle at 90% 15%,rgba(255,182,193,.25),transparent 25%),
+            radial-gradient(circle at 20% 90%,rgba(212,230,244,.30),transparent 25%),
+            #fbfdff;
+        }
+
+        .report{
+          background:rgba(255,255,255,.96);
+          border:2px solid #9fd3e5;
+          border-radius:22px;
+          padding:26px;
+          box-shadow:0 8px 24px rgba(75,167,202,.14);
+        }
+
+        .header{
+          text-align:center;
+          padding-bottom:16px;
+          border-bottom:2px dashed #bfe3ef;
+        }
+
+        .brand{
+          font-size:28px;
+          font-weight:900;
+          letter-spacing:3px;
+          color:#4ba7ca;
+        }
+
+        .sub{
+          margin-top:6px;
+          font-size:13px;
+          font-weight:800;
+          color:#8fc5d9;
+          letter-spacing:1px;
+        }
+
+        .decor{
+          margin-top:12px;
+          font-size:20px;
+          letter-spacing:8px;
+        }
+
+        .period{
+          margin-top:12px;
+          font-size:14px;
+          font-weight:800;
+          color:#7c8fa0;
+        }
+
+        table{
+          width:100%;
+          border-collapse:collapse;
+          margin-top:20px;
+        }
+
+        th{
+          padding:10px 6px;
+          text-align:left;
+          color:#4ba7ca;
+          font-size:12px;
+          font-weight:900;
+          border-bottom:2px dashed #bfe3ef;
+        }
+
+        td{
+          padding:11px 6px;
+          font-size:12px;
+          font-weight:700;
+          color:#596979;
+          border-bottom:1px dashed #d4e6f0;
+        }
+
+        td.bowls{
+          color:#4ba7ca;
+          font-weight:900;
+        }
+
+        td.profit-good{
+          color:#4ba7ca;
+          font-weight:900;
+        }
+
+        td.profit-bad{
+          color:#e58b9d;
+          font-weight:900;
+        }
+
+        .decor-line{
+          margin:18px 0;
+          text-align:center;
+          color:#8fc5d9;
+          font-size:16px;
+          letter-spacing:6px;
+        }
+
+        .totals{
+          background:linear-gradient(
+            135deg,
+            #e4f3f8,
+            #f6dfea
+          );
+          border-radius:16px;
+          padding:16px;
+          margin-top:16px;
+        }
+
+        .total-title{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          color:#4ba7ca;
+          font-size:15px;
+          font-weight:900;
+          margin-bottom:12px;
+        }
+
+        .total-row{
+          display:flex;
+          justify-content:space-between;
+          gap:20px;
+          padding:6px 0;
+          font-size:12px;
+          font-weight:800;
+          color:#637586;
+        }
+
+        .profit{
+          color:#4ba7ca;
+          font-size:14px;
+          font-weight:900;
+        }
+
+        .profit.loss{
+          color:#e58b9d;
+        }
+
+        .footer{
+          margin-top:20px;
+          padding-top:14px;
+          border-top:2px dashed #ead28a;
+          text-align:center;
+          color:#7db8d0;
+          font-size:12px;
+          font-weight:800;
+          line-height:1.8;
+        }
+
+        .footer strong{
+          color:#4ba7ca;
+        }
+
+        @media print{
+          body{
+            background:#fff;
+            padding:0;
+          }
+
+          .report{
+            box-shadow:none;
+          }
+        }
+      </style>
+    </head>
+
+    <body>
+
+      <div class="report">
+
+        <div class="header">
+
+          <div class="brand">
+            GOH YEAN HUAN
+          </div>
+
+          <div class="sub">
+            202403172359 (003618842-W)
+          </div>
+
+          <div class="decor">
+            🌹 ✨ 🌙
+          </div>
+
+          <div class="period">
+            🗓️ ${titleMap[repMode]}
+          </div>
+
+        </div>
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>${labelHeader}</th>
+              <th>Orders</th>
+              <th>🍜 Bowls</th>
+              <th>Revenue</th>
+              <th>Expense</th>
+              <th>Profit</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${
+              rows.map(r=>`
+                <tr>
+                  <td>${labelOf(r.label)}</td>
+                  <td>${r.count}</td>
+
+                  <td class="bowls">
+                    ${r.bowls||0}
+                  </td>
+
+                  <td>
+                    ${RM(r.rev)}
+                  </td>
+
+                  <td>
+                    ${RM(r.exp)}
+                  </td>
+
+                  <td class="${r.profit>=0?'profit-good':'profit-bad'}">
+                    ${RM(r.profit)}
+                  </td>
+                </tr>
+              `).join('')
+            }
+
+          </tbody>
+
+        </table>
+
+        <div class="decor-line">
+          🍅 🌶️ 🥬 🌿
+        </div>
+
+        <div class="totals">
+
+          <div class="total-title">
+            <span>🌷 TOTAL SUMMARY</span>
+            <span>${titleMap[repMode]}</span>
+          </div>
+
+          <div class="total-row">
+            <span>🧾 Total Orders</span>
+            <span>${rows.reduce((s,r)=>s+r.count,0)}</span>
+          </div>
+
+          <div class="total-row">
+            <span>🍜 Total Bowls</span>
+            <span>${tBowls}</span>
+          </div>
+
+          <div class="total-row">
+            <span>💰 Total Revenue</span>
+            <span>${RM(tRev)}</span>
+          </div>
+
+          <div class="total-row">
+            <span>🛒 Total Expense</span>
+            <span>${RM(tExp)}</span>
+          </div>
+
+          <div class="total-row">
+            <span>🌸 Total Profit</span>
+            <span class="profit ${tPro<0?'loss':''}">
+              ${RM(tPro)}
+            </span>
+          </div>
+
+        </div>
+
+        <div class="footer">
+          🙏 Thank you! Please keep going!<br>
+          ❤️ <strong>GOH YEAN HUAN POS</strong> ❤️
+        </div>
+
+      </div>
+
+    </body>
+    </html>
+  `);
+
+  w.document.close();
+  setTimeout(()=>w.print(),300);
 };
 
 /* ============ 清空数据（带二次确认） ============ */
