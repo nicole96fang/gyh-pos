@@ -2448,6 +2448,10 @@ function renderExpenses(){
           <td class="no-print" style="white-space:nowrap;">
             <button class="mini-btn" onclick="editExpense('${e.id}')" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);color:#7a4e2a;" title="编辑">✏️</button>
             <button class="mini-btn" onclick="deleteExpense('${e.id}')" style="background:linear-gradient(135deg,var(--pink-deep),#e8dff0);color:var(--purple-deep);" title="删除">🗑️</button>
+            <button class="mini-btn"
+onclick="printExpense('${e.id}')"
+style="background:linear-gradient(135deg,#c5e2eb,#fff);color:var(--purple-deep);"
+title="打印">🖨️</button>
           </td>
         </tr>`).join('')}
       </tbody>
@@ -2481,6 +2485,162 @@ function escapeHtml(s){
 }
 
 // 删除 expense
+  window.printExpense = id => {
+  const e = DB.expenses.find(x => x.id === id);
+  if (!e) {
+    alert('找不到这笔支出');
+    return;
+  }
+
+  const printWin = window.open('', '_blank', 'width=420,height=700');
+
+  if (!printWin) {
+    alert('请允许浏览器打开打印窗口');
+    return;
+  }
+
+  printWin.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Expense - ${escapeHtml(e.supplier || '')}</title>
+
+      <style>
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          padding: 24px;
+          background: #ffffff;
+          color: #333;
+          font-family: Arial, sans-serif;
+        }
+
+        .expense-slip {
+          width: 100%;
+          max-width: 360px;
+          margin: 0 auto;
+          border: 2px solid #4ba7ca;
+          border-radius: 18px;
+          padding: 22px;
+        }
+
+        .title {
+          text-align: center;
+          color: #4ba7ca;
+          font-size: 22px;
+          font-weight: 900;
+          margin-bottom: 18px;
+        }
+
+        .date {
+          text-align: center;
+          color: #777;
+          font-size: 13px;
+          margin-bottom: 20px;
+        }
+
+        .label {
+          font-size: 11px;
+          color: #777;
+          font-weight: 700;
+          margin-top: 12px;
+        }
+
+        .value {
+          font-size: 16px;
+          font-weight: 800;
+          margin-top: 4px;
+        }
+
+        .note {
+          white-space: pre-wrap;
+          line-height: 1.5;
+        }
+
+        .line {
+          border-top: 1px dashed #aaa;
+          margin: 20px 0;
+        }
+
+        .total-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-weight: 900;
+        }
+
+        .total {
+          color: #4ba7ca;
+          font-size: 22px;
+        }
+
+        @media print {
+          body {
+            padding: 0;
+          }
+
+          .expense-slip {
+            border: 1.5px solid #4ba7ca;
+          }
+        }
+      </style>
+    </head>
+
+    <body>
+      <div class="expense-slip">
+
+        <div class="title">
+          🧾 EXPENSE
+        </div>
+
+        <div class="date">
+          ${escapeHtml(e.date || '')}
+          ${e.time ? ' · ' + escapeHtml(e.time) : ''}
+        </div>
+
+        <div class="label">
+          SUPPLIER
+        </div>
+
+        <div class="value">
+          ${escapeHtml(e.supplier || '-')}
+        </div>
+
+        <div class="label">
+          NOTE
+        </div>
+
+        <div class="value note">
+          ${escapeHtml(e.note || '-')}
+        </div>
+
+        <div class="line"></div>
+
+        <div class="total-row">
+          <span>TOTAL</span>
+          <span class="total">${RM(e.amount)}</span>
+        </div>
+
+      </div>
+
+      <script>
+        window.onload = function() {
+          setTimeout(function() {
+            window.print();
+          }, 200);
+        };
+      <\/script>
+
+    </body>
+    </html>
+  `);
+
+  printWin.document.close();
+};
 window.deleteExpense = id => {
   const e = DB.expenses.find(x=>x.id===id);
   if(!e) return;
