@@ -2913,7 +2913,7 @@ document.getElementById('printReport').onclick=()=>{
   }).join('');
 
   w.document.open();
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${titleMap[repMode]}</title>
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><!-- cache-bust: 2026-08-28 19:25:57 +08 --><title>${titleMap[repMode]}</title>
 <style>
   @page { size: A4 portrait; margin: 12mm 10mm; }
   *{box-sizing:border-box;}
