@@ -3551,55 +3551,7 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
 });
 
 // === Paste JSON Import (备援：文件选择器失败时用) ===
-function openPasteJSON(){
-  const old = document.getElementById('pasteImportModal');
-  if(old) old.remove();
-  const m = document.createElement('div');
-  m.id = 'pasteImportModal';
-  m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;display:flex;align-items:center;justify-content:center;padding:14px;';
-  m.innerHTML = `
-    <div style="background:#fffaf6;border-radius:20px;padding:20px;max-width:520px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3 style="margin:0;color:var(--purple-deep);font-size:18px;">📋 Paste JSON · 粘贴备份</h3>
-        <button onclick="document.getElementById('pasteImportModal').remove()" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--purple-light);line-height:1;">✕</button>
-      </div>
-      <div style="background:#f7eee5;border-radius:10px;padding:8px 12px;font-size:11px;color:var(--purple-deep);margin-bottom:10px;line-height:1.5;">
-        💡 把之前 <b>Export Backup → Copy to Clipboard</b> 的 JSON 贴到下面，再按 <b>Import</b>。
-      </div>
-      <textarea id="pasteImportText" placeholder='{"orders":[],"expenses":[]}' style="flex:1;min-height:220px;border:1.5px dashed #d8b38d;border-radius:10px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#fff;color:#3a2e25;resize:vertical;"></textarea>
-      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-        <button onclick="document.getElementById('pasteImportText').focus()" style="flex:1;min-width:100px;background:linear-gradient(135deg,#c5e2eb,#7ec4dd);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px;">🎯 Focus Box</button>
-        <button id="pasteImportGo" style="flex:1;min-width:100px;background:linear-gradient(135deg,#ffb6c1,#ffd87a);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:900;cursor:pointer;font-size:14px;">✅ Import</button>
-      </div>
-    </div>`;
-  document.body.appendChild(m);
-  setTimeout(()=>document.getElementById('pasteImportText').focus(), 100);
-}
-document.addEventListener('click', e=>{
-  if(e.target && e.target.id==='pasteImportGo'){
-    const text = document.getElementById('pasteImportText').value.trim();
-    if(!text){ alert('请先粘贴 JSON 文本'); return; }
-    try{
-      const data = JSON.parse(text);
-      if(!data || typeof data!=='object') throw new Error('Not a valid JSON');
-      const orders = Array.isArray(data.orders) ? data.orders : [];
-      const expenses = Array.isArray(data.expenses) ? data.expenses : [];
-      if(!orders.length && !expenses.length){ alert('⚠️ 文本里没有订单或支出数据'); return; }
-      const ok = confirm(`📥 准备汇入：\n\n• 订单 ${orders.length} 笔\n• 支出 ${expenses.length} 笔\n\n⚠️ 这会「追加」到现在的资料（不会覆盖），\n合并重复是按 id 去重。\n继续？`);
-      if(!ok) return;
-      const seen = new Set(DB.orders.map(o=>o.id));
-      orders.forEach(o=>{ if(!seen.has(o.id)){ DB.orders.push(o); seen.add(o.id); } });
-      const seen2 = new Set(DB.expenses.map(x=>x.id));
-      expenses.forEach(x=>{ if(!seen2.has(x.id)){ DB.expenses.push(x); seen2.add(x.id); } });
-      DB.save();
-      renderDashboard(); renderHistory(); renderReport(); renderExpenses();
-      document.getElementById('pasteImportModal').remove();
-      alert(`✅ 汇入完成！\n• 现在订单总数：${DB.orders.length} 笔\n• 现在支出总数：${DB.expenses.length} 笔`);
-    }catch(err){
-      alert('❌ 汇入失败：JSON 格式错误\n\n'+err.message);
-    }
-  }
-});
+// (Old function removed — static modal in body handles it)
 
 /* ============ 初始化 ============ */
 document.getElementById('todayDate').textContent = now().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
