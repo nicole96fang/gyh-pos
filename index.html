@@ -3623,18 +3623,23 @@ document.addEventListener('DOMContentLoaded', function(){
   };
 });
 
+// === Paste JSON trigger — minimal & reliable ===
 window.openPasteJSON = function(){
-  var m = document.getElementById('pasteImportModal');
-  if(m){
-    m.style.display = 'flex';
-    setTimeout(function(){
-      var t = document.getElementById('pasteImportText');
-      if(t) t.focus();
-    }, 100);
-  }else{
-    alert('Modal not found — please refresh');
+  try{
+    console.log('[PasteJSON] click registered');
+    var m = document.getElementById('pasteImportModal');
+    if(!m){ alert('Modal element not found. Try reloading the page.'); return; }
+    m.style.cssText = 'display:flex !important;position:fixed !important;inset:0 !important;background:rgba(0,0,0,.5) !important;z-index:999999 !important;align-items:center !important;justify-content:center !important;padding:14px !important;';
+    var t = document.getElementById('pasteImportText');
+    if(t) setTimeout(function(){t.focus();}, 100);
+    console.log('[PasteJSON] modal shown');
+  }catch(err){
+    console.error('[PasteJSON] error:', err);
+    alert('Error opening Paste JSON: ' + err.message);
   }
 };
+// Also expose to a global alias for safety
+window.pasteJSON = window.openPasteJSON;
 </script>
 
 </body>
