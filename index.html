@@ -3623,4 +3623,63 @@ if(_restored && currentOrder.length){
 }
 </script>
 </body>
-</html>
+
+
+<!-- Paste JSON Import Modal (static, hidden by default) -->
+<div id="pasteImportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;align-items:center;justify-content:center;padding:14px;">
+  <div style="background:#fffaf6;border-radius:20px;padding:20px;max-width:520px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <h3 style="margin:0;color:#4ba7ca;font-size:18px;">📋 Paste JSON · 粘贴备份</h3>
+      <button id="pasteImportClose" style="background:none;border:none;font-size:24px;cursor:pointer;color:#7ec4dd;line-height:1;">✕</button>
+    </div>
+    <div style="background:#f7eee5;border-radius:10px;padding:8px 12px;font-size:11px;color:#4ba7ca;margin-bottom:10px;line-height:1.5;">
+      💡 把之前 <b>Export Backup → Copy to Clipboard</b> 的 JSON 贴到下面，再按 <b>Import</b>。
+    </div>
+    <textarea id="pasteImportText" placeholder='{"orders":[],"expenses":[]}' style="flex:1;min-height:220px;border:1.5px dashed #7ec4dd;border-radius:10px;padding:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;background:#fff;color:#3a2e25;resize:vertical;"></textarea>
+    <button id="pasteImportGo" style="margin-top:12px;width:100%;background:linear-gradient(135deg,#ffb6c1,#ffd87a);color:#fff;border:none;padding:14px;border-radius:12px;font-weight:900;cursor:pointer;font-size:15px;">✅ Import</button>
+  </div>
+</div>
+
+<script>
+// === Paste JSON Import — static modal approach ===
+document.addEventListener('DOMContentLoaded', function(){
+  var closeBtn = document.getElementById('pasteImportClose');
+  if(closeBtn) closeBtn.onclick = function(){ document.getElementById('pasteImportModal').style.display='none'; };
+  var goBtn = document.getElementById('pasteImportGo');
+  if(goBtn) goBtn.onclick = function(){
+    var text = (document.getElementById('pasteImportText').value||'').trim();
+    if(!text){ alert('请先粘贴 JSON 文本'); return; }
+    try{
+      var data = JSON.parse(text);
+      if(!data || typeof data!=='object') throw new Error('Not a valid JSON');
+      var orders = Array.isArray(data.orders) ? data.orders : [];
+      var expenses = Array.isArray(data.expenses) ? data.expenses : [];
+      if(!orders.length && !expenses.length){ alert('⚠️ 文本里没有订单或支出数据'); return; }
+      var ok = confirm('📥 准备汇入：\n\n• 订单 '+orders.length+' 笔\n• 支出 '+expenses.length+' 笔\n\n⚠️ 这会「追加」到现在的资料（不会覆盖），\n合并重复是按 id 去重。\n继续？');
+      if(!ok) return;
+      var seen = new Set(DB.orders.map(function(o){return o.id;}));
+      orders.forEach(function(o){ if(!seen.has(o.id)){ DB.orders.push(o); seen.add(o.id); } });
+      var seen2 = new Set(DB.expenses.map(function(x){return x.id;}));
+      expenses.forEach(function(x){ if(!seen2.has(x.id)){ DB.expenses.push(x); seen2.add(x.id); } });
+      DB.save();
+      renderDashboard(); renderHistory(); renderReport(); renderExpenses();
+      document.getElementById('pasteImportModal').style.display='none';
+      alert('✅ 汇入完成！\n• 现在订单总数：'+DB.orders.length+' 笔\n• 现在支出总数：'+DB.expenses.length+' 笔');
+    }catch(err){
+      alert('❌ 汇入失败：JSON 格式错误\n\n'+err.message);
+    }
+  };
+});
+
+window.openPasteJSON = function(){
+  var m = document.getElementById('pasteImportModal');
+  if(m){
+    m.style.display = 'flex';
+    setTimeout(function(){
+      var t = document.getElementById('pasteImportText');
+      if(t) t.focus();
+    }, 100);
+  }else{
+    alert('Modal not found — please refresh');
+  }
+};
