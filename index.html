@@ -511,7 +511,7 @@
     <button class="nav-btn" onclick="document.getElementById('importFile').click()" style="color:#4ba7ca;background:rgba(191,227,242,.18);">
       <span class="ic" style="background:linear-gradient(135deg,#ffb6c1,#ffd0d9);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📥</span> Import File
     </button>
-    <button class="nav-btn" onclick="openPasteJSON()" style="color:#4ba7ca;background:rgba(191,227,242,.18);">
+    <button id="pasteJsonBtn" class="nav-btn" style="color:#4ba7ca;background:rgba(191,227,242,.18);">
       <span class="ic" style="background:linear-gradient(135deg,#ffd87a,#fff0c2);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;">📋</span> Paste JSON
     </button>
     <input id="importFile" type="file" accept="application/json" style="display:none;" />
@@ -3623,7 +3623,7 @@ document.addEventListener('DOMContentLoaded', function(){
   };
 });
 
-// === Paste JSON trigger — minimal & reliable ===
+// === Paste JSON trigger — bind via event listener too ===
 window.openPasteJSON = function(){
   try{
     console.log('[PasteJSON] click registered');
@@ -3638,8 +3638,28 @@ window.openPasteJSON = function(){
     alert('Error opening Paste JSON: ' + err.message);
   }
 };
-// Also expose to a global alias for safety
 window.pasteJSON = window.openPasteJSON;
+
+// Bind click on the button via event listener (bypasses inline onclick)
+function bindPasteJsonBtn(){
+  var btn = document.getElementById('pasteJsonBtn');
+  if(!btn){ console.warn('[PasteJSON] button not found'); return; }
+  if(btn.dataset.bound) return;
+  btn.addEventListener('click', function(e){
+    e.preventDefault(); e.stopPropagation();
+    console.log('[PasteJSON] listener fired');
+    window.openPasteJSON();
+  });
+  btn.dataset.bound = '1';
+  console.log('[PasteJSON] listener bound');
+}
+// Try binding multiple times to handle various DOMContentLoaded timings
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', bindPasteJsonBtn);
+} else {
+  bindPasteJsonBtn();
+}
+window.addEventListener('load', bindPasteJsonBtn);
 </script>
 
 </body>
