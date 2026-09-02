@@ -2350,14 +2350,49 @@ function showReceipt(o){
   document.getElementById('receiptModal').classList.add('show');
 }
 document.getElementById('closeReceipt').onclick=()=>document.getElementById('receiptModal').classList.remove('show');
-document.getElementById('printReceipt').onclick=()=>window.print();
-// History 页重打小票: 打开 receipt 并稍后触发打印
+document.getElementById('printReceipt').onclick=()=>{
+  // Popup window approach — bypass iOS print preview CSS issues
+  const content = document.getElementById('receiptContent').innerHTML;
+  const w = window.open('','_blank');
+  if(!w){ alert('请允许 popup 后再试一次 ⚙️'); return; }
+  w.document.open();
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><!-- cache-bust: 2026-09-03 07:53:00 --><title>Receipt</title>
+<style>
+  @page { size: A4 portrait; margin: 8mm; }
+  *{box-sizing:border-box;}
+  body{margin:0;padding:20mm 15mm;background:#fff;color:#3a3a3a;font-family:"Quicksand","PingFang SC","Microsoft YaHei",sans-serif;}
+  .receipt{width:100%;max-width:100%;background:#fff;font-size:10px;line-height:1.3;}
+  .r-brand{text-align:center;padding-bottom:6px;border-bottom:1.5px dashed #c5e2eb;}
+  .r-shop{font-weight:900;font-size:18px;color:#4ba7ca;margin-top:4px;}
+  .r-reg{font-size:9px;color:#7ec4dd;margin-top:2px;}
+  .r-deco{text-align:center;font-size:10px;color:#ffd87a;margin:4px 0 4px;letter-spacing:4px;}
+  .r-meta{display:flex;justify-content:space-between;font-size:9px;margin:2px 0;}
+  .r-items{margin:4px 0;border-top:1.5px dashed #c5e2eb;border-bottom:1.5px dashed #c5e2eb;padding:4px 0;}
+  .r-item{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:3px 0;border-bottom:1px dotted #c5e2eb;}
+  .r-item:last-child{border-bottom:none;}
+  .rname{font-weight:900;font-size:10px;}
+  .ropt{font-size:8px;color:#7c8a9c;margin-top:1px;}
+  .rdesc{font-size:8px;color:#7c8a9c;margin-top:1px;font-style:italic;}
+  .r-qty,.r-price{font-weight:700;font-size:10px;}
+  .r-price{color:#ff7a85;}
+  .r-emoji{text-align:center;font-size:11px;margin:4px 0;letter-spacing:3px;}
+  .rtotal{display:flex;justify-content:space-between;background:linear-gradient(135deg,#ffb6c1,#ffd87a);color:#fff;font-weight:900;font-size:13px;padding:6px 10px;border-radius:8px;margin:4px 0;}
+  .rpay{display:flex;justify-content:space-between;font-size:9px;margin:2px 0;}
+  .rfoot{text-align:center;font-size:9px;color:#7c8a9c;margin-top:6px;padding-top:6px;border-top:1.5px dashed #ffd87a;}
+  .rfoot .heart{color:#ffb6c1;}
+</style>
+</head><body>
+<div class="receipt">${content}</div>
+<script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script>
+</body></html>`);
+  w.document.close();
+};
+// History 页重打小票: 打开 receipt 然后通过 printReceipt 按钮触发 popup 打印
 window.reprint = id => {
   const o = DB.orders.find(x=>x.id===id);
   if(!o){ alert('找不到该订单'); return; }
   showReceipt(o);
-  // 给 DOM 一点时间渲染 receipt, 再弹出打印对话框
-  setTimeout(()=>{ try{ window.print(); }catch(_){} }, 80);
+  setTimeout(()=>{ try{ document.getElementById('printReceipt').click(); }catch(_){} }, 80);
 };
 
 /* ============ Expense ============ */
