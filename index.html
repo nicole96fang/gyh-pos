@@ -2356,7 +2356,7 @@ document.getElementById('printReceipt').onclick=()=>{
   const w = window.open('','_blank');
   if(!w){ alert('请允许 popup 后再试一次 ⚙️'); return; }
   w.document.open();
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><!-- cache-bust: 2026-09-03 08:54:05 --><title>Receipt</title>
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><!-- cache-bust: 2026-09-03 09:26:53 --><!-- cache-bust: 2026-09-03 08:54:05 --><title>Receipt</title>
 <style>
   @page { size: A4 portrait; margin: 10mm; }
   *{box-sizing:border-box;}
@@ -2390,7 +2390,10 @@ document.getElementById('printReceipt').onclick=()=>{
 </style>
 </head><body>
 <div class="receipt">${content}</div>
-<script>window.addEventListener('load',()=>setTimeout(()=>window.print(),250));<\/script>
+<div style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:99999;font-family:system-ui,-apple-system,sans-serif;">
+  <button onclick="window.close()" style="background:#fff;color:#4ba7ca;border:2px solid #c5e2eb;padding:12px 22px;border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(75,167,202,.2);">← Back</button>
+  <button onclick="window.print()" style="background:linear-gradient(135deg,#4ba7ca,#ffb6c1);color:#fff;border:none;padding:12px 22px;border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 12px rgba(255,182,193,.4);">🖨️ Print Now</button>
+</div>
 </body></html>`);
   w.document.close();
 };
