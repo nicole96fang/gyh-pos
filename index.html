@@ -2458,20 +2458,897 @@ window.addEventListener('DOMContentLoaded',()=>{
   }
 });
 document.getElementById('expDate').addEventListener('input',e=>updateExpDateHint(e.target.value));
-document.getElementById('saveExpense').onclick=()=>{
-  const amt = parseFloat(document.getElementById('expAmount').value);
-  if(!selectedSupplier){ alert('请先选择一个供应商 🛒'); return; }
-  if(!(amt>0)){ alert('请输入有效金额 💰'); return; }
-  const dateInput = document.getElementById('expDate').value;
-  const dateKeyVal = dateInput || dateKey(now());
-  const d = now();
-  DB.expenses.push({id:'EXP'+Date.now(), supplier:selectedSupplier, amount:amt, note:document.getElementById('expNote').value, date:dateKeyVal, time:dateTime(d)});
+// ==========================================
+// EXPENSE ITEMS V2
+// Multiple Items Per Supplier Invoice
+// ==========================================
+
+let expenseItems = [];
+
+
+// ==========================================
+// CREATE EXPENSE ITEM AREA
+// ==========================================
+
+function initExpenseItems(){
+
+  const amountEl =
+    document.getElementById('expAmount');
+
+  if(!amountEl){
+    return;
+  }
+
+
+  // 如果已经建立，不重复建立
+  if(
+    document.getElementById(
+      'expenseItemsArea'
+    )
+  ){
+    return;
+  }
+
+
+  // ========================================
+  // ITEM AREA
+  // ========================================
+
+  const area =
+    document.createElement('div');
+
+  area.id =
+    'expenseItemsArea';
+
+  area.style.cssText = `
+    margin-top:16px;
+    padding:16px;
+    border:1.5px solid #C5E2EB;
+    border-radius:18px;
+    background:#FBFDFF;
+  `;
+
+
+  area.innerHTML = `
+
+    <div style="
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    ">
+
+      <div>
+
+        <div style="
+          font-size:15px;
+          font-weight:900;
+          color:var(--purple-deep);
+        ">
+          🧾 Expense Items
+        </div>
+
+        <div style="
+          margin-top:3px;
+          font-size:11px;
+          color:var(--purple-light);
+          font-weight:600;
+        ">
+          Add every item from the same supplier invoice
+        </div>
+
+      </div>
+
+
+      <button
+        type="button"
+        id="addExpenseItem"
+        style="
+          border:none;
+          border-radius:14px;
+          padding:9px 13px;
+          background:linear-gradient(
+            135deg,
+            #4ba7ca,
+            #9ccfe0
+          );
+          color:#fff;
+          font-weight:900;
+          cursor:pointer;
+          font-size:12px;
+        "
+      >
+        ＋ Add Item
+      </button>
+
+    </div>
+
+
+    <div id="expenseItemsList"></div>
+
+
+    <div style="
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:linear-gradient(
+        135deg,
+        #e8dff0,
+        #c5e2eb
+      );
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    ">
+
+      <span style="
+        font-weight:900;
+        color:var(--purple-deep);
+      ">
+        TOTAL
+      </span>
+
+      <strong
+        id="expenseItemsTotal"
+        style="
+          font-size:19px;
+          color:var(--purple-deep);
+        "
+      >
+        RM 0.00
+      </strong>
+
+    </div>
+
+  `;
+
+
+  // 放在 Amount 输入框之前
+  const amountField =
+    amountEl.closest('.field');
+
+
+  if(amountField){
+
+    amountField.parentNode.insertBefore(
+      area,
+      amountField
+    );
+
+  }else{
+
+    amountEl.parentNode.insertBefore(
+      area,
+      amountEl
+    );
+
+  }
+
+
+  // ========================================
+  // HIDE OLD AMOUNT INPUT
+  // ========================================
+
+  amountEl.readOnly = true;
+
+  amountEl.style.background =
+    '#F4F8FB';
+
+
+  // ========================================
+  // ADD FIRST ITEM
+  // ========================================
+
+  addExpenseItem();
+
+
+  // ========================================
+  // ADD ITEM BUTTON
+  // ========================================
+
+  document
+    .getElementById(
+      'addExpenseItem'
+    )
+    .addEventListener(
+      'click',
+      () => {
+
+        addExpenseItem();
+
+      }
+    );
+
+}
+
+
+// ==========================================
+// ADD ITEM
+// ==========================================
+
+function addExpenseItem(
+  item = {}
+){
+
+  const id =
+    'EXPITEM' +
+    Date.now() +
+    Math.random()
+      .toString(36)
+      .slice(2,7);
+
+
+  expenseItems.push({
+
+    id,
+
+    name:
+      item.name || '',
+
+    qty:
+      Number(item.qty) > 0
+        ? Number(item.qty)
+        : 1,
+
+    price:
+      Number(item.price) > 0
+        ? Number(item.price)
+        : 0,
+
+  });
+
+
+  renderExpenseItems();
+
+}
+
+
+// ==========================================
+// REMOVE ITEM
+// ==========================================
+
+function removeExpenseItem(id){
+
+  expenseItems =
+    expenseItems.filter(
+      item =>
+        item.id !== id
+    );
+
+
+  // 至少保留一个
+  if(
+    expenseItems.length === 0
+  ){
+
+    addExpenseItem();
+
+    return;
+
+  }
+
+
+  renderExpenseItems();
+
+}
+
+
+// ==========================================
+// UPDATE ITEM
+// ==========================================
+
+function updateExpenseItem(
+  id,
+  field,
+  value
+){
+
+  const item =
+    expenseItems.find(
+      x =>
+        x.id === id
+    );
+
+
+  if(!item){
+    return;
+  }
+
+
+  if(field === 'name'){
+
+    item.name = value;
+
+  }
+
+
+  if(field === 'qty'){
+
+    item.qty =
+      Math.max(
+        1,
+        Number(value) || 1
+      );
+
+  }
+
+
+  if(field === 'price'){
+
+    item.price =
+      Math.max(
+        0,
+        Number(value) || 0
+      );
+
+  }
+
+
+  renderExpenseItems();
+
+}
+
+
+// ==========================================
+// RENDER ITEMS
+// ==========================================
+
+function renderExpenseItems(){
+
+  const list =
+    document.getElementById(
+      'expenseItemsList'
+    );
+
+
+  if(!list){
+    return;
+  }
+
+
+  list.innerHTML =
+    expenseItems
+      .map(
+        (item,index) => {
+
+          const itemTotal =
+            item.qty *
+            item.price;
+
+
+          return `
+
+            <div
+              style="
+                position:relative;
+                margin-bottom:10px;
+                padding:12px;
+                border:1px solid #E1E8ED;
+                border-radius:15px;
+                background:#fff;
+              "
+            >
+
+              <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin-bottom:9px;
+              ">
+
+                <span style="
+                  font-size:11px;
+                  font-weight:900;
+                  color:var(--purple-light);
+                ">
+                  ITEM ${index + 1}
+                </span>
+
+
+                ${
+                  expenseItems.length > 1
+                    ? `
+                      <button
+                        type="button"
+                        onclick="
+                          removeExpenseItem(
+                            '${item.id}'
+                          )
+                        "
+                        style="
+                          border:none;
+                          background:#FCECEF;
+                          color:#B45C6C;
+                          border-radius:10px;
+                          padding:5px 8px;
+                          cursor:pointer;
+                          font-weight:800;
+                        "
+                      >
+                        🗑️
+                      </button>
+                    `
+                    : ''
+                }
+
+              </div>
+
+
+              <div style="
+                display:grid;
+                grid-template-columns:
+                  minmax(0,2fr)
+                  minmax(70px,.7fr)
+                  minmax(100px,1fr);
+                gap:8px;
+              ">
+
+
+                <div>
+
+                  <label style="
+                    display:block;
+                    font-size:10px;
+                    font-weight:800;
+                    color:var(--ink-soft);
+                    margin-bottom:4px;
+                  ">
+                    ITEM NAME
+                  </label>
+
+                  <input
+                    type="text"
+                    value="${escapeHtml(
+                      item.name
+                    )}"
+                    placeholder="e.g. Egg"
+                    oninput="
+                      updateExpenseItem(
+                        '${item.id}',
+                        'name',
+                        this.value
+                      )
+                    "
+                    style="
+                      width:100%;
+                      border:1.5px solid #DDE5EA;
+                      border-radius:12px;
+                      padding:9px;
+                      font-family:var(--font);
+                      font-size:13px;
+                      background:#fff;
+                    "
+                  />
+
+                </div>
+
+
+                <div>
+
+                  <label style="
+                    display:block;
+                    font-size:10px;
+                    font-weight:800;
+                    color:var(--ink-soft);
+                    margin-bottom:4px;
+                  ">
+                    QTY
+                  </label>
+
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    value="${item.qty}"
+                    onchange="
+                      updateExpenseItem(
+                        '${item.id}',
+                        'qty',
+                        this.value
+                      )
+                    "
+                    style="
+                      width:100%;
+                      border:1.5px solid #DDE5EA;
+                      border-radius:12px;
+                      padding:9px;
+                      font-family:var(--font);
+                      font-size:13px;
+                      background:#fff;
+                    "
+                  />
+
+                </div>
+
+
+                <div>
+
+                  <label style="
+                    display:block;
+                    font-size:10px;
+                    font-weight:800;
+                    color:var(--ink-soft);
+                    margin-bottom:4px;
+                  ">
+                    UNIT PRICE
+                  </label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value="${item.price || ''}"
+                    placeholder="0.00"
+                    onchange="
+                      updateExpenseItem(
+                        '${item.id}',
+                        'price',
+                        this.value
+                      )
+                    "
+                    style="
+                      width:100%;
+                      border:1.5px solid #DDE5EA;
+                      border-radius:12px;
+                      padding:9px;
+                      font-family:var(--font);
+                      font-size:13px;
+                      background:#fff;
+                    "
+                  />
+
+                </div>
+
+              </div>
+
+
+              <div style="
+                margin-top:9px;
+                text-align:right;
+                font-size:12px;
+                font-weight:900;
+                color:var(--purple-deep);
+              ">
+
+                Item Total:
+                ${RM(itemTotal)}
+
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      )
+      .join('');
+
+
+  // ========================================
+  // TOTAL
+  // ========================================
+
+  const total =
+    expenseItems.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum +
+        (
+          Number(item.qty) || 0
+        ) *
+        (
+          Number(item.price) || 0
+        ),
+      0
+    );
+
+
+  const totalEl =
+    document.getElementById(
+      'expenseItemsTotal'
+    );
+
+
+  if(totalEl){
+
+    totalEl.textContent =
+      RM(total);
+
+  }
+
+
+  // ========================================
+  // SYNC OLD AMOUNT FIELD
+  // ========================================
+
+  const amountEl =
+    document.getElementById(
+      'expAmount'
+    );
+
+
+  if(amountEl){
+
+    amountEl.value =
+      total.toFixed(2);
+
+  }
+
+}
+
+
+// ==========================================
+// INITIALIZE
+// ==========================================
+
+if(
+  document.readyState ===
+  'loading'
+){
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    initExpenseItems
+  );
+
+}else{
+
+  initExpenseItems();
+
+}
+
+
+// ==========================================
+// SAVE EXPENSE
+// ==========================================
+
+document.getElementById(
+  'saveExpense'
+).onclick = () => {
+
+
+  // ========================================
+  // SUPPLIER
+  // ========================================
+
+  if(
+    !selectedSupplier
+  ){
+
+    alert(
+      '请先选择一个供应商 🛒'
+    );
+
+    return;
+
+  }
+
+
+  // ========================================
+  // VALIDATE ITEMS
+  // ========================================
+
+  const validItems =
+    expenseItems
+      .filter(
+        item =>
+          String(
+            item.name || ''
+          ).trim() !== '' &&
+          Number(item.price) > 0
+      )
+      .map(
+        item => ({
+
+          id:
+            item.id,
+
+          name:
+            String(
+              item.name
+            ).trim(),
+
+          qty:
+            Math.max(
+              1,
+              Number(
+                item.qty
+              ) || 1
+            ),
+
+          price:
+            Number(
+              item.price
+            ) || 0,
+
+          total:
+            Number(
+              (
+                (
+                  Number(item.qty) || 0
+                ) *
+                (
+                  Number(item.price) || 0
+                )
+              ).toFixed(2)
+            ),
+
+        })
+      );
+
+
+  if(
+    validItems.length === 0
+  ){
+
+    alert(
+      '请至少填写一个 Expense Item，并输入有效单价 💰'
+    );
+
+    return;
+
+  }
+
+
+  // ========================================
+  // TOTAL
+  // ========================================
+
+  const total =
+    validItems.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum +
+        item.total,
+      0
+    );
+
+
+  // ========================================
+  // DATE
+  // ========================================
+
+  const dateInput =
+    document.getElementById(
+      'expDate'
+    ).value;
+
+
+  const dateKeyVal =
+    dateInput ||
+    dateKey(now());
+
+
+  // ========================================
+  // TIME
+  // ========================================
+
+  const d =
+    now();
+
+
+  // ========================================
+  // SAVE
+  // ========================================
+
+  DB.expenses.push({
+
+    id:
+      'EXP' +
+      Date.now(),
+
+    supplier:
+      selectedSupplier,
+
+    amount:
+      Number(
+        total.toFixed(2)
+      ),
+
+    items:
+      validItems,
+
+    note:
+      document.getElementById(
+        'expNote'
+      ).value,
+
+    date:
+      dateKeyVal,
+
+    time:
+      dateTime(d),
+
+  });
+
+
+  // ========================================
+  // SAVE DATABASE
+  // ========================================
+
   DB.save();
-  document.getElementById('expAmount').value=''; document.getElementById('expNote').value='';
-  selectedSupplier=''; document.getElementById('expSupplier').value='';
-  document.getElementById('expDate').value = dateKey(now());
+
+
+  // ========================================
+  // RESET
+  // ========================================
+
+  expenseItems = [];
+
+
+  document.getElementById(
+    'expAmount'
+  ).value = '';
+
+
+  document.getElementById(
+    'expNote'
+  ).value = '';
+
+
+  selectedSupplier =
+    '';
+
+
+  document.getElementById(
+    'expSupplier'
+  ).value = '';
+
+
+  document.getElementById(
+    'expDate'
+  ).value =
+    dateKey(now());
+
+
+  // ========================================
+  // REBUILD ITEM AREA
+  // ========================================
+
+  renderExpenseItems();
+
+
+  // ========================================
+  // REFRESH
+  // ========================================
+
   renderExpenses();
-  alert('✅ 支出已保存');
+
+
+  if(
+    typeof renderDashboard ===
+    'function'
+  ){
+
+    renderDashboard();
+
+  }
+
+
+  if(
+    typeof renderReport ===
+    'function'
+  ){
+
+    renderReport();
+
+  }
+
+
+  // ========================================
+  // SUCCESS
+  // ========================================
+
+  alert(
+    `✅ 支出已保存\n\n${validItems.length} 个 Item\nTotal: ${RM(total)}`
+  );
+
 };
 function renderExpenses(){
   const today = dateKey(now());
