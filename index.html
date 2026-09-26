@@ -2739,6 +2739,11 @@ function removeExpenseItem(id){
 // UPDATE ITEM
 // ==========================================
 
+// ==========================================
+// UPDATE EXPENSE ITEM
+// FIX: DO NOT RERENDER INPUT WHILE TYPING
+// ==========================================
+
 function updateExpenseItem(
   id,
   field,
@@ -2747,22 +2752,33 @@ function updateExpenseItem(
 
   const item =
     expenseItems.find(
-      x =>
-        x.id === id
+      x => x.id === id
     );
-
 
   if(!item){
     return;
   }
 
 
+  // ========================================
+  // ITEM NAME
+  // ========================================
+
   if(field === 'name'){
 
     item.name = value;
 
+    // 不重新 render
+    // 保持输入框和光标位置
+    updateExpenseItemsTotal();
+
+    return;
   }
 
+
+  // ========================================
+  // QTY
+  // ========================================
 
   if(field === 'qty'){
 
@@ -2775,6 +2791,10 @@ function updateExpenseItem(
   }
 
 
+  // ========================================
+  // UNIT PRICE
+  // ========================================
+
   if(field === 'price'){
 
     item.price =
@@ -2786,10 +2806,104 @@ function updateExpenseItem(
   }
 
 
-  renderExpenseItems();
+  // 数字输入完成后再更新显示
+  updateExpenseItemsTotal();
 
 }
 
+  // ==========================================
+// UPDATE EXPENSE TOTAL
+// WITHOUT REBUILDING INPUTS
+// ==========================================
+
+function updateExpenseItemsTotal(){
+
+  const total =
+    expenseItems.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum +
+        (
+          Number(item.qty) || 0
+        ) *
+        (
+          Number(item.price) || 0
+        ),
+      0
+    );
+
+
+  // ========================================
+  // TOTAL
+  // ========================================
+
+  const totalEl =
+    document.getElementById(
+      'expenseItemsTotal'
+    );
+
+
+  if(totalEl){
+
+    totalEl.textContent =
+      RM(total);
+
+  }
+
+
+  // ========================================
+  // OLD AMOUNT FIELD
+  // ========================================
+
+  const amountEl =
+    document.getElementById(
+      'expAmount'
+    );
+
+
+  if(amountEl){
+
+    amountEl.value =
+      total.toFixed(2);
+
+  }
+
+
+  // ========================================
+  // UPDATE EACH ITEM TOTAL
+  // ========================================
+
+  expenseItems.forEach(
+    item => {
+
+      const itemTotal =
+        (
+          Number(item.qty) || 0
+        ) *
+        (
+          Number(item.price) || 0
+        );
+
+
+      const itemTotalEl =
+        document.querySelector(
+          `[data-expense-item-total="${item.id}"]`
+        );
+
+
+      if(itemTotalEl){
+
+        itemTotalEl.textContent =
+          `Item Total: ${RM(itemTotal)}`;
+
+      }
+
+    }
+  );
+
+}
 
 // ==========================================
 // RENDER ITEMS
@@ -3004,18 +3118,18 @@ function renderExpenseItems(){
               </div>
 
 
-              <div style="
-                margin-top:9px;
-                text-align:right;
-                font-size:12px;
-                font-weight:900;
-                color:var(--purple-deep);
-              ">
-
-                Item Total:
-                ${RM(itemTotal)}
-
-              </div>
+              <div
+  data-expense-item-total="${item.id}"
+  style="
+    margin-top:9px;
+    text-align:right;
+    font-size:12px;
+    font-weight:900;
+    color:var(--purple-deep);
+  "
+>
+  Item Total: ${RM(itemTotal)}
+</div>
 
             </div>
 
