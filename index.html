@@ -3220,158 +3220,173 @@ if(
 // SAVE EXPENSE
 // ==========================================
 
-document.getElementById(
-  'saveExpense'
-).onclick = () => {
+// ==========================================
+// SAVE EXPENSE
+// 支持一张 Supplier Invoice 多个 Item
+// ==========================================
 
+document.getElementById('saveExpense').onclick = () => {
 
-  // ========================================
-  // SUPPLIER
-  // ========================================
+  // ----------------------------------------
+  // Supplier
+  // ----------------------------------------
 
-  if(
-    !selectedSupplier
-  ){
+  if(!selectedSupplier){
 
-    alert(
-      '请先选择一个供应商 🛒'
-    );
+    alert('请先选择一个供应商 🛒');
 
     return;
-
   }
 
 
-  // ========================================
-  // VALIDATE ITEMS
-  // ========================================
+  // ----------------------------------------
+  // Date
+  // ----------------------------------------
+
+  const dateInput =
+    document.getElementById('expDate')?.value;
+
+  const dateKeyVal =
+    dateInput || dateKey(now());
+
+
+  // ----------------------------------------
+  // Items
+  // ----------------------------------------
 
   const validItems =
     expenseItems
-      .filter(
-        item =>
-          String(
-            item.name || ''
-          ).trim() !== '' &&
-          Number(item.price) > 0
-      )
-      .map(
-        item => ({
+      .map(item => ({
 
-          id:
-            item.id,
+        id:
+          item.id ||
+          ('ITEM' + Date.now() + Math.random()),
 
-          name:
-            String(
-              item.name
-            ).trim(),
+        name:
+          String(item.name || '').trim(),
 
-          qty:
-            Math.max(
-              1,
-              Number(
-                item.qty
-              ) || 1
-            ),
+        qty:
+          Number(item.qty) || 0,
 
-          price:
-            Number(
-              item.price
-            ) || 0,
+        price:
+          Number(item.price) || 0,
 
-          total:
-            Number(
-              (
-                (
-                  Number(item.qty) || 0
-                ) *
-                (
-                  Number(item.price) || 0
-                )
-              ).toFixed(2)
-            ),
+        total:
+          (Number(item.qty) || 0) *
+          (Number(item.price) || 0)
 
-        })
-      );
+      }))
+      .filter(item => {
+
+        return (
+          item.name ||
+          item.qty > 0 ||
+          item.price > 0
+        );
+
+      });
 
 
-  if(
-    validItems.length === 0
-  ){
+  // ----------------------------------------
+  // 必须至少有一个 Item
+  // ----------------------------------------
 
-    alert(
-      '请至少填写一个 Expense Item，并输入有效单价 💰'
-    );
+  if(!validItems.length){
+
+    alert('请至少添加一个 Expense Item 🧾');
 
     return;
+  }
+
+
+  // ----------------------------------------
+  // 检查 Item
+  // ----------------------------------------
+
+  for(const item of validItems){
+
+    if(!item.name){
+
+      alert('请填写每一个 Item Name 📝');
+
+      return;
+    }
+
+
+    if(!(item.qty > 0)){
+
+      alert(
+        `请输入有效数量：${item.name}`
+      );
+
+      return;
+    }
+
+
+    if(item.price < 0){
+
+      alert(
+        `请输入有效单价：${item.name}`
+      );
+
+      return;
+    }
 
   }
 
 
-  // ========================================
-  // TOTAL
-  // ========================================
+  // ----------------------------------------
+  // 自动计算总金额
+  // ----------------------------------------
 
-  const total =
+  const totalAmount =
     validItems.reduce(
-      (
-        sum,
-        item
-      ) =>
-        sum +
-        item.total,
+      (sum, item) =>
+        sum + item.total,
       0
     );
 
 
-  // ========================================
-  // DATE
-  // ========================================
+  if(!(totalAmount > 0)){
 
-  const dateInput =
-    document.getElementById(
-      'expDate'
-    ).value;
+    alert('Expense Total 必须大于 RM 0.00 💰');
+
+    return;
+  }
 
 
-  const dateKeyVal =
-    dateInput ||
-    dateKey(now());
+  // ----------------------------------------
+  // Note
+  // ----------------------------------------
+
+  const note =
+    document.getElementById('expNote')?.value || '';
 
 
-  // ========================================
-  // TIME
-  // ========================================
+  // ----------------------------------------
+  // Time
+  // ----------------------------------------
 
-  const d =
-    now();
+  const d = now();
 
 
-  // ========================================
-  // SAVE
-  // ========================================
+  // ----------------------------------------
+  // 创建 Expense
+  // ----------------------------------------
 
-  DB.expenses.push({
+  const expense = {
 
     id:
-      'EXP' +
-      Date.now(),
+      'EXP' + Date.now(),
 
     supplier:
       selectedSupplier,
 
     amount:
-      Number(
-        total.toFixed(2)
-      ),
-
-    items:
-      validItems,
+      totalAmount,
 
     note:
-      document.getElementById(
-        'expNote'
-      ).value,
+      note,
 
     date:
       dateKeyVal,
@@ -3379,91 +3394,152 @@ document.getElementById(
     time:
       dateTime(d),
 
-  });
+    // ⭐ 新增：保存所有 Item
+    items:
+      validItems
+
+  };
 
 
-  // ========================================
-  // SAVE DATABASE
-  // ========================================
+  // ----------------------------------------
+  // 保存
+  // ----------------------------------------
+
+  DB.expenses.push(expense);
 
   DB.save();
 
 
-  // ========================================
-  // RESET
-  // ========================================
+  // ----------------------------------------
+  // 清空表格
+  // ----------------------------------------
 
-  expenseItems = [];
+  expenseItems = [
 
+    {
+      id:
+        'item-' +
+        Date.now(),
 
-  document.getElementById(
-    'expAmount'
-  ).value = '';
+      name:
+        '',
 
+      qty:
+        1,
 
-  document.getElementById(
-    'expNote'
-  ).value = '';
+      price:
+        0
 
+    }
 
-  selectedSupplier =
-    '';
-
-
-  document.getElementById(
-    'expSupplier'
-  ).value = '';
-
-
-  document.getElementById(
-    'expDate'
-  ).value =
-    dateKey(now());
+  ];
 
 
-  // ========================================
-  // REBUILD ITEM AREA
-  // ========================================
+  // ----------------------------------------
+  // 清空 Supplier
+  // ----------------------------------------
+
+  selectedSupplier = '';
+
+  const supplierEl =
+    document.getElementById('expSupplier');
+
+  if(supplierEl){
+
+    supplierEl.value = '';
+
+  }
+
+
+  // ----------------------------------------
+  // 清空 Amount
+  // ----------------------------------------
+
+  const amountEl =
+    document.getElementById('expAmount');
+
+  if(amountEl){
+
+    amountEl.value = '';
+
+  }
+
+
+  // ----------------------------------------
+  // 清空 Note
+  // ----------------------------------------
+
+  const noteEl =
+    document.getElementById('expNote');
+
+  if(noteEl){
+
+    noteEl.value = '';
+
+  }
+
+
+  // ----------------------------------------
+  // 回到今天
+  // ----------------------------------------
+
+  const dateEl =
+    document.getElementById('expDate');
+
+  if(dateEl){
+
+    dateEl.value =
+      dateKey(now());
+
+    updateExpDateHint(
+      dateEl.value
+    );
+
+  }
+
+
+  // ----------------------------------------
+  // 重新显示 Item
+  // ----------------------------------------
 
   renderExpenseItems();
 
 
-  // ========================================
-  // REFRESH
-  // ========================================
+  // ----------------------------------------
+  // 更新 Expense List
+  // ----------------------------------------
 
   renderExpenses();
 
 
-  if(
-    typeof renderDashboard ===
-    'function'
-  ){
+  // ----------------------------------------
+  // 更新 Dashboard / Report
+  // ----------------------------------------
+
+  if(typeof renderDashboard === 'function'){
 
     renderDashboard();
 
   }
 
 
-  if(
-    typeof renderReport ===
-    'function'
-  ){
+  if(typeof renderReport === 'function'){
 
     renderReport();
 
   }
 
 
-  // ========================================
-  // SUCCESS
-  // ========================================
+  // ----------------------------------------
+  // 完成
+  // ----------------------------------------
 
-  alert(
-    `✅ 支出已保存\n\n${validItems.length} 个 Item\nTotal: ${RM(total)}`
+  toast(
+    `✅ Expense 已保存 · ${validItems.length} items · ${RM(totalAmount)}`
   );
 
 };
+  
 function renderExpenses(){
   const today = dateKey(now());
   const dateEl = document.getElementById('expListDate');
