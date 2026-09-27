@@ -3225,7 +3225,14 @@ if(
 // 支持一张 Supplier Invoice 多个 Item
 // ==========================================
 
-document.getElementById('saveExpense').onclick = () => {
+document.addEventListener('DOMContentLoaded', () => {
+
+  const saveBtn =
+    document.getElementById('saveExpense');
+
+  if(!saveBtn) return;
+
+  saveBtn.onclick = () => {
 
   // ----------------------------------------
   // Supplier
@@ -3551,7 +3558,10 @@ if(invoiceEl){
     `✅ Expense 已保存 · ${validItems.length} items · ${RM(totalAmount)}`
   );
 
-};
+  };
+
+});
+  
   
 function renderExpenses(){
   const today = dateKey(now());
