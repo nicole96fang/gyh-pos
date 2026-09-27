@@ -701,6 +701,13 @@
             </div>
           </div>
           <div class="field" style="grid-column:1 / -1;">
+  <label>Invoice No. (optional)</label>
+  <input
+    id="expInvoiceNo"
+    placeholder="Invoice No. 可留空"
+  />
+</div>
+          <div class="field" style="grid-column:1 / -1;">
             <label>Note (optional)</label>
             <input id="expNote" placeholder="备注说明" />
           </div>
@@ -3368,7 +3375,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const note =
     document.getElementById('expNote')?.value || '';
-
+const invoiceNo =
+  document.getElementById('expInvoiceNo')?.value.trim() || '';
 
   // ----------------------------------------
   // Time
@@ -3393,6 +3401,9 @@ document.addEventListener('DOMContentLoaded', () => {
     amount:
       totalAmount,
 
+    invoiceNo:
+  invoiceNo,
+    
     note:
       note,
 
