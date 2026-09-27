@@ -3382,6 +3382,9 @@ document.getElementById('saveExpense').onclick = () => {
     supplier:
       selectedSupplier,
 
+    invoiceNo:
+  invoiceNo,
+    
     amount:
       totalAmount,
 
@@ -3477,6 +3480,18 @@ document.getElementById('saveExpense').onclick = () => {
     noteEl.value = '';
 
   }
+  // =================================
+// 清空 Invoice No
+// =================================
+
+const invoiceEl =
+  document.getElementById('expInvoiceNo');
+
+if(invoiceEl){
+
+  invoiceEl.value = '';
+
+}
 
 
   // ----------------------------------------
@@ -4501,6 +4516,38 @@ body{
 
   ${itemsHtml}
 
+${
+  e.invoiceNo
+    ? `
+      <div style="
+        margin-top:18px;
+        padding:10px 14px;
+        border-left:4px solid #B9DDE9;
+        background:#F4FAFC;
+        border-radius:10px;
+      ">
+        <div style="
+          font-size:10px;
+          font-weight:900;
+          letter-spacing:1px;
+          color:#7890A8;
+          margin-bottom:4px;
+        ">
+          INVOICE NO.
+        </div>
+
+        <div style="
+          font-size:14px;
+          font-weight:900;
+          color:#385674;
+          letter-spacing:.5px;
+        ">
+          ${escapeHtml(e.invoiceNo)}
+        </div>
+      </div>
+    `
+    : ''
+}
 
   <!-- =====================================
        NOTE
