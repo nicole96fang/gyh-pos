@@ -3642,161 +3642,964 @@ function escapeHtml(s){
 }
 
 // 删除 expense
-  window.printExpense = id => {
-  const e = DB.expenses.find(x => x.id === id);
-  if (!e) {
+  // ==========================================
+// PRINT SINGLE EXPENSE
+// FANG'S POS PROFESSIONAL EXPENSE RECEIPT
+// Supports multiple items
+// ==========================================
+
+window.printExpense = id => {
+
+  const e =
+    DB.expenses.find(
+      x => x.id === id
+    );
+
+
+  if(!e){
+
     alert('找不到这笔支出');
+
     return;
   }
 
-  const printWin = window.open('', '_blank', 'width=420,height=700');
 
-  if (!printWin) {
-    alert('请允许浏览器打开打印窗口');
+  // ========================================
+  // EXPENSE ITEMS
+  // ========================================
+
+  let items = [];
+
+
+  // 新版本：有多个 items
+  if(
+    Array.isArray(e.items) &&
+    e.items.length > 0
+  ){
+
+    items = e.items.map(
+      (item, index) => {
+
+        const qty =
+          Number(item.qty) || 0;
+
+        const price =
+          Number(item.price) || 0;
+
+        const total =
+          Number(item.total) ||
+          (
+            qty * price
+          );
+
+        return {
+
+          no:
+            index + 1,
+
+          name:
+            item.name ||
+            `Item ${index + 1}`,
+
+          qty:
+            qty,
+
+          price:
+            price,
+
+          total:
+            total
+
+        };
+
+      }
+    );
+
+  }
+
+
+  // ========================================
+  // OLD EXPENSE DATA
+  // ========================================
+
+  // 旧记录没有 items
+  // 自动转换成一个 Item
+  if(!items.length){
+
+    items = [
+
+      {
+
+        no: 1,
+
+        name:
+          e.note ||
+          'Expense',
+
+        qty:
+          1,
+
+        price:
+          Number(e.amount) || 0,
+
+        total:
+          Number(e.amount) || 0
+
+      }
+
+    ];
+
+  }
+
+
+  // ========================================
+  // TOTAL
+  // ========================================
+
+  const total =
+    items.reduce(
+      (
+        sum,
+        item
+      ) =>
+        sum +
+        (
+          Number(item.total) || 0
+        ),
+      0
+    );
+
+
+  // ========================================
+  // DATE / TIME
+  // ========================================
+
+  const dateText =
+    e.date || '';
+
+
+  const timeText =
+    e.time || '';
+
+
+  // ========================================
+  // PRINT WINDOW
+  // ========================================
+
+  const printWin =
+    window.open(
+      '',
+      '_blank',
+      'width=850,height=900'
+    );
+
+
+  if(!printWin){
+
+    alert(
+      '请允许浏览器打开打印窗口'
+    );
+
     return;
   }
+
+
+  // ========================================
+  // ITEMS HTML
+  // ========================================
+
+  const itemsHtml =
+    items.map(
+      item => {
+
+        return `
+
+          <div class="item-row">
+
+            <div class="item-no">
+              ${item.no}
+            </div>
+
+            <div class="item-main">
+
+              <div class="item-name">
+                ${escapeHtml(
+                  item.name
+                )}
+              </div>
+
+              <div class="item-detail">
+
+                QTY
+                ${item.qty}
+
+                &nbsp;&nbsp;×
+
+                &nbsp;&nbsp;
+
+                ${RM(
+                  item.price
+                )}
+
+              </div>
+
+            </div>
+
+            <div class="item-total">
+              ${RM(
+                item.total
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join('');
+
+
+  // ========================================
+  // HTML
+  // ========================================
 
   printWin.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Expense - ${escapeHtml(e.supplier || '')}</title>
 
-      <style>
-        * {
-          box-sizing: border-box;
-        }
+<!DOCTYPE html>
 
-        body {
-          margin: 0;
-          padding: 24px;
-          background: #ffffff;
-          color: #333;
-          font-family: Arial, sans-serif;
-        }
+<html>
 
-        .expense-slip {
-          width: 100%;
-          max-width: 360px;
-          margin: 0 auto;
-          border: 2px solid #4ba7ca;
-          border-radius: 18px;
-          padding: 22px;
-        }
+<head>
 
-        .title {
-          text-align: center;
-          color: #4ba7ca;
-          font-size: 22px;
-          font-weight: 900;
-          margin-bottom: 18px;
-        }
+<meta charset="UTF-8">
 
-        .date {
-          text-align: center;
-          color: #777;
-          font-size: 13px;
-          margin-bottom: 20px;
-        }
+<title>
+Expense - ${escapeHtml(
+  e.supplier || ''
+)}
+</title>
 
-        .label {
-          font-size: 11px;
-          color: #777;
-          font-weight: 700;
-          margin-top: 12px;
-        }
 
-        .value {
-          font-size: 16px;
-          font-weight: 800;
-          margin-top: 4px;
-        }
+<style>
 
-        .note {
-          white-space: pre-wrap;
-          line-height: 1.5;
-        }
+/* ==========================================
+   BASIC
+========================================== */
 
-        .line {
-          border-top: 1px dashed #aaa;
-          margin: 20px 0;
-        }
+*{
+  box-sizing:border-box;
+}
 
-        .total-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-weight: 900;
-        }
+html,
+body{
 
-        .total {
-          color: #4ba7ca;
-          font-size: 22px;
-        }
+  margin:0;
+  padding:0;
 
-        @media print {
-          body {
-            padding: 0;
-          }
+  background:#ffffff;
 
-          .expense-slip {
-            border: 1.5px solid #4ba7ca;
-          }
-        }
-      </style>
-    </head>
+  color:#385674;
 
-    <body>
-      <div class="expense-slip">
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
 
-        <div class="title">
-          🧾 EXPENSE
+
+/* ==========================================
+   PAGE
+========================================== */
+
+body{
+
+  padding:30px;
+
+}
+
+
+.expense-page{
+
+  width:100%;
+
+  max-width:900px;
+
+  margin:0 auto;
+
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.header{
+
+  text-align:center;
+
+  padding-top:10px;
+
+}
+
+
+.logo{
+
+  font-size:28px;
+
+  line-height:1;
+
+}
+
+
+.title{
+
+  margin-top:6px;
+
+  font-size:30px;
+
+  font-weight:900;
+
+  letter-spacing:2px;
+
+  color:#4BA7CA;
+
+}
+
+
+.subtitle{
+
+  margin-top:5px;
+
+  font-size:13px;
+
+  font-weight:800;
+
+  color:#7890A8;
+
+  letter-spacing:.5px;
+
+}
+
+
+.date{
+
+  margin-top:8px;
+
+  font-size:12px;
+
+  font-weight:700;
+
+  color:#8A9AAC;
+
+}
+
+
+/* ==========================================
+   DECORATION
+========================================== */
+
+.divider{
+
+  margin:
+    22px 0;
+
+  border-top:
+    2px dashed #79C5DF;
+
+}
+
+
+.deco{
+
+  text-align:center;
+
+  font-size:18px;
+
+  letter-spacing:8px;
+
+  color:#4BA7CA;
+
+}
+
+
+/* ==========================================
+   SUPPLIER
+========================================== */
+
+.supplier-box{
+
+  padding:
+    8px 0 4px;
+
+}
+
+
+.label{
+
+  font-size:11px;
+
+  font-weight:900;
+
+  letter-spacing:1.5px;
+
+  color:#7890A8;
+
+}
+
+
+.supplier{
+
+  margin-top:7px;
+
+  font-size:22px;
+
+  line-height:1.3;
+
+  font-weight:900;
+
+  color:#385674;
+
+}
+
+
+/* ==========================================
+   ITEMS HEADER
+========================================== */
+
+.items-header{
+
+  display:grid;
+
+  grid-template-columns:
+    45px
+    1fr
+    130px;
+
+  gap:15px;
+
+  padding:
+    10px 12px;
+
+  border-bottom:
+    2px dashed #B9DDE9;
+
+  font-size:11px;
+
+  font-weight:900;
+
+  color:#7890A8;
+
+  letter-spacing:1px;
+
+}
+
+
+/* ==========================================
+   ITEM
+========================================== */
+
+.item-row{
+
+  display:grid;
+
+  grid-template-columns:
+    45px
+    1fr
+    130px;
+
+  gap:15px;
+
+  align-items:center;
+
+  padding:
+    15px 12px;
+
+  border-bottom:
+    1px dotted #D8E8EE;
+
+}
+
+
+.item-no{
+
+  width:30px;
+
+  height:30px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:#EAF6FA;
+
+  color:#4BA7CA;
+
+  font-weight:900;
+
+  font-size:12px;
+
+}
+
+
+.item-name{
+
+  font-size:15px;
+
+  font-weight:900;
+
+  color:#385674;
+
+}
+
+
+.item-detail{
+
+  margin-top:5px;
+
+  font-size:11px;
+
+  font-weight:700;
+
+  color:#8A9AAC;
+
+}
+
+
+.item-total{
+
+  text-align:right;
+
+  font-size:16px;
+
+  font-weight:900;
+
+  color:#4BA7CA;
+
+}
+
+
+/* ==========================================
+   NOTE
+========================================== */
+
+.note-box{
+
+  margin-top:22px;
+
+  padding:
+    14px 16px;
+
+  border-left:
+    4px solid #B9DDE9;
+
+  background:#F8FBFC;
+
+}
+
+
+.note-label{
+
+  font-size:10px;
+
+  font-weight:900;
+
+  letter-spacing:1px;
+
+  color:#7890A8;
+
+}
+
+
+.note-text{
+
+  margin-top:6px;
+
+  white-space:pre-wrap;
+
+  font-size:13px;
+
+  line-height:1.5;
+
+  color:#55708F;
+
+}
+
+
+/* ==========================================
+   TOTAL
+========================================== */
+
+.total-box{
+
+  margin-top:25px;
+
+  padding:
+    15px 18px;
+
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #E8DFF0,
+      #C5E2EB
+    );
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+}
+
+
+.total-label{
+
+  font-size:19px;
+
+  font-weight:900;
+
+  color:#55708F;
+
+}
+
+
+.total-value{
+
+  font-size:25px;
+
+  font-weight:900;
+
+  color:#4BA7CA;
+
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.footer{
+
+  margin-top:28px;
+
+  text-align:center;
+
+  padding-top:15px;
+
+  border-top:
+    2px dashed #E8C97A;
+
+}
+
+
+.footer-main{
+
+  font-size:12px;
+
+  font-weight:900;
+
+  color:#4BA7CA;
+
+}
+
+
+.footer-small{
+
+  margin-top:5px;
+
+  font-size:10px;
+
+  color:#8A9AAC;
+
+}
+
+
+/* ==========================================
+   PRINT
+========================================== */
+
+@media print{
+
+  html,
+  body{
+
+    margin:0;
+
+    padding:0;
+
+    background:#ffffff;
+
+  }
+
+
+  body{
+
+    padding:18px;
+
+  }
+
+
+  .expense-page{
+
+    max-width:none;
+
+    width:100%;
+
+  }
+
+
+  .no-print{
+
+    display:none !important;
+
+  }
+
+}
+
+
+/* ==========================================
+   AVOID ITEM SPLIT
+========================================== */
+
+.item-row{
+
+  break-inside:avoid;
+
+  page-break-inside:avoid;
+
+}
+
+
+.note-box{
+
+  break-inside:avoid;
+
+  page-break-inside:avoid;
+
+}
+
+
+.total-box{
+
+  break-inside:avoid;
+
+  page-break-inside:avoid;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="expense-page">
+
+
+  <!-- =====================================
+       HEADER
+  ====================================== -->
+
+  <div class="header">
+
+    <div class="logo">
+      🧾
+    </div>
+
+    <div class="title">
+      EXPENSE RECORD
+    </div>
+
+    <div class="subtitle">
+      GOH YEAN HUAN · 支出记录
+    </div>
+
+    <div class="date">
+
+      ${escapeHtml(
+        dateText
+      )}
+
+      ${
+        timeText
+          ? ' · ' +
+            escapeHtml(
+              timeText
+            )
+          : ''
+      }
+
+    </div>
+
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <div class="deco">
+    🌹 ✨ 🌙
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- =====================================
+       SUPPLIER
+  ====================================== -->
+
+  <div class="supplier-box">
+
+    <div class="label">
+      SUPPLIER
+    </div>
+
+    <div class="supplier">
+
+      ${escapeHtml(
+        e.supplier ||
+        '(未填)'
+      )}
+
+    </div>
+
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- =====================================
+       ITEMS
+  ====================================== -->
+
+  <div class="items-header">
+
+    <div>
+      #
+    </div>
+
+    <div>
+      ITEM
+    </div>
+
+    <div style="text-align:right;">
+      TOTAL
+    </div>
+
+  </div>
+
+
+  ${itemsHtml}
+
+
+  <!-- =====================================
+       NOTE
+  ====================================== -->
+
+  ${
+    e.note
+      ? `
+
+        <div class="note-box">
+
+          <div class="note-label">
+            NOTE
+          </div>
+
+          <div class="note-text">
+            ${escapeHtml(
+              e.note
+            )}
+          </div>
+
         </div>
 
-        <div class="date">
-          ${escapeHtml(e.date || '')}
-          ${e.time ? ' · ' + escapeHtml(e.time) : ''}
-        </div>
+      `
+      : ''
+  }
 
-        <div class="label">
-          SUPPLIER
-        </div>
 
-        <div class="value">
-          ${escapeHtml(e.supplier || '-')}
-        </div>
+  <!-- =====================================
+       TOTAL
+  ====================================== -->
 
-        <div class="label">
-          NOTE
-        </div>
+  <div class="total-box">
 
-        <div class="value note">
-          ${escapeHtml(e.note || '-')}
-        </div>
+    <div class="total-label">
+      💰 TOTAL
+    </div>
 
-        <div class="line"></div>
+    <div class="total-value">
+      ${RM(total)}
+    </div>
 
-        <div class="total-row">
-          <span>TOTAL</span>
-          <span class="total">${RM(e.amount)}</span>
-        </div>
+  </div>
 
-      </div>
 
-      <script>
-        window.onload = function() {
-          setTimeout(function() {
-            window.print();
-          }, 200);
-        };
-      <\/script>
+  <!-- =====================================
+       FOOTER
+  ====================================== -->
 
-    </body>
-    </html>
+  <div class="footer">
+
+    <div class="footer-main">
+      🧾 Expense Record · 支出明细
+    </div>
+
+    <div class="footer-small">
+
+      ${escapeHtml(
+        dateText
+      )}
+
+      · generated by
+      GOH YEAN HUAN POS
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<script>
+
+window.onload = function(){
+
+  setTimeout(
+    function(){
+
+      window.print();
+
+    },
+    300
+  );
+
+};
+
+<\/script>
+
+
+</body>
+
+</html>
+
   `);
 
+
   printWin.document.close();
+
 };
 window.deleteExpense = id => {
   const e = DB.expenses.find(x=>x.id===id);
