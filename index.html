@@ -3912,6 +3912,23 @@ Expense - ${escapeHtml(
 *{
   box-sizing:border-box;
 }
+.back-btn{
+    padding:10px 18px;
+    margin-bottom:18px;
+    border:0;
+    border-radius:14px;
+    background:#EAF4FB;
+    color:#385674;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+@media print{
+    .back-btn{
+        display:none !important;
+    }
+}
 
 html,
 body{
@@ -4550,6 +4567,12 @@ body{
 
 <body>
 
+<button
+    class="back-btn no-print"
+    onclick="window.close(); if(!window.closed){history.back();}"
+>
+    ← Back
+</button>
 
 <div class="expense-page">
 
