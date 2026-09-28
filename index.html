@@ -1625,9 +1625,42 @@ function renderActiveOrders(){
     const isSel = (selectedOrderId===o.id);
     const nameStr = o.name ? ` · ${o.name}` : '';
     const itemStr = o.items.map(it=>{
-      const d = findDish(it.dishId);
-      return `${d.emoji}×${it.qty}`;
-    }).join(' ');
+  const d = findDish(it.dishId);
+  if(!d) return '';
+
+  const noodleStr = (it.noodles||[]).map(nid=>{
+    const n = NOODLES.find(x=>x.id===nid);
+    return n ? n.name : '';
+  }).filter(Boolean).join(' · ');
+
+  let proteinStr = '';
+  if(it.protein){
+    const p = SINGLE_PROTEIN.find(x=>x.id===it.protein);
+    if(p) proteinStr = p.name;
+  }
+
+  let optStr = '';
+  if(it.opts && it.opts.length){
+    optStr = it.opts.map(oo=>{
+      const op = OPTIONS.find(x=>x.id===oo.id);
+      return op ? (oo.qty>1 ? `${op.name}×${oo.qty}` : op.name) : '';
+    }).filter(Boolean).join(', ');
+  }
+
+  return `
+    <div style="margin-top:6px;padding:6px 0;border-top:1px dashed rgba(75,167,202,.25);">
+      <div style="font-weight:900;color:var(--purple-deep);font-size:12px;">
+        ${d.emoji} ${escapeHtml(d.name)}
+        <span style="background:var(--purple-light);color:#fff;padding:2px 7px;border-radius:8px;font-size:10px;margin-left:4px;">×${it.qty}</span>
+      </div>
+
+      ${noodleStr ? `<div style="font-size:10px;color:var(--purple);margin-top:2px;font-weight:700;">🍜 ${escapeHtml(noodleStr)}</div>` : ''}
+
+      ${proteinStr ? `<div style="font-size:10px;color:var(--purple);margin-top:1px;font-weight:700;">🥩 ${escapeHtml(proteinStr)}</div>` : ''}
+
+      ${optStr ? `<div style="font-size:10px;color:var(--purple);margin-top:1px;font-weight:700;">➕ ${escapeHtml(optStr)}</div>` : ''}
+    </div>`;
+}).join('');
     const prepared = !!o.prepared;
     return `
       <div class="active-order-card ${isSel?'sel':''} ${prepared?'prepared':''}" data-id="${o.id}" style="border:2px solid ${prepared?'#3fae8f':(isSel?'var(--mint)':'transparent')};background:${prepared?'#eefaf4':(isSel?'#f0f8f4':'#fff8ee')};border-left:5px solid ${prepared?'#3fae8f':'#4ba7ca'};border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;">
@@ -1635,7 +1668,10 @@ function renderActiveOrders(){
           <div style="font-weight:900;color:var(--purple-deep);font-size:13px;">${prepared?'🟢':'🍳'} ${o.code}${nameStr}</div>
           <div style="font-weight:900;color:var(--purple-deep);font-size:14px;">${RM(total)}</div>
         </div>
-        <div style="font-size:11px;color:${prepared?'#2f8f73':'var(--ink-soft)'};margin-top:4px;line-height:1.4;">${itemStr}${prepared?' · ✅ Prepared':''}</div>
+        <div style="color:${prepared?'#2f8f73':'var(--ink-soft)'};margin-top:4px;line-height:1.4;">
+  ${itemStr}
+  ${prepared ? `<div style="font-size:11px;font-weight:900;margin-top:5px;">✅ Prepared</div>` : ''}
+</div>
         <div style="display:flex;gap:6px;margin-top:8px;">
           <button data-act="view" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,var(--purple),var(--purple-deep));color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">📋 查看</button>
           <button data-act="addMore" data-id="${o.id}" style="flex:1;background:linear-gradient(135deg,var(--purple-light),#c5e2eb);color:#fff;border:none;padding:7px;border-radius:8px;font-size:11px;font-weight:900;cursor:pointer;">➕ Add 菜</button>
