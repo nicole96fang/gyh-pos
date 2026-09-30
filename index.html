@@ -2704,40 +2704,22 @@ function initExpenseItems(){
     ">
 
       <button
-        type="button"
-        onclick="applyExpenseRoundOff('down')"
-        style="
-          flex:1;
-          border:none;
-          border-radius:11px;
-          padding:9px 6px;
-          background:#e8dff0;
-          color:var(--purple-deep);
-          font-weight:900;
-          font-size:11px;
-          cursor:pointer;
-        "
-      >
-        − Round Down
-      </button>
-
-      <button
-        type="button"
-        onclick="applyExpenseRoundOff('up')"
-        style="
-          flex:1;
-          border:none;
-          border-radius:11px;
-          padding:9px 6px;
-          background:#c5e2eb;
-          color:var(--purple-deep);
-          font-weight:900;
-          font-size:11px;
-          cursor:pointer;
-        "
-      >
-        ＋ Round Up
-      </button>
+  type="button"
+  onclick="applyExpenseRoundOff()"
+  style="
+    width:100%;
+    border:none;
+    border-radius:11px;
+    padding:10px 6px;
+    background:#c5e2eb;
+    color:var(--purple-deep);
+    font-weight:900;
+    font-size:11px;
+    cursor:pointer;
+  "
+>
+  🔄 Round Off to 5 sen
+</button>
 
     </div>
 
@@ -2977,8 +2959,11 @@ function updateExpenseItem(
   }
 
 
-  // 数字输入完成后再更新显示
-  updateExpenseItemsTotal();
+  // 数字输入改变后，先取消旧 Round Off
+expenseRoundOff = 0;
+
+// 再更新显示
+updateExpenseItemsTotal();
 
 }
 
@@ -2986,7 +2971,7 @@ function updateExpenseItem(
 // UPDATE EXPENSE TOTAL
 // WITHOUT REBUILDING INPUTS
 // ==========================================
-function applyExpenseRoundOff(direction){
+function applyExpenseRoundOff(){
 
   const total =
     expenseItems.reduce(
@@ -2998,40 +2983,37 @@ function applyExpenseRoundOff(direction){
     );
 
   if(!(total > 0)){
+
     expenseRoundOff = 0;
+
     updateExpenseItemsTotal();
+
     return;
   }
 
-  const base =
-    Math.floor(total * 100) / 100;
 
-  const down =
-    Math.floor(base * 10) / 10;
+  // ========================================
+  // ROUND TO NEAREST RM 0.05
+  // ========================================
 
-  const up =
-    Math.ceil(base * 10) / 10;
+  const roundedTotal =
+    Math.round(
+      total * 20
+    ) / 20;
 
-  if(direction === 'down'){
 
-    expenseRoundOff =
-      Number((down - base).toFixed(2));
+  expenseRoundOff =
+    Number(
+      (
+        roundedTotal -
+        total
+      ).toFixed(2)
+    );
 
-  }else if(direction === 'up'){
-
-    expenseRoundOff =
-      Number((up - base).toFixed(2));
-
-  }else{
-
-    expenseRoundOff = 0;
-
-  }
 
   updateExpenseItemsTotal();
 
 }
-
 
 // ==========================================
 // UPDATE EXPENSE TOTAL
