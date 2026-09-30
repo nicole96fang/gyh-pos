@@ -2526,7 +2526,7 @@ document.getElementById('expDate').addEventListener('input',e=>updateExpDateHint
 // ==========================================
 
 let expenseItems = [];
-
+let expenseRoundOff = 0;
 
 // ==========================================
 // CREATE EXPENSE ITEM AREA
@@ -2631,38 +2631,147 @@ function initExpenseItems(){
 
 
     <div style="
-      margin-top:14px;
-      padding:12px 14px;
-      border-radius:14px;
-      background:linear-gradient(
-        135deg,
-        #e8dff0,
-        #c5e2eb
-      );
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:linear-gradient(
+    135deg,
+    #e8dff0,
+    #c5e2eb
+  );
+">
+
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  ">
+    <span style="
+      font-weight:900;
+      color:var(--purple-deep);
+    ">
+      TOTAL
+    </span>
+
+    <strong
+      id="expenseItemsTotal"
+      style="
+        font-size:19px;
+        color:var(--purple-deep);
+      "
+    >
+      RM 0.00
+    </strong>
+  </div>
+
+  <div style="
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dashed rgba(75,167,202,.25);
+  ">
+
+    <div style="
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:10px;
+      gap:8px;
     ">
-
       <span style="
+        font-size:11px;
         font-weight:900;
-        color:var(--purple-deep);
+        color:var(--ink-soft);
       ">
-        TOTAL
+        Round Off
       </span>
 
-      <strong
-        id="expenseItemsTotal"
+      <span
+        id="expenseRoundOffValue"
         style="
-          font-size:19px;
-          color:var(--purple-deep);
+          font-size:12px;
+          font-weight:900;
+          color:var(--purple);
         "
       >
         RM 0.00
-      </strong>
+      </span>
+    </div>
+
+    <div style="
+      display:flex;
+      gap:8px;
+      margin-top:8px;
+    ">
+
+      <button
+        type="button"
+        onclick="applyExpenseRoundOff('down')"
+        style="
+          flex:1;
+          border:none;
+          border-radius:11px;
+          padding:9px 6px;
+          background:#e8dff0;
+          color:var(--purple-deep);
+          font-weight:900;
+          font-size:11px;
+          cursor:pointer;
+        "
+      >
+        − Round Down
+      </button>
+
+      <button
+        type="button"
+        onclick="applyExpenseRoundOff('up')"
+        style="
+          flex:1;
+          border:none;
+          border-radius:11px;
+          padding:9px 6px;
+          background:#c5e2eb;
+          color:var(--purple-deep);
+          font-weight:900;
+          font-size:11px;
+          cursor:pointer;
+        "
+      >
+        ＋ Round Up
+      </button>
 
     </div>
+
+  </div>
+
+  <div style="
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:12px;
+    background:rgba(255,255,255,.65);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  ">
+    <span style="
+      font-weight:900;
+      color:var(--purple-deep);
+    ">
+      Final Total
+    </span>
+
+    <strong
+      id="expenseFinalTotal"
+      style="
+        font-size:20px;
+        color:var(--purple-deep);
+      "
+    >
+      RM 0.00
+    </strong>
+  </div>
+
+</div>
 
   `;
 
@@ -2877,28 +2986,71 @@ function updateExpenseItem(
 // UPDATE EXPENSE TOTAL
 // WITHOUT REBUILDING INPUTS
 // ==========================================
+function applyExpenseRoundOff(direction){
 
+  const total =
+    expenseItems.reduce(
+      (sum,item) =>
+        sum +
+        (Number(item.qty) || 0) *
+        (Number(item.price) || 0),
+      0
+    );
+
+  if(!(total > 0)){
+    expenseRoundOff = 0;
+    updateExpenseItemsTotal();
+    return;
+  }
+
+  const base =
+    Math.floor(total * 100) / 100;
+
+  const down =
+    Math.floor(base * 10) / 10;
+
+  const up =
+    Math.ceil(base * 10) / 10;
+
+  if(direction === 'down'){
+
+    expenseRoundOff =
+      Number((down - base).toFixed(2));
+
+  }else if(direction === 'up'){
+
+    expenseRoundOff =
+      Number((up - base).toFixed(2));
+
+  }else{
+
+    expenseRoundOff = 0;
+
+  }
+
+  updateExpenseItemsTotal();
+
+}
+
+
+// ==========================================
+// UPDATE EXPENSE TOTAL
+// WITHOUT REBUILDING INPUTS
+// ==========================================
 function updateExpenseItemsTotal(){
 
   const total =
     expenseItems.reduce(
-      (
-        sum,
-        item
-      ) =>
+      (sum,item) =>
         sum +
-        (
-          Number(item.qty) || 0
-        ) *
-        (
-          Number(item.price) || 0
-        ),
+        (Number(item.qty) || 0) *
+        (Number(item.price) || 0),
       0
     );
 
 
   // ========================================
-  // TOTAL
+  // ORIGINAL TOTAL
   // ========================================
 
   const totalEl =
@@ -2906,11 +3058,58 @@ function updateExpenseItemsTotal(){
       'expenseItemsTotal'
     );
 
-
   if(totalEl){
 
     totalEl.textContent =
       RM(total);
+
+  }
+
+
+  // ========================================
+  // ROUND OFF
+  // ========================================
+
+  const roundEl =
+    document.getElementById(
+      'expenseRoundOffValue'
+    );
+
+  if(roundEl){
+
+    const sign =
+      expenseRoundOff > 0
+        ? '+'
+        : '';
+
+    roundEl.textContent =
+      `${sign}${RM(expenseRoundOff)}`;
+
+  }
+
+
+  // ========================================
+  // FINAL TOTAL
+  // ========================================
+
+  const finalTotal =
+    Number(
+      (
+        total +
+        expenseRoundOff
+      ).toFixed(2)
+    );
+
+
+  const finalEl =
+    document.getElementById(
+      'expenseFinalTotal'
+    );
+
+  if(finalEl){
+
+    finalEl.textContent =
+      RM(finalTotal);
 
   }
 
@@ -2924,11 +3123,10 @@ function updateExpenseItemsTotal(){
       'expAmount'
     );
 
-
   if(amountEl){
 
     amountEl.value =
-      total.toFixed(2);
+      finalTotal.toFixed(2);
 
   }
 
@@ -2941,12 +3139,8 @@ function updateExpenseItemsTotal(){
     item => {
 
       const itemTotal =
-        (
-          Number(item.qty) || 0
-        ) *
-        (
-          Number(item.price) || 0
-        );
+        (Number(item.qty) || 0) *
+        (Number(item.price) || 0);
 
 
       const itemTotalEl =
