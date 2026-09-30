@@ -3592,7 +3592,14 @@ document.addEventListener('DOMContentLoaded', () => {
         sum + item.total,
       0
     );
-
+    
+const finalTotal =
+  Number(
+    (
+      totalAmount +
+      expenseRoundOff
+    ).toFixed(2)
+  );
 
   if(!(totalAmount > 0)){
 
@@ -3632,7 +3639,7 @@ const invoiceNo =
 
     
     amount:
-      totalAmount,
+  finalTotal
 
     invoiceNo:
   invoiceNo,
@@ -3799,7 +3806,7 @@ if(invoiceEl){
   // ----------------------------------------
 
   toast(
-    `✅ Expense 已保存 · ${validItems.length} items · ${RM(totalAmount)}`
+    `✅ Expense 已保存 · ${validItems.length} items · ${RM(finalTotal)}`
   );
 
   };
